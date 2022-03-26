@@ -8,7 +8,7 @@
 <script>
 import PomodoroTimer from "./PomodoroTimer.vue";
 import PreferencePanel from "./PreferencePanel.vue";
-import * as colorUtils from '../utils/colorUtils';
+import * as colorUtils from "../utils/colorUtils";
 
 export default {
   name: "App",
@@ -17,8 +17,9 @@ export default {
     PreferencePanel,
   },
   created() {
-    document.body.style.background =
-      colorUtils.ntos(this.$store.state.pomodoro.backgroundColor);
+    document.body.style.background = colorUtils.ntos(
+      this.$store.state.pomodoro.backgroundColor
+    );
   },
 };
 </script>

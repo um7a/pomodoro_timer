@@ -1,26 +1,26 @@
-const state = {
+const state = () => ({
   elapsedTimeSec: 0,
   lastUpdateTime: new Date(),
   workCount: 1,
   working: true,
   // The following fields are initialized by the values of config file.
   currentIntervalSec: 0,
-  longBreakColors: [ 0x000000, 0x000000 ],
+  longBreakColors: [0x000000, 0x000000],
   longBreakIntervalSec: 0,
   nWorkBeforeLongBreak: 0,
   pausing: false,
   fps: 0,
   refreshLoop: undefined,
   remainingTimeSec: 0,
-  shortBreakColors: [ 0x000000, 0x000000 ],
+  shortBreakColors: [0x000000, 0x000000],
   shortBreakIntervalSec: 0,
-  workColors: [ 0x000000, 0x000000],
+  workColors: [0x000000, 0x000000],
   workIntervalSec: 0,
   backgroundColor: 0x000000,
   ringBaseColor: 0x000000,
   ringLabelColor: 0x000000,
   ringFontColor: 0x000000,
-};
+});
 
 const mutations = {
   goToStart(state) {
@@ -28,20 +28,24 @@ const mutations = {
     state.remainingTimeSec = state.currentIntervalSec;
   },
   goToEnd(state) {
-    if (state.working) {  // end of work
+    if (state.working) {
       // end of work
       state.working = false;
-    } else {  // end of break
-      if (state.workCount >= state.nWorkBeforeLongBreak) {  // end of long break
+    } else {
+      // end of break
+      if (state.workCount >= state.nWorkBeforeLongBreak) {
+        // end of long break
         state.workCount = 1;
       } else {
         state.workCount++;
       }
       state.working = true;
     }
-    state.currentIntervalSec = state.working ? state.workIntervalSec : (
-      state.workCount >= state.nWorkBeforeLongBreak ? state.longBreakIntervalSec : state.shortBreakIntervalSec
-    );
+    state.currentIntervalSec = state.working
+      ? state.workIntervalSec
+      : state.workCount >= state.nWorkBeforeLongBreak
+      ? state.longBreakIntervalSec
+      : state.shortBreakIntervalSec;
     state.elapsedTimeSec = 0;
     state.remainingTimeSec = state.currentIntervalSec;
   },
@@ -53,62 +57,63 @@ const mutations = {
 
     if (!state.pausing) {
       // Update elapsed time
-      state.elapsedTimeSec += (now.getTime() - state.lastUpdateTime.getTime()) / 1000;
+      state.elapsedTimeSec +=
+        (now.getTime() - state.lastUpdateTime.getTime()) / 1000;
 
       // Update current interval
-      state.currentIntervalSec = state.working ? state.workIntervalSec : (
-        state.workCount >= state.nWorkBeforeLongBreak ? state.longBreakIntervalSec : state.shortBreakIntervalSec
-      );
+      state.currentIntervalSec = state.working
+        ? state.workIntervalSec
+        : state.workCount >= state.nWorkBeforeLongBreak
+        ? state.longBreakIntervalSec
+        : state.shortBreakIntervalSec;
 
       // Update remaining time
       state.remainingTimeSec = state.currentIntervalSec - state.elapsedTimeSec;
     }
 
     // Update last update time
-    state.lastUpdateTime= now;
+    state.lastUpdateTime = now;
 
     // If interval finished
     if (state.elapsedTimeSec >= state.currentIntervalSec) {
       // Reset elapsed time
       state.elapsedTimeSec = 0;
 
-      if (state.working) {  // end of work
-        if (state.workCount >= state.nWorkBeforeLongBreak) {  // start of long break
+      if (state.working) {
+        // end of work
+        if (state.workCount >= state.nWorkBeforeLongBreak) {
+          // start of long break
           let intervalStr = `${state.longBreakIntervalSec / 60} Minutes`;
           if (state.longBreakIntervalSec / 60 < 1) {
             intervalStr = `${state.longBreakIntervalSec} Seconds`;
           }
-          new Notification(
-            'Long Break ' + String.fromCodePoint(0x1f943),
-            {
-              body: intervalStr,
-              icon: 'public/pomodoroTimer.png',
-            });
+          new Notification("Long Break " + String.fromCodePoint(0x1f943), {
+            body: intervalStr,
+            icon: "public/pomodoroTimer.png",
+          });
         } else {
           let intervalStr = `${state.shortBreakIntervalSec / 60} Minutes`;
           if (state.shortBreakIntervalSec / 60 < 1) {
             intervalStr = `${state.shortBreakIntervalSec} Seconds`;
           }
-          new Notification(
-            'Short Break ' + String.fromCodePoint(0x2615),
-            {
-              body: intervalStr,
-              icon: 'public/pomodoroTimer.png',
-            });
+          new Notification("Short Break " + String.fromCodePoint(0x2615), {
+            body: intervalStr,
+            icon: "public/pomodoroTimer.png",
+          });
         }
         state.working = false;
-      } else {  // end of break
+      } else {
+        // end of break
         let intervalStr = `${state.workIntervalSec / 60} Minutes`;
         if (state.workIntervalSec / 60 < 1) {
           intervalStr = `${state.workIntervalSec} Seconds`;
         }
-        new Notification(
-          'Work ' + String.fromCodePoint(0x1f680),
-          {
-            body: intervalStr,
-            icon: 'public/pomodoroTimer.png',
-          });
-        if (state.workCount >= state.nWorkBeforeLongBreak) {  // end of long break
+        new Notification("Work " + String.fromCodePoint(0x1f680), {
+          body: intervalStr,
+          icon: "public/pomodoroTimer.png",
+        });
+        if (state.workCount >= state.nWorkBeforeLongBreak) {
+          // end of long break
           state.workCount = 1;
         } else {
           state.workCount++;
@@ -120,13 +125,13 @@ const mutations = {
   //
   // about refresh loop
   //
-  startRefreshLoop(state) {
+  startRefreshLoop(/*state*/) {
     const refreshLoop = setInterval(() => {
-      this.commit('updatePomodoro');
+      this.commit("updatePomodoro");
     }, 1000 / state.fps);
     state.refreshLoop = refreshLoop;
   },
-  stopRefreshLoop(state) {
+  stopRefreshLoop(/*state*/) {
     clearInterval(state.refreshLoop);
     state.refreshLoop = undefined;
   },

@@ -1,9 +1,9 @@
-const state = {
+const state = () => ({
   preferenceIsOpened: false,
   // The following fields are initialized by the values of config file.
   preferenceButtonColor: 0x000000,
   preferenceButtonHoverColor: 0x000000,
-};
+});
 
 const mutations = {
   closePreference(state) {

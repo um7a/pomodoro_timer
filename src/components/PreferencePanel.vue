@@ -12,11 +12,16 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="text" class="invalid" v-model="workIntervalMinute" v-if="isInvalid.workIntervalMinute"/>
-            <input type="text" v-model="workIntervalMinute" v-else/>
+            <input
+              type="text"
+              class="invalid"
+              v-model="workIntervalMinute"
+              v-if="isInvalid.workIntervalMinute"
+            />
+            <input type="text" v-model="workIntervalMinute" v-else />
           </p>
         </div>
-        <div class=unitSpace>
+        <div class="unitSpace">
           <p class="unit">minutes</p>
         </div>
       </div>
@@ -27,11 +32,16 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="text" class="invalid" v-model="shortBreakIntervalMinute" v-if="isInvalid.shortBreakIntervalMinute"/>
-            <input type="text" v-model="shortBreakIntervalMinute" v-else/>
+            <input
+              type="text"
+              class="invalid"
+              v-model="shortBreakIntervalMinute"
+              v-if="isInvalid.shortBreakIntervalMinute"
+            />
+            <input type="text" v-model="shortBreakIntervalMinute" v-else />
           </p>
         </div>
-        <div class=unitSpace>
+        <div class="unitSpace">
           <p class="unit">minutes</p>
         </div>
       </div>
@@ -42,11 +52,16 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="text" class="invalid" v-model="longBreakIntervalMinute" v-if="isInvalid.longBreakIntervalMinute"/>
-            <input type="text" v-model="longBreakIntervalMinute" v-else/>
+            <input
+              type="text"
+              class="invalid"
+              v-model="longBreakIntervalMinute"
+              v-if="isInvalid.longBreakIntervalMinute"
+            />
+            <input type="text" v-model="longBreakIntervalMinute" v-else />
           </p>
         </div>
-        <div class=unitSpace>
+        <div class="unitSpace">
           <p class="unit">minutes</p>
         </div>
       </div>
@@ -57,11 +72,16 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="text" class="invalid" v-model="nWorkBeforeLongBreak" v-if="isInvalid.nWorkBeforeLongBreak"/>
-            <input type="text" v-model="nWorkBeforeLongBreak" v-else/>
+            <input
+              type="text"
+              class="invalid"
+              v-model="nWorkBeforeLongBreak"
+              v-if="isInvalid.nWorkBeforeLongBreak"
+            />
+            <input type="text" v-model="nWorkBeforeLongBreak" v-else />
           </p>
         </div>
-        <div class=unitSpace>
+        <div class="unitSpace">
           <p class="unit">times</p>
         </div>
       </div>
@@ -76,11 +96,16 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="text" class="invalid" v-model="fps" v-if="isInvalid.fps"/>
-            <input type="text" v-model="fps" v-else/>
+            <input
+              type="text"
+              class="invalid"
+              v-model="fps"
+              v-if="isInvalid.fps"
+            />
+            <input type="text" v-model="fps" v-else />
           </p>
         </div>
-        <div class=unitSpace>
+        <div class="unitSpace">
           <p class="unit">fps</p>
         </div>
       </div>
@@ -95,8 +120,8 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="workColorLeft"/>
-            <input type="color" v-model="workColorRight"/>
+            <input type="color" v-model="workColorLeft" />
+            <input type="color" v-model="workColorRight" />
           </p>
         </div>
       </div>
@@ -107,8 +132,8 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="shortBreakColorLeft"/>
-            <input type="color" v-model="shortBreakColorRight"/>
+            <input type="color" v-model="shortBreakColorLeft" />
+            <input type="color" v-model="shortBreakColorRight" />
           </p>
         </div>
       </div>
@@ -119,8 +144,8 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="longBreakColorLeft"/>
-            <input type="color" v-model="longBreakColorRight"/>
+            <input type="color" v-model="longBreakColorLeft" />
+            <input type="color" v-model="longBreakColorRight" />
           </p>
         </div>
       </div>
@@ -131,7 +156,7 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="backgroundColor"/>
+            <input type="color" v-model="backgroundColor" />
           </p>
         </div>
       </div>
@@ -142,7 +167,7 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="ringBaseColor"/>
+            <input type="color" v-model="ringBaseColor" />
           </p>
         </div>
       </div>
@@ -153,7 +178,7 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="ringLabelColor"/>
+            <input type="color" v-model="ringLabelColor" />
           </p>
         </div>
       </div>
@@ -164,7 +189,7 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="ringFontColor"/>
+            <input type="color" v-model="ringFontColor" />
           </p>
         </div>
       </div>
@@ -175,37 +200,58 @@
         </div>
         <div class="valueSpace">
           <p class="value">
-            <input type="color" v-model="preferenceButtonColor"/>
-            <input type="color" v-model="preferenceButtonHoverColor"/>
+            <input type="color" v-model="preferenceButtonColor" />
+            <input type="color" v-model="preferenceButtonHoverColor" />
           </p>
         </div>
       </div>
 
       <!-- Footer -->
       <div class="footer">
-        <p class="button" @click="submit()" :style="{ '--preference-button-hover-color': savedPreferenceButtonHoverColor, }">Submit</p>
+        <p
+          class="button"
+          @click="submit()"
+          :style="{
+            '--preference-button-hover-color': savedPreferenceButtonHoverColor,
+          }"
+        >
+          Submit
+        </p>
       </div>
     </div>
     <!-- Preference Open/Close Button -->
-    <p class="openButton"
-      v-if="!preferenceIsOpened" @click="openPreference()" :style="{
+    <p
+      class="openButton"
+      v-if="!preferenceIsOpened"
+      @click="openPreference()"
+      :style="{
         '--preference-button-color': savedPreferenceButtonColor,
         '--preference-button-hover-color': savedPreferenceButtonHoverColor,
-      }">Preference</p>
-    <p class="closeButton" v-else @click="closePreference()" :style="{
-      '--preference-button-hover-color': savedPreferenceButtonHoverColor,
-    }">Close</p>
+      }"
+    >
+      Preference
+    </p>
+    <p
+      class="closeButton"
+      v-else
+      @click="closePreference()"
+      :style="{
+        '--preference-button-hover-color': savedPreferenceButtonHoverColor,
+      }"
+    >
+      Close
+    </p>
   </div>
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
-import * as os from 'os';
+import { ipcRenderer } from "electron";
+import * as os from "os";
 
-import * as colorUtils from '../utils/colorUtils';
-import { ConfigFileAccessor } from '../utils/configFileAccessor';
+import * as colorUtils from "../utils/colorUtils";
+import { ConfigFileAccessor } from "../utils/configFileAccessor";
 export default {
-  name: 'PreferencePanel',
+  name: "PreferencePanel",
   data() {
     return {
       isInvalid: {},
@@ -215,18 +261,18 @@ export default {
       longBreakIntervalMinute: 0,
       nWorkBeforeLongBreak: 0,
       fps: 0,
-      workColorLeft: '#000000',
-      workColorRight : '#000000',
-      shortBreakColorLeft: '#000000',
-      shortBreakColorRight: '#000000',
-      longBreakColorLeft: '#000000',
-      longBreakColorRight: '#000000',
-      backgroundColor: '#000000',
-      ringBaseColor: '#000000',
-      ringLabelColor: '#000000',
-      ringFontColor: '#000000',
-      preferenceButtonColor: '#000000',
-      preferenceButtonHoverColor: '#000000',
+      workColorLeft: "#000000",
+      workColorRight: "#000000",
+      shortBreakColorLeft: "#000000",
+      shortBreakColorRight: "#000000",
+      longBreakColorLeft: "#000000",
+      longBreakColorRight: "#000000",
+      backgroundColor: "#000000",
+      ringBaseColor: "#000000",
+      ringLabelColor: "#000000",
+      ringFontColor: "#000000",
+      preferenceButtonColor: "#000000",
+      preferenceButtonHoverColor: "#000000",
     };
   },
   computed: {
@@ -234,21 +280,25 @@ export default {
       return this.$store.state.preference.preferenceIsOpened;
     },
     savedPreferenceButtonColor() {
-      return colorUtils.ntos(this.$store.state.preference.preferenceButtonColor);
+      return colorUtils.ntos(
+        this.$store.state.preference.preferenceButtonColor
+      );
     },
     savedPreferenceButtonHoverColor() {
-      const preferenceButtonHoverColor = colorUtils.ntos(this.$store.state.preference.preferenceButtonHoverColor);
+      const preferenceButtonHoverColor = colorUtils.ntos(
+        this.$store.state.preference.preferenceButtonHoverColor
+      );
       return preferenceButtonHoverColor;
     },
   },
   methods: {
     openPreference() {
-      this.$store.commit('openPreference');
-      ipcRenderer.send('open-preference');
+      this.$store.commit("openPreference");
+      ipcRenderer.send("open-preference");
     },
     closePreference() {
-      this.$store.commit('closePreference');
-      ipcRenderer.send('close-preference');
+      this.$store.commit("closePreference");
+      ipcRenderer.send("close-preference");
     },
     validate() {
       let isValid = true;
@@ -267,11 +317,11 @@ export default {
         isValid = false;
       }
       if (!/^[1-9][0-9]*$/.test(this.nWorkBeforeLongBreak)) {
-        isInvalid.nWorkBeforeLongBreak= true;
+        isInvalid.nWorkBeforeLongBreak = true;
         isValid = false;
       }
       if (!/^[1-9][0-9]*$/.test(this.fps)) {
-        isInvalid.fps= true;
+        isInvalid.fps = true;
         isValid = false;
       }
       this.isInvalid = isInvalid;
@@ -283,59 +333,135 @@ export default {
         return;
       }
       // Set new settings to store.
-      this.$store.commit('setWorkIntervalSec', this.workIntervalMinute * 60);
-      this.$store.commit('setShortBreakIntervalSec', this.shortBreakIntervalMinute * 60);
-      this.$store.commit('setLongBreakIntervalSec', this.longBreakIntervalMinute * 60);
-      this.$store.commit('setNWorkBeforeLongBreak', Number.parseInt(this.nWorkBeforeLongBreak));
-      this.$store.commit('setFps', Number.parseInt(this.fps));
-      this.$store.commit('setWorkColors', [ colorUtils.ston(this.workColorRight), colorUtils.ston(this.workColorLeft), ]);
-      this.$store.commit('setShortBreakColors', [ colorUtils.ston(this.shortBreakColorRight), colorUtils.ston(this.shortBreakColorLeft), ]);
-      this.$store.commit('setLongBreakColors', [ colorUtils.ston(this.longBreakColorRight), colorUtils.ston(this.longBreakColorLeft), ]);
-      this.$store.commit('setBackgroundColor',colorUtils.ston(this.backgroundColor));
-      this.$store.commit('setRingBaseColor',colorUtils.ston(this.ringBaseColor));
-      this.$store.commit('setRingLabelColor',colorUtils.ston(this.ringLabelColor));
-      this.$store.commit('setRingFontColor',colorUtils.ston(this.ringFontColor));
-      this.$store.commit('setPreferenceButtonColor',colorUtils.ston(this.preferenceButtonColor));
-      this.$store.commit('setPreferenceButtonHoverColor',colorUtils.ston(this.preferenceButtonHoverColor));
+      this.$store.commit("setWorkIntervalSec", this.workIntervalMinute * 60);
+      this.$store.commit(
+        "setShortBreakIntervalSec",
+        this.shortBreakIntervalMinute * 60
+      );
+      this.$store.commit(
+        "setLongBreakIntervalSec",
+        this.longBreakIntervalMinute * 60
+      );
+      this.$store.commit(
+        "setNWorkBeforeLongBreak",
+        Number.parseInt(this.nWorkBeforeLongBreak)
+      );
+      this.$store.commit("setFps", Number.parseInt(this.fps));
+      this.$store.commit("setWorkColors", [
+        colorUtils.ston(this.workColorRight),
+        colorUtils.ston(this.workColorLeft),
+      ]);
+      this.$store.commit("setShortBreakColors", [
+        colorUtils.ston(this.shortBreakColorRight),
+        colorUtils.ston(this.shortBreakColorLeft),
+      ]);
+      this.$store.commit("setLongBreakColors", [
+        colorUtils.ston(this.longBreakColorRight),
+        colorUtils.ston(this.longBreakColorLeft),
+      ]);
+      this.$store.commit(
+        "setBackgroundColor",
+        colorUtils.ston(this.backgroundColor)
+      );
+      this.$store.commit(
+        "setRingBaseColor",
+        colorUtils.ston(this.ringBaseColor)
+      );
+      this.$store.commit(
+        "setRingLabelColor",
+        colorUtils.ston(this.ringLabelColor)
+      );
+      this.$store.commit(
+        "setRingFontColor",
+        colorUtils.ston(this.ringFontColor)
+      );
+      this.$store.commit(
+        "setPreferenceButtonColor",
+        colorUtils.ston(this.preferenceButtonColor)
+      );
+      this.$store.commit(
+        "setPreferenceButtonHoverColor",
+        colorUtils.ston(this.preferenceButtonHoverColor)
+      );
       // Restart refresh loop.
-      this.$store.commit('stopRefreshLoop');
-      this.$store.commit('startRefreshLoop');
+      this.$store.commit("stopRefreshLoop");
+      this.$store.commit("startRefreshLoop");
       // Save the new settings to the config file.
-      const configFileAccessor = new ConfigFileAccessor(os.homedir()+'/.pomodoroTimer/config.json');
-      configFileAccessor.save('workIntervalSec',            this.workIntervalMinute * 60);
-      configFileAccessor.save('shortBreakIntervalSec',      this.shortBreakIntervalMinute * 60);
-      configFileAccessor.save('longBreakIntervalSec',       this.longBreakIntervalMinute * 60);
-      configFileAccessor.save('nWorkBeforeLongBreak',       this.nWorkBeforeLongBreak);
-      configFileAccessor.save('fps',                        this.fps);
-      configFileAccessor.save('workColors',                 [ colorUtils.ston(this.workColorRight), colorUtils.ston(this.workColorLeft), ]);
-      configFileAccessor.save('shortBreakColors',           [ colorUtils.ston(this.shortBreakColorRight), colorUtils.ston(this.shortBreakColorLeft), ]);
-      configFileAccessor.save('longBreakColors',            [ colorUtils.ston(this.longBreakColorRight), colorUtils.ston(this.longBreakColorLeft), ]);
-      configFileAccessor.save('backgroundColor',            colorUtils.ston(this.backgroundColor));
-      configFileAccessor.save('ringBaseColor',              colorUtils.ston(this.ringBaseColor));
-      configFileAccessor.save('ringLabelColor',             colorUtils.ston(this.ringLabelColor));
-      configFileAccessor.save('ringFontColor',              colorUtils.ston(this.ringFontColor));
-      configFileAccessor.save('preferenceButtonColor',      colorUtils.ston(this.preferenceButtonColor));
-      configFileAccessor.save('preferenceButtonHoverColor', colorUtils.ston(this.preferenceButtonHoverColor));
+      const configFileAccessor = new ConfigFileAccessor(
+        os.homedir() + "/.pomodoroTimer/config.json"
+      );
+      configFileAccessor.save("workIntervalSec", this.workIntervalMinute * 60);
+      configFileAccessor.save(
+        "shortBreakIntervalSec",
+        this.shortBreakIntervalMinute * 60
+      );
+      configFileAccessor.save(
+        "longBreakIntervalSec",
+        this.longBreakIntervalMinute * 60
+      );
+      configFileAccessor.save(
+        "nWorkBeforeLongBreak",
+        this.nWorkBeforeLongBreak
+      );
+      configFileAccessor.save("fps", this.fps);
+      configFileAccessor.save("workColors", [
+        colorUtils.ston(this.workColorRight),
+        colorUtils.ston(this.workColorLeft),
+      ]);
+      configFileAccessor.save("shortBreakColors", [
+        colorUtils.ston(this.shortBreakColorRight),
+        colorUtils.ston(this.shortBreakColorLeft),
+      ]);
+      configFileAccessor.save("longBreakColors", [
+        colorUtils.ston(this.longBreakColorRight),
+        colorUtils.ston(this.longBreakColorLeft),
+      ]);
+      configFileAccessor.save(
+        "backgroundColor",
+        colorUtils.ston(this.backgroundColor)
+      );
+      configFileAccessor.save(
+        "ringBaseColor",
+        colorUtils.ston(this.ringBaseColor)
+      );
+      configFileAccessor.save(
+        "ringLabelColor",
+        colorUtils.ston(this.ringLabelColor)
+      );
+      configFileAccessor.save(
+        "ringFontColor",
+        colorUtils.ston(this.ringFontColor)
+      );
+      configFileAccessor.save(
+        "preferenceButtonColor",
+        colorUtils.ston(this.preferenceButtonColor)
+      );
+      configFileAccessor.save(
+        "preferenceButtonHoverColor",
+        colorUtils.ston(this.preferenceButtonHoverColor)
+      );
     },
   },
-  mounted: function() {
-    this.configFileAccessor = new ConfigFileAccessor(os.homedir()+'/.pomodoroTimer/config.json');
+  mounted: function () {
+    this.configFileAccessor = new ConfigFileAccessor(
+      os.homedir() + "/.pomodoroTimer/config.json"
+    );
     // Create new file with default values.
     if (!this.configFileAccessor.configFileExists()) {
-      this.configFileAccessor.save('workIntervalSec',            25 * 60);
-      this.configFileAccessor.save('shortBreakIntervalSec',      5 * 60);
-      this.configFileAccessor.save('longBreakIntervalSec',       20 * 60);
-      this.configFileAccessor.save('nWorkBeforeLongBreak',       4);
-      this.configFileAccessor.save('fps',                        8);
-      this.configFileAccessor.save('workColors',                 [ 0xd38312, 0xa83279, ]);
-      this.configFileAccessor.save('shortBreakColors',           [ 0x00b09b, 0x96c93d, ]);
-      this.configFileAccessor.save('longBreakColors',            [ 0x43cea2, 0x1e90ff, ]);
-      this.configFileAccessor.save('backgroundColor',            0x000000);
-      this.configFileAccessor.save('ringBaseColor',              0x131313);
-      this.configFileAccessor.save('ringLabelColor',             0x4d4d4d);
-      this.configFileAccessor.save('ringFontColor',              0xc0c0c0);
-      this.configFileAccessor.save('preferenceButtonColor',      0x0e0e0e);
-      this.configFileAccessor.save('preferenceButtonHoverColor', 0xff6767); // pink
+      this.configFileAccessor.save("workIntervalSec", 25 * 60);
+      this.configFileAccessor.save("shortBreakIntervalSec", 5 * 60);
+      this.configFileAccessor.save("longBreakIntervalSec", 20 * 60);
+      this.configFileAccessor.save("nWorkBeforeLongBreak", 4);
+      this.configFileAccessor.save("fps", 8);
+      this.configFileAccessor.save("workColors", [0xd38312, 0xa83279]);
+      this.configFileAccessor.save("shortBreakColors", [0x00b09b, 0x96c93d]);
+      this.configFileAccessor.save("longBreakColors", [0x43cea2, 0x1e90ff]);
+      this.configFileAccessor.save("backgroundColor", 0x000000);
+      this.configFileAccessor.save("ringBaseColor", 0x131313);
+      this.configFileAccessor.save("ringLabelColor", 0x4d4d4d);
+      this.configFileAccessor.save("ringFontColor", 0xc0c0c0);
+      this.configFileAccessor.save("preferenceButtonColor", 0x0e0e0e);
+      this.configFileAccessor.save("preferenceButtonHoverColor", 0xff6767); // pink
       //this.configFileAccessor.save('preferenceButtonHoverColor', 0xb3ff66); // green
       //this.configFileAccessor.save('preferenceButtonHoverColor', 0x454545); // gray
     }
@@ -377,31 +503,64 @@ export default {
     this.ringLabelColor = colorUtils.ntos(ringLabelColor);
     this.ringFontColor = colorUtils.ntos(ringFontColor);
     this.preferenceButtonColor = colorUtils.ntos(preferenceButtonColor);
-    this.preferenceButtonHoverColor = colorUtils.ntos(preferenceButtonHoverColor);
+    this.preferenceButtonHoverColor = colorUtils.ntos(
+      preferenceButtonHoverColor
+    );
 
     // The following data of vuex store are used by every vue components to set intervals, colors, and etc.
-    this.$store.commit('setWorkIntervalSec', this.workIntervalMinute * 60);
-    this.$store.commit('setShortBreakIntervalSec', this.shortBreakIntervalMinute * 60);
-    this.$store.commit('setLongBreakIntervalSec', this.longBreakIntervalMinute * 60);
-    this.$store.commit('setNWorkBeforeLongBreak', Number.parseInt(this.nWorkBeforeLongBreak));
-    this.$store.commit('setFps', Number.parseInt(this.fps));
-    this.$store.commit('setWorkColors', [ colorUtils.ston(this.workColorRight), colorUtils.ston(this.workColorLeft), ]);
-    this.$store.commit('setShortBreakColors', [ colorUtils.ston(this.shortBreakColorRight), colorUtils.ston(this.shortBreakColorLeft), ]);
-    this.$store.commit('setLongBreakColors', [ colorUtils.ston(this.longBreakColorRight), colorUtils.ston(this.longBreakColorLeft), ]);
-    this.$store.commit('setBackgroundColor',colorUtils.ston(this.backgroundColor));
-    this.$store.commit('setRingBaseColor',colorUtils.ston(this.ringBaseColor));
-    this.$store.commit('setRingLabelColor',colorUtils.ston(this.ringLabelColor));
-    this.$store.commit('setRingFontColor',colorUtils.ston(this.ringFontColor));
-    this.$store.commit('setPreferenceButtonColor',colorUtils.ston(this.preferenceButtonColor));
-    this.$store.commit('setPreferenceButtonHoverColor',colorUtils.ston(this.preferenceButtonHoverColor));
+    this.$store.commit("setWorkIntervalSec", this.workIntervalMinute * 60);
+    this.$store.commit(
+      "setShortBreakIntervalSec",
+      this.shortBreakIntervalMinute * 60
+    );
+    this.$store.commit(
+      "setLongBreakIntervalSec",
+      this.longBreakIntervalMinute * 60
+    );
+    this.$store.commit(
+      "setNWorkBeforeLongBreak",
+      Number.parseInt(this.nWorkBeforeLongBreak)
+    );
+    this.$store.commit("setFps", Number.parseInt(this.fps));
+    this.$store.commit("setWorkColors", [
+      colorUtils.ston(this.workColorRight),
+      colorUtils.ston(this.workColorLeft),
+    ]);
+    this.$store.commit("setShortBreakColors", [
+      colorUtils.ston(this.shortBreakColorRight),
+      colorUtils.ston(this.shortBreakColorLeft),
+    ]);
+    this.$store.commit("setLongBreakColors", [
+      colorUtils.ston(this.longBreakColorRight),
+      colorUtils.ston(this.longBreakColorLeft),
+    ]);
+    this.$store.commit(
+      "setBackgroundColor",
+      colorUtils.ston(this.backgroundColor)
+    );
+    this.$store.commit("setRingBaseColor", colorUtils.ston(this.ringBaseColor));
+    this.$store.commit(
+      "setRingLabelColor",
+      colorUtils.ston(this.ringLabelColor)
+    );
+    this.$store.commit("setRingFontColor", colorUtils.ston(this.ringFontColor));
+    this.$store.commit(
+      "setPreferenceButtonColor",
+      colorUtils.ston(this.preferenceButtonColor)
+    );
+    this.$store.commit(
+      "setPreferenceButtonHoverColor",
+      colorUtils.ston(this.preferenceButtonHoverColor)
+    );
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.openButton, .closeButton {
-  cursor : pointer;
+.openButton,
+.closeButton {
+  cursor: pointer;
   position: absolute;
   bottom: 0;
   color: #4d4d4d;
@@ -410,7 +569,7 @@ export default {
   width: 100%;
   margin: 0;
   background: var(--preference-button-color);
-  transition: all  0.5s ease;
+  transition: all 0.5s ease;
   border-radius: 2px;
   /*
    * Make this class to flexible box layout.
@@ -421,10 +580,11 @@ export default {
   /* Horizontal Middle */
   justify-content: center;
   /* Vertical Middle */
-  align-items: center;  
+  align-items: center;
 }
 
-.openButton:hover, .closeButton {
+.openButton:hover,
+.closeButton {
   background: var(--preference-button-hover-color);
   color: #000000;
 }
@@ -500,12 +660,12 @@ export default {
   margin: 0;
 }
 
-.preference .content input[type=text] {
+.preference .content input[type="text"] {
   background: #0e0e0e;
-	border: 1px solid #222222;
-	border-radius: 4px;
+  border: 1px solid #222222;
+  border-radius: 4px;
   color: #4d4d4d;
-	outline: none;
+  outline: none;
   width: 60px;
   height: 20px;
   top: 0;
@@ -513,10 +673,10 @@ export default {
 
 .preference .content input[type="text"][class="invalid"] {
   background: #1a1010;
-	border: 1px solid #540000;
-	border-radius: 4px;
+  border: 1px solid #540000;
+  border-radius: 4px;
   color: #9b0043;
-	outline: none;
+  outline: none;
   width: 60px;
   height: 20px;
   top: 0;
@@ -524,9 +684,9 @@ export default {
 
 .preference .content input[type="color"] {
   background: none;
-	border: none;
+  border: none;
   color: #4d4d4d;
-	outline: none;
+  outline: none;
   width: 40px;
   height: 22px;
   top: 0;
@@ -552,16 +712,15 @@ export default {
   margin: 0 12px;
   padding: 3px 10px;
   border-radius: 3px;
-  cursor : pointer;
+  cursor: pointer;
 }
 
-@keyframes fade{
-  0%{
+@keyframes fade {
+  0% {
     opacity: 0;
   }
-  100%{
+  100% {
     opacity: 1;
   }
 }
-
 </style>
