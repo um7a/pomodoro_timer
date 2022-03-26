@@ -1,8 +1,12 @@
 # PomodoroTimer
+
 Pomodoro timer for Mac.  
 
+![node.js](https://github.com/um7a/pomodoro_timer/actions/workflows/node.js.yml/badge.svg?branch=main)
+![daily_build](https://github.com/um7a/pomodoro_timer/actions/workflows/daily_build.yml/badge.svg?branch=main)
+
 <div align="center">
-  <img src="https://github.com/um7a/pomodoro_timer/raw/docs/docs/pomodoroTimer.png" width="350px">
+  <img src="https://github.com/um7a/pomodoro_timer/raw/main/docs/pomodoroTimer.png" width="350px">
 </div>
 
 ## Project setup
