@@ -27,3 +27,4 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run electron:build -- --arm64 --mac --dir
+      - run: npm run electron:build -- --x64 --mac --dir
