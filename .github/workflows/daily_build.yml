@@ -1,0 +1,52 @@
+name: Daily Build
+
+on:
+  schedule:
+    # The format of cron is 'Minutes' 'Hours' 'Days' 'Months' 'Days of Week'
+    # The time zone is UTC.
+    - cron: "0 22 * * *"
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      # Set 1 to run 16.x job before other jobs.
+      max-parallel: 1
+      # Set false not to cancel all jobs when one of the jobs failed.
+      fail-fast: false
+      matrix:
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        # We should execute 16.x first. Because only 16.x job updates package.json if necessary.
+        node-version: [16.x]
+        branch: [main]
+    steps:
+      - name: Checkout to ${{ matrix.branch }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.branch }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
+      - name: Update npm packages
+        if: ${{ matrix.node-version == '16.x' }}
+        run: |
+          npm update
+      - run: npm audit --production
+      - run: npm outdated
+      - run: npm run lint
+      - run: npm test
+      - run: npm run electron:build -- --arm64 --mac --dir
+      - run: npm run electron:build -- --x64 --mac --dir
+      - name: Push package.json and package-lock.json if needed
+        if: ${{ matrix.node-version == '16.x' }}
+        run: |
+          if [[ ! -z $(git diff --shortstat package.json package-lock.json) ]]; then \
+            git config --global user.name "github actions"; \
+            git add package.json package-lock.json; \
+            git commit -m "chore: Update dependencies"; \
+            git push origin ${{ matrix.branch }}
+          fi
