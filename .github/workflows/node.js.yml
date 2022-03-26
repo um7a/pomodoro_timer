@@ -26,4 +26,4 @@ jobs:
       - run: npm outdated
       - run: npm run lint
       - run: npm test
-      - run: npm run electron:build
+      - run: npm run electron:build -- --arm64 --mac
