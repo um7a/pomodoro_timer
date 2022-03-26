@@ -1,6 +1,9 @@
 # PomodoroTimer
-Pomodoro timer for Mac.
+Pomodoro timer for Mac.  
 
+<div align="center">
+  <img src="https://github.com/um7a/pomodoro_timer/raw/docs/docs/pomodoroTimer.png" width="200px">
+</div>
 
 ## Project setup
 ```bash
