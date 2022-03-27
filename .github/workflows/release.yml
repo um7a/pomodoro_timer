@@ -25,7 +25,6 @@ jobs:
       - run: npm run lint
       - run: npm test
 
-      - run: npm run electron:build -- --arm64 --mac --dir
       - run: npm run electron:build -- --x64 --mac --dir
 
       - name: Create release
@@ -43,11 +42,6 @@ jobs:
           cd dist_electron/mac/
           zip -r PomodoroTimer.app.x64.zip PomodoroTimer.app
 
-      - name: Zip Release Asset for arm64
-        run: |
-          cd dist_electron/mac-arm64/
-          zip -r PomodoroTimer.app.arm64.zip PomodoroTimer.app
-
       - name: Upload Release Asset for x64
         uses: actions/upload-release-asset@v1.0.2
         env:
@@ -58,12 +52,21 @@ jobs:
           asset_name: PomodoroTimer.app.x64.zip
           asset_content_type: application/octet-stream
 
-      - name: Upload Release Asset for arm64
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist_electron/mac-arm64/PomodoroTimer.app.arm64.zip
-          asset_name: PomodoroTimer.app.arm64.zip
-          asset_content_type: application/octet-stream
+      # TODO The built app for arm64 mac treated as damaged when execute. So I disabled.
+      #
+      # - run: npm run electron:build -- --arm64 --mac --dir
+      #
+      # - name: Zip Release Asset for arm64
+      #   run: |
+      #     cd dist_electron/mac-arm64/
+      #     zip -r PomodoroTimer.app.arm64.zip PomodoroTimer.app
+      #
+      # - name: Upload Release Asset for arm64
+      #   uses: actions/upload-release-asset@v1.0.2
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: dist_electron/mac-arm64/PomodoroTimer.app.arm64.zip
+      #     asset_name: PomodoroTimer.app.arm64.zip
+      #     asset_content_type: application/octet-stream
