@@ -452,7 +452,7 @@ export default {
       this.configFileAccessor.save("shortBreakIntervalSec", 5 * 60);
       this.configFileAccessor.save("longBreakIntervalSec", 20 * 60);
       this.configFileAccessor.save("nWorkBeforeLongBreak", 4);
-      this.configFileAccessor.save("fps", 8);
+      this.configFileAccessor.save("fps", 2);
       this.configFileAccessor.save("workColors", [0xd38312, 0xa83279]);
       this.configFileAccessor.save("shortBreakColors", [0x00b09b, 0x96c93d]);
       this.configFileAccessor.save("longBreakColors", [0x43cea2, 0x1e90ff]);
