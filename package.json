@@ -16,7 +16,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "electron": "^17.2.0",
+    "electron": "^18.0.0",
     "electron-localshortcut": "^3.2.1",
     "vue": "^3.2.31",
     "vuex": "^4.0.2"
