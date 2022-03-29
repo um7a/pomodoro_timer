@@ -6,6 +6,8 @@ import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import * as localShortcut from "electron-localshortcut";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
+app.disableHardwareAcceleration();
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
