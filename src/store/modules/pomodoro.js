@@ -8,7 +8,7 @@ const state = () => ({
   longBreakColors: [0x000000, 0x000000],
   longBreakIntervalSec: 0,
   nWorkBeforeLongBreak: 0,
-  pausing: false,
+  pausing: true,
   fps: 0,
   refreshLoop: undefined,
   remainingTimeSec: 0,
@@ -51,6 +51,14 @@ const mutations = {
   },
   setPausing(state, val) {
     state.pausing = val;
+  },
+  initPomodoro(state) {
+    state.currentIntervalSec = state.working
+      ? state.workIntervalSec
+      : state.workCount >= state.nWorkBeforeLongBreak
+      ? state.longBreakIntervalSec
+      : state.shortBreakIntervalSec;
+    state.remainingTimeSec = state.currentIntervalSec;
   },
   updatePomodoro(state) {
     const now = new Date();

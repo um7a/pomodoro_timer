@@ -552,7 +552,7 @@ export default {
       "setPreferenceButtonHoverColor",
       colorUtils.ston(this.preferenceButtonHoverColor)
     );
-
+    this.$store.commit("initPomodoro");
     this.$store.commit("startRefreshLoop");
   },
 };
