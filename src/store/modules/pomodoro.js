@@ -125,7 +125,7 @@ const mutations = {
   //
   // about refresh loop
   //
-  startRefreshLoop(/*state*/) {
+  startRefreshLoop(state) {
     const refreshLoop = setInterval(() => {
       this.commit("updatePomodoro");
     }, 1000 / state.fps);

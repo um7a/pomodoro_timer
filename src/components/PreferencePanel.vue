@@ -552,6 +552,8 @@ export default {
       "setPreferenceButtonHoverColor",
       colorUtils.ston(this.preferenceButtonHoverColor)
     );
+
+    this.$store.commit("startRefreshLoop");
   },
 };
 </script>

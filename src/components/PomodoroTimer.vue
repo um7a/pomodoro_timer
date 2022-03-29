@@ -245,9 +245,6 @@ export default {
       this.$store.commit('goToStart');
     },
   },
-  created() {
-    this.$store.commit('startRefreshLoop');
-  },
 };
 </script>
 
