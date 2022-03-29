@@ -14,6 +14,8 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
+    show: false,
+    backgroundColor: "#000000",
     // Set window size
     width: 230,
     height: 230 + 30, // pomodoro + preference
@@ -30,6 +32,9 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
+  });
+  win.once("ready-to-show", () => {
+    win.show();
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
