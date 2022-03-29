@@ -131,7 +131,7 @@ const mutations = {
     }, 1000 / state.fps);
     state.refreshLoop = refreshLoop;
   },
-  stopRefreshLoop(/*state*/) {
+  stopRefreshLoop(state) {
     clearInterval(state.refreshLoop);
     state.refreshLoop = undefined;
   },
