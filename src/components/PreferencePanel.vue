@@ -348,16 +348,16 @@ export default {
       );
       this.$store.commit("setFps", Number.parseInt(this.fps));
       this.$store.commit("setWorkColors", [
-        colorUtils.ston(this.workColorRight),
         colorUtils.ston(this.workColorLeft),
+        colorUtils.ston(this.workColorRight),
       ]);
       this.$store.commit("setShortBreakColors", [
-        colorUtils.ston(this.shortBreakColorRight),
         colorUtils.ston(this.shortBreakColorLeft),
+        colorUtils.ston(this.shortBreakColorRight),
       ]);
       this.$store.commit("setLongBreakColors", [
-        colorUtils.ston(this.longBreakColorRight),
         colorUtils.ston(this.longBreakColorLeft),
+        colorUtils.ston(this.longBreakColorRight),
       ]);
       this.$store.commit(
         "setBackgroundColor",
@@ -523,16 +523,16 @@ export default {
     );
     this.$store.commit("setFps", Number.parseInt(this.fps));
     this.$store.commit("setWorkColors", [
-      colorUtils.ston(this.workColorRight),
       colorUtils.ston(this.workColorLeft),
+      colorUtils.ston(this.workColorRight),
     ]);
     this.$store.commit("setShortBreakColors", [
-      colorUtils.ston(this.shortBreakColorRight),
       colorUtils.ston(this.shortBreakColorLeft),
+      colorUtils.ston(this.shortBreakColorRight),
     ]);
     this.$store.commit("setLongBreakColors", [
-      colorUtils.ston(this.longBreakColorRight),
       colorUtils.ston(this.longBreakColorLeft),
+      colorUtils.ston(this.longBreakColorRight),
     ]);
     this.$store.commit(
       "setBackgroundColor",

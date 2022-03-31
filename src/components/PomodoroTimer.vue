@@ -11,26 +11,26 @@
     <!-- outer ring -->
     <div class="outerRing" v-if="outerPercentage < 50" :style="{
       '--percentage': outerPercentage,
-      '--front-color1': `#${startColor()}`,
-      '--front-color2': `#${endColor(outerPercentage)}`,
+      '--front-color1': `${startColor()}`,
+      '--front-color2': `${endColor(outerPercentage)}`,
       'background-image':
         'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
         'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
     }"></div>
     <div class="outerRing" v-else :style="{
       '--percentage': outerPercentage,
-      '--front-color1': `#${startColor()}`,
-      '--front-color2': `#${endColor(outerPercentage)}`,
+      '--front-color1': `${startColor()}`,
+      '--front-color2': `${endColor(outerPercentage)}`,
       'background-image':
         'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
-        `conic-gradient(from 90deg, var(--front-color1) 0% 0%, #${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
+        `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
     }"></div>
 
     <!-- inner ring -->
     <div class="innerRing" v-if="innerPercentage < 50" :style="{
       '--percentage': innerPercentage,
-      '--front-color1': `#${startColor()}`,
-      '--front-color2': `#${endColor(innerPercentage)}`,
+      '--front-color1': `${startColor()}`,
+      '--front-color2': `${endColor(innerPercentage)}`,
       'background-image':
         'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
         'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
@@ -38,11 +38,11 @@
     </div>
     <div class="innerRing" v-else :style="{
       '--percentage': innerPercentage,
-      '--front-color1': `#${startColor()}`,
-      '--front-color2': `#${endColor(innerPercentage)}`,
+      '--front-color1': `${startColor()}`,
+      '--front-color2': `${endColor(innerPercentage)}`,
       'background-image':
         'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
-        `conic-gradient(from 90deg, var(--front-color1) 0% 0%, #${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
+        `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
     }">
     </div>
     <!-- texts -->
@@ -124,6 +124,9 @@ export default {
         elapsedTimeSec,
         currentIntervalSec,
       } = this.$store.state.pomodoro;
+      if (elapsedTimeSec === 0 || currentIntervalSec === 0) {
+        return 0;
+      }
       return Math.min(elapsedTimeSec / currentIntervalSec * 100, 100);
     },
     outerPercentage() {
@@ -132,10 +135,11 @@ export default {
         workCount,
         nWorkBeforeLongBreak,
       } = this.$store.state.pomodoro;
-
-      let percentage = (workCount - 1) / nWorkBeforeLongBreak * 100;
+      let percentage = (workCount > 1) ? (workCount - 1) / nWorkBeforeLongBreak * 100: 0;
       const innerPercentage = working ? this.innerPercentage : 100;
-      percentage += innerPercentage / nWorkBeforeLongBreak;
+      if (innerPercentage > 0) {
+        percentage += innerPercentage / nWorkBeforeLongBreak;
+      }
       return percentage;
     },
   },
@@ -158,12 +162,7 @@ export default {
       } else {
         startColor = shortBreakColors[0];
       }
-
-      let startColorStr = startColor.toString(16);
-      while (startColorStr.length < 6) {
-        startColorStr = '0' + startColorStr;
-      }
-      return startColorStr;
+      return colorUtils.ntos(startColor);
     },
     fiftyColor() {
       const {
@@ -177,18 +176,13 @@ export default {
 
       let leftColor = undefined;
       if (working) {
-        leftColor = workColors[1];
+        leftColor = workColors[workColors.length - 1];
       } else if (workCount === nWorkBeforeLongBreak) {
-        leftColor = longBreakColors[1];
+        leftColor = longBreakColors[longBreakColors.length - 1];
       } else {
-        leftColor = shortBreakColors[1];
+        leftColor = shortBreakColors[shortBreakColors.length - 1];
       }
-
-      let leftColorStr = leftColor.toString(16);
-      while (leftColorStr.length < 6) {
-        leftColorStr = '00' + leftColorStr;
-      }
-      return leftColorStr;
+      return colorUtils.ntos(leftColor);
     },
     endColor(percentage) {
       const {
@@ -200,39 +194,19 @@ export default {
         working,
       } = this.$store.state.pomodoro;
 
-      let leftColor = undefined;
+      // percentage to index
+      percentage = percentage < 50 ? percentage: 100 - percentage;
+      const colorIndex = Math.floor(percentage);
+
+      let endColor = undefined;
       if (working) {
-        leftColor = workColors[1];
+        endColor = workColors[colorIndex];
       } else if (workCount === nWorkBeforeLongBreak) {
-        leftColor = longBreakColors[1];
+        endColor = longBreakColors[colorIndex];
       } else {
-        leftColor = shortBreakColors[1];
+        endColor = shortBreakColors[colorIndex];
       }
-      const leftColorRed = (leftColor & 0xff0000) >> 16;
-      const leftColorGreen = (leftColor & 0x00ff00) >> 8;
-      const leftColorBlue = leftColor & 0x0000ff;
-
-      const rightColor = Number.parseInt(this.startColor(), 16);
-      const rightColorRed = (rightColor & 0xff0000) >> 16;
-      const rightColorGreen = (rightColor & 0x00ff00) >> 8;
-      const rightColorBlue = rightColor & 0x0000ff;
-
-      const diffRed   = leftColorRed - rightColorRed;
-      const diffGreen = leftColorGreen - rightColorGreen;
-      const diffBlue  = leftColorBlue - rightColorBlue;
-
-      const distanceFromZero = percentage < 50 ? percentage: 100 - percentage;
-
-      const endColorRed = Math.floor(rightColorRed + (diffRed * distanceFromZero / 50));
-      const endColorGreen = Math.floor(rightColorGreen + (diffGreen * distanceFromZero / 50));
-      const endColorBlue = Math.floor(rightColorBlue + (diffBlue * distanceFromZero / 50));
-      const endColor = (endColorRed << 16) + (endColorGreen << 8) + endColorBlue;
-
-      let endColorStr = endColor.toString(16);
-      while (endColorStr.length < 6) {
-        endColorStr = '0' + endColorStr;
-      }
-      return endColorStr;
+      return colorUtils.ntos(endColor);
     },
     // Return "HH:MM:SS" format string from second Number.
     formatSec: function(seconds) {

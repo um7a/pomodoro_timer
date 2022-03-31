@@ -1,3 +1,5 @@
+import { calcColor } from '../../utils/colorUtils';
+
 const state = () => ({
   elapsedTimeSec: 0,
   lastUpdateTime: new Date(),
@@ -162,13 +164,32 @@ const mutations = {
   setFps(state, fps) {
     state.fps = fps;
   },
-  setWorkColors(state, colors) {
+  setWorkColors(state, edgeColors) {
+    const colors = [];
+    const leftColor = edgeColors[0];
+    const rightColor = edgeColors[1];
+    for (let percentage = 0; percentage <= 50; percentage += 1) {
+      const color = calcColor(rightColor, leftColor, percentage);
+      colors.push(color);
+    }
     state.workColors = colors;
   },
-  setShortBreakColors(state, colors) {
+  setShortBreakColors(state, edgeColors) {
+    const colors = [];
+    const leftColor = edgeColors[0];
+    const rightColor = edgeColors[1];
+    for (let percentage = 0; percentage <= 50; percentage += 1) {
+      colors.push(calcColor(rightColor, leftColor, percentage));
+    }
     state.shortBreakColors = colors;
   },
-  setLongBreakColors(state, colors) {
+  setLongBreakColors(state, edgeColors) {
+    const colors = [];
+    const leftColor = edgeColors[0];
+    const rightColor = edgeColors[1];
+    for (let percentage = 0; percentage <= 50; percentage += 1) {
+      colors.push(calcColor(rightColor, leftColor, percentage));
+    }
     state.longBreakColors = colors;
   },
   setBackgroundColor(state, color) {
