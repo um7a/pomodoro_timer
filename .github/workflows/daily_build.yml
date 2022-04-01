@@ -47,6 +47,6 @@ jobs:
           if [[ ! -z $(git diff --shortstat package.json package-lock.json) ]]; then \
             git config --global user.name "github actions"; \
             git add package.json package-lock.json; \
-            git commit -m "chore: Update dependencies"; \
+            git commit -m "deps: Update dependencies"; \
             git push origin ${{ matrix.branch }}
           fi
