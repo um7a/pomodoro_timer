@@ -102,10 +102,10 @@
 
         <!-- < STOP/START > -->
         <p class="button" :style="{ '--ring-label-color': ringLabelColor }">
-          <span @click="goToStart">&lt;</span>
+          <span @click="goToStart">◀︎</span>
           <span v-if="!pausing" @click="pausing = true">STOP</span>
           <span v-else @click="pausing = false">START</span>
-          <span @click="goToEnd">&gt;</span>
+          <span @click="goToEnd">▶︎</span>
         </p>
       </div>
     </div>
@@ -358,11 +358,11 @@ export default {
   font-size: 12px;
   margin: 20px 0px 0px;
   text-align: center;
-  animation-name: fade;
+  animation-name: fade-in;
   animation-duration: 1s;
 }
 
-@keyframes fade {
+@keyframes fade-in {
   0% {
     opacity: 0;
   }
@@ -388,6 +388,8 @@ export default {
 
 .ringTextArea:hover .button {
   visibility: visible;
+  animation-duration: 0.3s;
+  animation-name: fade-in;
 }
 
 .ringTextArea .button span {
