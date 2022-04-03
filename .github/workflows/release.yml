@@ -94,7 +94,7 @@ jobs:
           curl \
           "$upload_url?name=$(basename $upload_filepath)" \
           -X POST \
-          -H "Content-Type: $(file -b --mime-type $upload_filepath)" \
+          -H "Content-Type: application/octet-stream" \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -d @$upload_filepath
