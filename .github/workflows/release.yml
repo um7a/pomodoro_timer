@@ -15,58 +15,64 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
-      - run: npm audit --production
-      - run: npm run lint
-      - run: npm test
 
-      - run: npm run electron:build -- --x64 --mac --dir
+      - name: Install Dependencies
+        run: npm ci
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          prerelease: true
+      - name: Audit
+        run: npm audit --production
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build App for x64
+        run: npm run electron:build -- --x64 --mac --dir
+
+      - name: Build App for arm64
+        run: npm run electron:build -- --arm64 --mac --dir
 
       - name: Zip Release Asset for x64
         run: |
           cd dist_electron/mac/
           zip -r PomodoroTimer.app.x64.zip PomodoroTimer.app
 
+      - name: Zip Release Asset for arm64
+        run: |
+          cd dist_electron/mac-arm64/
+          zip -r PomodoroTimer.app.arm64.zip PomodoroTimer.app
+
+      - name: Create Release
+        run: |
+          tag_name=$(echo ${{ github.ref }} | cut -d / -f 3)
+          npx generate-release-note > ./release_note
+          release_body=$(sed -z 's/\n/\\n/g' ./release_note)
+          echo "{ \"tag_name\": \"$tag_name\", \"prerelease\": true, \"body\": \"$release_body\" }" > ./request_body
+          curl \
+          $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases \
+          -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -d @request_body
+
       - name: Upload Release Asset for x64
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist_electron/mac/PomodoroTimer.app.x64.zip
-          asset_name: PomodoroTimer.app.x64.zip
-          asset_content_type: application/octet-stream
+        run: |
+          upload_filepath=./dist_electron/mac/PomodoroTimer.app.x64.zip
+          upload_url=$(cat ./response_body | jq .upload_url | sed s/\"//g | cut -d "{" -f 1)
+          curl \
+          "$upload_url?name=$(basename $upload_filepath)" \
+          -X POST \
+          -H "Content-Type: $(file -b --mime-type $upload_filepath)" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -d @$upload_filepath
 
       # TODO The built app for arm64 mac treated as damaged when execute. So I disabled.
-      #
-      # - run: npm run electron:build -- --arm64 --mac --dir
-      #
-      # - name: Zip Release Asset for arm64
-      #   run: |
-      #     cd dist_electron/mac-arm64/
-      #     zip -r PomodoroTimer.app.arm64.zip PomodoroTimer.app
-      #
-      # - name: Upload Release Asset for arm64
-      #   uses: actions/upload-release-asset@v1.0.2
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: dist_electron/mac-arm64/PomodoroTimer.app.arm64.zip
-      #     asset_name: PomodoroTimer.app.arm64.zip
-      #     asset_content_type: application/octet-stream
