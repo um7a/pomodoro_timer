@@ -327,11 +327,7 @@ export default {
       this.isInvalid = isInvalid;
       return isValid;
     },
-    submit() {
-      // Validate new settings.
-      if (!this.validate()) {
-        return;
-      }
+    copySettingToStore() {
       // Set new settings to store.
       this.$store.commit("setWorkIntervalSec", this.workIntervalMinute * 60);
       this.$store.commit(
@@ -383,9 +379,19 @@ export default {
         "setPreferenceButtonHoverColor",
         colorUtils.ston(this.preferenceButtonHoverColor)
       );
+    },
+
+    submit() {
+      // Validate new settings.
+      if (!this.validate()) {
+        return;
+      }
+      this.copySettingToStore();
+
       // Restart refresh loop.
       this.$store.commit("stopRefreshLoop");
       this.$store.commit("startRefreshLoop");
+
       // Save the new settings to the config file.
       const configFileAccessor = new ConfigFileAccessor(
         os.homedir() + "/.pomodoroTimer/config.json"
@@ -507,51 +513,8 @@ export default {
       preferenceButtonHoverColor
     );
 
-    // The following data of vuex store are used by every vue components to set intervals, colors, and etc.
-    this.$store.commit("setWorkIntervalSec", this.workIntervalMinute * 60);
-    this.$store.commit(
-      "setShortBreakIntervalSec",
-      this.shortBreakIntervalMinute * 60
-    );
-    this.$store.commit(
-      "setLongBreakIntervalSec",
-      this.longBreakIntervalMinute * 60
-    );
-    this.$store.commit(
-      "setNWorkBeforeLongBreak",
-      Number.parseInt(this.nWorkBeforeLongBreak)
-    );
-    this.$store.commit("setFps", Number.parseInt(this.fps));
-    this.$store.commit("setWorkColors", [
-      colorUtils.ston(this.workColorLeft),
-      colorUtils.ston(this.workColorRight),
-    ]);
-    this.$store.commit("setShortBreakColors", [
-      colorUtils.ston(this.shortBreakColorLeft),
-      colorUtils.ston(this.shortBreakColorRight),
-    ]);
-    this.$store.commit("setLongBreakColors", [
-      colorUtils.ston(this.longBreakColorLeft),
-      colorUtils.ston(this.longBreakColorRight),
-    ]);
-    this.$store.commit(
-      "setBackgroundColor",
-      colorUtils.ston(this.backgroundColor)
-    );
-    this.$store.commit("setRingBaseColor", colorUtils.ston(this.ringBaseColor));
-    this.$store.commit(
-      "setRingLabelColor",
-      colorUtils.ston(this.ringLabelColor)
-    );
-    this.$store.commit("setRingFontColor", colorUtils.ston(this.ringFontColor));
-    this.$store.commit(
-      "setPreferenceButtonColor",
-      colorUtils.ston(this.preferenceButtonColor)
-    );
-    this.$store.commit(
-      "setPreferenceButtonHoverColor",
-      colorUtils.ston(this.preferenceButtonHoverColor)
-    );
+    this.copySettingToStore();
+
     this.$store.commit("initPomodoro");
     this.$store.commit("startRefreshLoop");
   },
