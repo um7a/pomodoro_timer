@@ -79,6 +79,9 @@ jobs:
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -d @request_body
 
+      - name: Use jq
+        run: sudo apt -y install jq
+
       - name: Upload Release Asset for x64
         run: |
           upload_filepath=./dist_electron/mac/PomodoroTimer.app.x64.zip
