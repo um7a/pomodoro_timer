@@ -6,7 +6,22 @@ on:
     tags:
       - "v*.*.*"
 jobs:
-  build:
+  check-tag-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: check tag name
+        run: test `echo ${{ github.ref }} | cut -d / -f 3 | cut -d v -f 2`  = `node -e "console.log(require('./package.json').version)"`
+
+  release:
+    needs: check-tag-version
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,7 +30,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
+        with:
+          fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
