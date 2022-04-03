@@ -1,4 +1,4 @@
-import { calcColor } from '../../utils/colorUtils';
+import { calcColor } from "../../utils/colorUtils";
 
 const state = () => ({
   elapsedTimeSec: 0,

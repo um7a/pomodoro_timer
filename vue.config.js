@@ -3,7 +3,7 @@ module.exports = {
     electronBuilder: {
       builderOptions: {
         mac: {
-          icon: "public/pomodoroTimer.png"
+          icon: "public/pomodoroTimer.png",
         },
       },
       // To use common js module from electron

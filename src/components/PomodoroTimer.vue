@@ -1,55 +1,81 @@
 <template>
-  <div class = "ring" :style="{
-    '--body-background-color': `${backgroundColor}`,
-    '--ring-base-color': ringBaseColor,
-  }">
+  <div
+    class="ring"
+    :style="{
+      '--body-background-color': `${backgroundColor}`,
+      '--ring-base-color': ringBaseColor,
+    }"
+  >
     <!-- Scale -->
-    <div class="scale" v-for="p in scalePercentage" :style="{
-      '--percentage-no-percent':p,
-    }" v-bind:key='p'></div>
+    <div
+      class="scale"
+      v-for="p in scalePercentage"
+      :style="{
+        '--percentage-no-percent': p,
+      }"
+      v-bind:key="p"
+    ></div>
 
     <!-- outer ring -->
-    <div class="outerRing" v-if="outerPercentage < 50" :style="{
-      '--percentage': outerPercentage,
-      '--front-color1': `${startColor()}`,
-      '--front-color2': `${endColor(outerPercentage)}`,
-      'background-image':
-        'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
-        'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
-    }"></div>
-    <div class="outerRing" v-else :style="{
-      '--percentage': outerPercentage,
-      '--front-color1': `${startColor()}`,
-      '--front-color2': `${endColor(outerPercentage)}`,
-      'background-image':
-        'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
-        `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
-    }"></div>
+    <div
+      class="outerRing"
+      v-if="outerPercentage < 50"
+      :style="{
+        '--percentage': outerPercentage,
+        '--front-color1': `${startColor()}`,
+        '--front-color2': `${endColor(outerPercentage)}`,
+        'background-image':
+          'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
+          'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
+      }"
+    ></div>
+    <div
+      class="outerRing"
+      v-else
+      :style="{
+        '--percentage': outerPercentage,
+        '--front-color1': `${startColor()}`,
+        '--front-color2': `${endColor(outerPercentage)}`,
+        'background-image':
+          'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
+          `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
+      }"
+    ></div>
 
     <!-- inner ring -->
-    <div class="innerRing" v-if="innerPercentage < 50" :style="{
-      '--percentage': innerPercentage,
-      '--front-color1': `${startColor()}`,
-      '--front-color2': `${endColor(innerPercentage)}`,
-      'background-image':
-        'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
-        'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
-    }">
-    </div>
-    <div class="innerRing" v-else :style="{
-      '--percentage': innerPercentage,
-      '--front-color1': `${startColor()}`,
-      '--front-color2': `${endColor(innerPercentage)}`,
-      'background-image':
-        'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
-        `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
-    }">
-    </div>
+    <div
+      class="innerRing"
+      v-if="innerPercentage < 50"
+      :style="{
+        '--percentage': innerPercentage,
+        '--front-color1': `${startColor()}`,
+        '--front-color2': `${endColor(innerPercentage)}`,
+        'background-image':
+          'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
+          'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
+      }"
+    ></div>
+    <div
+      class="innerRing"
+      v-else
+      :style="{
+        '--percentage': innerPercentage,
+        '--front-color1': `${startColor()}`,
+        '--front-color2': `${endColor(innerPercentage)}`,
+        'background-image':
+          'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
+          `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
+      }"
+    ></div>
     <!-- texts -->
     <div class="ringTextArea">
       <div>
-        <p class="label" :style="{ '--ring-label-color': ringLabelColor }">Pomodoro</p>
-        <p class="mainText" :style="{ '--ring-font-color': ringFontColor }">{{ formatSec(remainingTimeSec) }}</p>
+        <p class="label" :style="{ '--ring-label-color': ringLabelColor }">
+          Pomodoro
+        </p>
+        <p class="mainText" :style="{ '--ring-font-color': ringFontColor }">
+          {{ formatSec(remainingTimeSec) }}
+        </p>
         <p class="button" :style="{ '--ring-label-color': ringLabelColor }">
           <span @click="goToStart">&lt;</span>
           <span v-if="!pausing" @click="pausing = true">STOP</span>
@@ -62,80 +88,65 @@
 </template>
 
 <script>
-import * as utils from '../utils/timeUtils';
-import * as colorUtils from '../utils/colorUtils';
+import * as utils from "../utils/timeUtils";
+import * as colorUtils from "../utils/colorUtils";
 
 export default {
-  name: 'PomodoroTimer',
+  name: "PomodoroTimer",
   computed: {
-    scalePercentage: function() {
+    scalePercentage: function () {
       return [
-        0,
-        5,
-        10,
-        15,
-        20,
-        25,
-        30,
-        35,
-        40,
-        45,
-        50,
-        55,
-        60,
-        65,
-        70,
-        75,
-        80,
-        85,
-        90,
-        95,
+        0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85,
+        90, 95,
       ];
     },
-    backgroundColor: function() {
-      const backgroundColorStr = colorUtils.ntos(this.$store.state.pomodoro.backgroundColor);
+    backgroundColor: function () {
+      const backgroundColorStr = colorUtils.ntos(
+        this.$store.state.pomodoro.backgroundColor
+      );
       return backgroundColorStr;
     },
-    ringBaseColor: function() {
-      const ringBaseColorStr = colorUtils.ntos(this.$store.state.pomodoro.ringBaseColor);
+    ringBaseColor: function () {
+      const ringBaseColorStr = colorUtils.ntos(
+        this.$store.state.pomodoro.ringBaseColor
+      );
       return ringBaseColorStr;
     },
-    ringLabelColor: function() {
-      const ringLabelColorStr = colorUtils.ntos(this.$store.state.pomodoro.ringLabelColor);
+    ringLabelColor: function () {
+      const ringLabelColorStr = colorUtils.ntos(
+        this.$store.state.pomodoro.ringLabelColor
+      );
       return ringLabelColorStr;
     },
-    ringFontColor: function() {
-      const ringFontColorStr = colorUtils.ntos(this.$store.state.pomodoro.ringFontColor);
+    ringFontColor: function () {
+      const ringFontColorStr = colorUtils.ntos(
+        this.$store.state.pomodoro.ringFontColor
+      );
       return ringFontColorStr;
     },
     pausing: {
-      get: function() {
+      get: function () {
         return this.$store.state.pomodoro.pausing;
       },
-      set: function(val) {
-        this.$store.commit('setPausing', val);
+      set: function (val) {
+        this.$store.commit("setPausing", val);
       },
     },
     remainingTimeSec() {
       return this.$store.state.pomodoro.remainingTimeSec;
     },
     innerPercentage() {
-      const {
-        elapsedTimeSec,
-        currentIntervalSec,
-      } = this.$store.state.pomodoro;
+      const { elapsedTimeSec, currentIntervalSec } = this.$store.state.pomodoro;
       if (elapsedTimeSec === 0 || currentIntervalSec === 0) {
         return 0;
       }
-      return Math.min(elapsedTimeSec / currentIntervalSec * 100, 100);
+      return Math.min((elapsedTimeSec / currentIntervalSec) * 100, 100);
     },
     outerPercentage() {
-      const {
-        working,
-        workCount,
-        nWorkBeforeLongBreak,
-      } = this.$store.state.pomodoro;
-      let percentage = (workCount > 1) ? (workCount - 1) / nWorkBeforeLongBreak * 100: 0;
+      const { working, workCount, nWorkBeforeLongBreak } =
+        this.$store.state.pomodoro;
+      let percentage =
+        workCount > 1 ? ((workCount - 1) / nWorkBeforeLongBreak) * 100 : 0;
       const innerPercentage = working ? this.innerPercentage : 100;
       if (innerPercentage > 0) {
         percentage += innerPercentage / nWorkBeforeLongBreak;
@@ -195,7 +206,7 @@ export default {
       } = this.$store.state.pomodoro;
 
       // percentage to index
-      percentage = percentage < 50 ? percentage: 100 - percentage;
+      percentage = percentage < 50 ? percentage : 100 - percentage;
       const colorIndex = Math.floor(percentage);
 
       let endColor = undefined;
@@ -209,14 +220,14 @@ export default {
       return colorUtils.ntos(endColor);
     },
     // Return "HH:MM:SS" format string from second Number.
-    formatSec: function(seconds) {
+    formatSec: function (seconds) {
       return utils.formatSec(seconds);
     },
-    goToEnd: function() {
-      this.$store.commit('goToEnd');
+    goToEnd: function () {
+      this.$store.commit("goToEnd");
     },
-    goToStart: function() {
-      this.$store.commit('goToStart');
+    goToStart: function () {
+      this.$store.commit("goToStart");
     },
   },
 };
@@ -237,7 +248,9 @@ export default {
 }
 
 /* Common settings for innerRing and outerRing */
-.innerRing, .outerRing, .ringTextArea {
+.innerRing,
+.outerRing,
+.ringTextArea {
   --ring-label-color: #4d4d4d;
   --button-color: #4d4d4d;
   position: absolute;
@@ -260,7 +273,9 @@ export default {
 }
 
 /* Common settings for innerRing, innerRing::before and innerRing::after */
-.innerRing, .innerRing::before, .innerRing::after {
+.innerRing,
+.innerRing::before,
+.innerRing::after {
   position: absolute;
   /* Size of inner ring */
   width: 170px;
@@ -269,21 +284,23 @@ export default {
 }
 
 .innerRing::before {
-  content: "";  /* content is necessary to show ::before element */
-  background:
-    radial-gradient(farthest-side,var(--front-color1) 98%,transparent)
-    100%/7px /* position and width ? */
-    7px /* height ? */
-    no-repeat;
+  content: ""; /* content is necessary to show ::before element */
+  background: radial-gradient(
+      farthest-side,
+      var(--front-color1) 98%,
+      transparent
+    )
+    100%/7px /* position and width ? */ 7px /* height ? */ no-repeat;
 }
 
 .innerRing::after {
-  content: "";  /* content is necessary to show ::after element */
-  background:
-    radial-gradient(farthest-side,var(--front-color2) 98%,transparent)
-    100%/7px /* position and width ? */
-    7px /* height ? */
-    no-repeat;
+  content: ""; /* content is necessary to show ::after element */
+  background: radial-gradient(
+      farthest-side,
+      var(--front-color2) 98%,
+      transparent
+    )
+    100%/7px /* position and width ? */ 7px /* height ? */ no-repeat;
   transform: rotate(calc(360deg * var(--percentage) * 0.01));
 }
 
@@ -329,13 +346,13 @@ export default {
 
 .ringTextArea .button span {
   margin: 0px 5px;
-  cursor : pointer;
+  cursor: pointer;
 }
 
 .ringTextArea .button ::selection {
-color: var(--ring-label-color);
-background-color: transparent;
-cursor: default;
+  color: var(--ring-label-color);
+  background-color: transparent;
+  cursor: default;
 }
 
 .outerRing {
@@ -347,16 +364,15 @@ cursor: default;
 
 .scale {
   position: absolute;
-   /* Size of scale */
+  /* Size of scale */
   width: 200px;
   height: 200px;
   margin: 0px;
-  background-image:
-    radial-gradient(var(--body-background-color) 66%, transparent 67%),
-    conic-gradient(
-      var(--ring-base-color) 0deg,
-      transparent 1deg 359deg
-    );
+  background-image: radial-gradient(
+      var(--body-background-color) 66%,
+      transparent 67%
+    ),
+    conic-gradient(var(--ring-base-color) 0deg, transparent 1deg 359deg);
   /*
    * Round the corners.
    * Radius of the corner is 50% of the element.
