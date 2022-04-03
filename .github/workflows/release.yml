@@ -89,14 +89,12 @@ jobs:
         run: |
           upload_filepath=./dist_electron/mac/PomodoroTimer.app.x64.zip
           upload_url=$(cat ./response_body | jq .upload_url | sed s/\"//g | cut -d "{" -f 1)
-          pwd
-          ls -l $upload_filepath
           curl \
           "$upload_url?name=$(basename $upload_filepath)" \
           -X POST \
-          -H "Content-Type: application/octet-stream" \
+          -H "Content-Type: $(file -b --mime-type $upload_filepath)" \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -d @$upload_filepath
+          --data-binary @$upload_filepath
 
       # TODO The built app for arm64 mac treated as damaged when execute. So I disabled.
