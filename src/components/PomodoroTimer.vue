@@ -70,12 +70,37 @@
     <!-- texts -->
     <div class="ringTextArea">
       <div>
-        <p class="label" :style="{ '--ring-label-color': ringLabelColor }">
-          Pomodoro
+        <!-- Work/Short Break/Long Break label -->
+        <p
+          class="label"
+          :style="{
+            '--ring-label-color': ringLabelColor,
+            'letter-spacing': '3px',
+          }"
+          v-if="isWorking"
+        >
+          Work
         </p>
+        <p
+          class="label"
+          :style="{ '--ring-label-color': ringLabelColor }"
+          v-else-if="isLongBreak"
+        >
+          Long Break
+        </p>
+        <p
+          class="label"
+          :style="{ '--ring-label-color': ringLabelColor }"
+          v-else
+        >
+          Short Break
+        </p>
+        <!-- HH:MM:SS -->
         <p class="mainText" :style="{ '--ring-font-color': ringFontColor }">
           {{ formatSec(remainingTimeSec) }}
         </p>
+
+        <!-- < STOP/START > -->
         <p class="button" :style="{ '--ring-label-color': ringLabelColor }">
           <span @click="goToStart">&lt;</span>
           <span v-if="!pausing" @click="pausing = true">STOP</span>
@@ -152,6 +177,16 @@ export default {
         percentage += innerPercentage / nWorkBeforeLongBreak;
       }
       return percentage;
+    },
+    isWorking() {
+      return this.$store.state.pomodoro.working;
+    },
+    isLongBreak() {
+      return (
+        !this.$store.state.pomodoro.working &&
+        this.$store.state.pomodoro.nWorkBeforeLongBreak ===
+          this.$store.state.pomodoro.workCount
+      );
     },
   },
   methods: {
@@ -323,6 +358,17 @@ export default {
   font-size: 12px;
   margin: 20px 0px 0px;
   text-align: center;
+  animation-name: fade;
+  animation-duration: 1s;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .ringTextArea .mainText {
