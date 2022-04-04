@@ -27,7 +27,7 @@ async function createWindow() {
     frame: false,
     titleBarStyle: "customButtonsOnHover",
     maximizable: false,
-    resizable: false,
+    resizable: isDevelopment ? true : false,
     webPreferences: {
       // The following nodeIntegration and contextIsolation are settings
       // to use common js module from electron.
@@ -73,7 +73,7 @@ ipcMain.on("open-preference", (/* event, arg */) => {
   const win = BrowserWindow.getAllWindows()[0];
   const currentSize = win.getSize();
   win.setSize(
-    currentSize[0] + 370, // width
+    currentSize[0] + 370 * 2, // width (1 column = 370 px)
     currentSize[1] + 450, // height
     true // animate
   );
@@ -83,7 +83,7 @@ ipcMain.on("close-preference", (/* event, arg */) => {
   const win = BrowserWindow.getAllWindows()[0];
   const currentSize = win.getSize();
   win.setSize(
-    currentSize[0] - 370, // width
+    currentSize[0] - 370 * 2, // width (1 column = 370 px)
     currentSize[1] - 450, // height
     true // animate
   );

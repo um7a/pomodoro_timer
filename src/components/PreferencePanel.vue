@@ -1,208 +1,234 @@
 <template>
   <div id="preference">
     <div class="preference" v-if="preferenceIsOpened">
-      <!-- Title Pomodoro -->
-      <div class="title">
-        <p>Pomodoro</p>
-      </div>
-      <!-- Work Interval -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Work interval</p>
+      <!-- 1st Column -->
+      <div class="preferenceColumn">
+        <!-- Title Pomodoro -->
+        <div class="title">
+          <p>Pomodoro</p>
         </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input
-              type="text"
-              class="invalid"
-              v-model="workIntervalMinute"
-              v-if="isInvalid.workIntervalMinute"
-            />
-            <input type="text" v-model="workIntervalMinute" v-else />
-          </p>
+        <!-- Work Interval -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Work interval</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input
+                type="text"
+                class="invalid"
+                v-model="workIntervalMinute"
+                v-if="isInvalid.workIntervalMinute"
+              />
+              <input type="text" v-model="workIntervalMinute" v-else />
+            </p>
+          </div>
+          <div class="unitSpace">
+            <p class="unit">minutes</p>
+          </div>
         </div>
-        <div class="unitSpace">
-          <p class="unit">minutes</p>
+        <!-- Short Break Interval -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Short break interval</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input
+                type="text"
+                class="invalid"
+                v-model="shortBreakIntervalMinute"
+                v-if="isInvalid.shortBreakIntervalMinute"
+              />
+              <input type="text" v-model="shortBreakIntervalMinute" v-else />
+            </p>
+          </div>
+          <div class="unitSpace">
+            <p class="unit">minutes</p>
+          </div>
         </div>
-      </div>
-      <!-- Short Break Interval -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Short break interval</p>
+        <!-- Long Break Interval -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Long break interval</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input
+                type="text"
+                class="invalid"
+                v-model="longBreakIntervalMinute"
+                v-if="isInvalid.longBreakIntervalMinute"
+              />
+              <input type="text" v-model="longBreakIntervalMinute" v-else />
+            </p>
+          </div>
+          <div class="unitSpace">
+            <p class="unit">minutes</p>
+          </div>
         </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input
-              type="text"
-              class="invalid"
-              v-model="shortBreakIntervalMinute"
-              v-if="isInvalid.shortBreakIntervalMinute"
-            />
-            <input type="text" v-model="shortBreakIntervalMinute" v-else />
-          </p>
+        <!-- Number of work -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Number of work before long break</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input
+                type="text"
+                class="invalid"
+                v-model="nWorkBeforeLongBreak"
+                v-if="isInvalid.nWorkBeforeLongBreak"
+              />
+              <input type="text" v-model="nWorkBeforeLongBreak" v-else />
+            </p>
+          </div>
+          <div class="unitSpace">
+            <p class="unit">times</p>
+          </div>
         </div>
-        <div class="unitSpace">
-          <p class="unit">minutes</p>
+        <!-- Title Graphic -->
+        <div class="title">
+          <p>Graphic</p>
         </div>
-      </div>
-      <!-- Long Break Interval -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Long break interval</p>
+        <!-- Frame per sec -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Frame per sec</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input
+                type="text"
+                class="invalid"
+                v-model="fps"
+                v-if="isInvalid.fps"
+              />
+              <input type="text" v-model="fps" v-else />
+            </p>
+          </div>
+          <div class="unitSpace">
+            <p class="unit">fps</p>
+          </div>
         </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input
-              type="text"
-              class="invalid"
-              v-model="longBreakIntervalMinute"
-              v-if="isInvalid.longBreakIntervalMinute"
-            />
-            <input type="text" v-model="longBreakIntervalMinute" v-else />
-          </p>
+        <!-- Notification -->
+        <div class="title">
+          <p>Notification</p>
         </div>
-        <div class="unitSpace">
-          <p class="unit">minutes</p>
-        </div>
-      </div>
-      <!-- Number of work -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Number of work before long break</p>
-        </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input
-              type="text"
-              class="invalid"
-              v-model="nWorkBeforeLongBreak"
-              v-if="isInvalid.nWorkBeforeLongBreak"
-            />
-            <input type="text" v-model="nWorkBeforeLongBreak" v-else />
-          </p>
-        </div>
-        <div class="unitSpace">
-          <p class="unit">times</p>
-        </div>
-      </div>
-      <!-- Title Graphic -->
-      <div class="title">
-        <p>Graphic</p>
-      </div>
-      <!-- Frame per sec -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Frame per sec</p>
-        </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input
-              type="text"
-              class="invalid"
-              v-model="fps"
-              v-if="isInvalid.fps"
-            />
-            <input type="text" v-model="fps" v-else />
-          </p>
-        </div>
-        <div class="unitSpace">
-          <p class="unit">fps</p>
-        </div>
-      </div>
-      <!-- Title Color -->
-      <div class="title">
-        <p>Color</p>
-      </div>
-      <!-- Work Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Work Color ( Left / Right )</p>
-        </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="workColorLeft" />
-            <input type="color" v-model="workColorRight" />
-          </p>
-        </div>
-      </div>
-      <!-- Short Break Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Short Break Color ( Left / Right )</p>
-        </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="shortBreakColorLeft" />
-            <input type="color" v-model="shortBreakColorRight" />
-          </p>
+        <div class="content">
+          <div class="keySpace">
+            <p class="checkboxKey">Send notification</p>
+          </div>
+          <div class="valueSpace">
+            <p class="checkboxValue">
+              <input
+                type="checkbox"
+                id="notification"
+                v-model="notificationStr"
+                true-value="true"
+                false-value="false"
+              /><label for="notification"></label>
+            </p>
+          </div>
         </div>
       </div>
-      <!-- Long Break Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Long Break Color ( Left / Right )</p>
+      <!-- 2nd Column -->
+      <div class="preferenceColumn">
+        <!-- Title Color -->
+        <div class="title">
+          <p>Color</p>
         </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="longBreakColorLeft" />
-            <input type="color" v-model="longBreakColorRight" />
-          </p>
+        <!-- Work Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Work Color ( Left / Right )</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="workColorLeft" />
+              <input type="color" v-model="workColorRight" />
+            </p>
+          </div>
         </div>
-      </div>
-      <!-- Background Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Background Color</p>
+        <!-- Short Break Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Short Break Color ( Left / Right )</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="shortBreakColorLeft" />
+              <input type="color" v-model="shortBreakColorRight" />
+            </p>
+          </div>
         </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="backgroundColor" />
-          </p>
+        <!-- Long Break Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Long Break Color ( Left / Right )</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="longBreakColorLeft" />
+              <input type="color" v-model="longBreakColorRight" />
+            </p>
+          </div>
         </div>
-      </div>
-      <!-- Ring Base Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Ring Base Color</p>
+        <!-- Background Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Background Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="backgroundColor" />
+            </p>
+          </div>
         </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="ringBaseColor" />
-          </p>
+        <!-- Ring Base Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Ring Base Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="ringBaseColor" />
+            </p>
+          </div>
         </div>
-      </div>
-      <!-- Ring Label Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Ring Label Color</p>
+        <!-- Ring Label Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Ring Label Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="ringLabelColor" />
+            </p>
+          </div>
         </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="ringLabelColor" />
-          </p>
+        <!-- Ring Font Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Ring Font Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="ringFontColor" />
+            </p>
+          </div>
         </div>
-      </div>
-      <!-- Ring Font Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Ring Font Color</p>
-        </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="ringFontColor" />
-          </p>
-        </div>
-      </div>
-      <!-- Preference Button Color -->
-      <div class="content">
-        <div class="keySpace">
-          <p class="key">Preference Button Color</p>
-        </div>
-        <div class="valueSpace">
-          <p class="value">
-            <input type="color" v-model="preferenceButtonColor" />
-            <input type="color" v-model="preferenceButtonHoverColor" />
-          </p>
+        <!-- Preference Button Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Preference Button Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="preferenceButtonColor" />
+              <input type="color" v-model="preferenceButtonHoverColor" />
+            </p>
+          </div>
         </div>
       </div>
 
@@ -250,6 +276,11 @@ import * as os from "os";
 
 import * as colorUtils from "../utils/colorUtils";
 import { ConfigFileAccessor } from "../utils/configFileAccessor";
+
+const valueOrDefault = (value, defaultValue) => {
+  return typeof value === "undefined" || value === null ? defaultValue : value;
+};
+
 export default {
   name: "PreferencePanel",
   data() {
@@ -273,6 +304,7 @@ export default {
       ringFontColor: "#000000",
       preferenceButtonColor: "#000000",
       preferenceButtonHoverColor: "#000000",
+      notificationIsEnabled: false,
     };
   },
   computed: {
@@ -289,6 +321,14 @@ export default {
         this.$store.state.preference.preferenceButtonHoverColor
       );
       return preferenceButtonHoverColor;
+    },
+    notificationStr: {
+      get: function () {
+        return this.notificationIsEnabled ? "true" : "false";
+      },
+      set: function (val) {
+        this.notificationIsEnabled = val === "true" ? true : false;
+      },
     },
   },
   methods: {
@@ -379,6 +419,10 @@ export default {
         "setPreferenceButtonHoverColor",
         colorUtils.ston(this.preferenceButtonHoverColor)
       );
+      this.$store.commit(
+        "setNotificationIsEnabled",
+        this.notificationIsEnabled
+      );
     },
 
     submit() {
@@ -386,6 +430,18 @@ export default {
       if (!this.validate()) {
         return;
       }
+
+      // If notification become enabled, send notification.
+      if (
+        !this.$store.state.pomodoro.notificationIsEnabled &&
+        this.notificationIsEnabled
+      ) {
+        new Notification("Pomodoro Timer", {
+          body: "Notification is Enabled " + String.fromCodePoint(0x1f508),
+          icon: "public/pomodoroTimer.png",
+        });
+      }
+
       this.copySettingToStore();
 
       // Restart refresh loop.
@@ -446,30 +502,93 @@ export default {
         "preferenceButtonHoverColor",
         colorUtils.ston(this.preferenceButtonHoverColor)
       );
+      configFileAccessor.save(
+        "notificationIsEnabled",
+        this.notificationIsEnabled
+      );
     },
   },
   mounted: function () {
+    // Default values
+    const defaultSettings = {
+      workIntervalSec: 25 * 60,
+      shortBreakIntervalSec: 5 * 60,
+      longBreakIntervalSec: 20 * 60,
+      nWorkBeforeLongBreak: 4,
+      fps: 2,
+      workColors: [0xd38312, 0xa83279],
+      shortBreakColors: [0x00b09b, 0x96c93d],
+      longBreakColors: [0x43cea2, 0x1e90ff],
+      backgroundColor: 0x000000,
+      ringBaseColor: 0x131313,
+      ringLabelColor: 0x4d4d4d,
+      ringFontColor: 0xc0c0c0,
+      preferenceButtonColor: 0x0e0e0e,
+      preferenceButtonHoverColor: 0xff6767, // pink
+      //preferenceButtonHoverColor: 0xb3ff66, // green
+      //preferenceButtonHoverColor: 0x454545, // gray
+      notificationIsEnabled: true,
+    };
+
     this.configFileAccessor = new ConfigFileAccessor(
       os.homedir() + "/.pomodoroTimer/config.json"
     );
     // Create new file with default values.
     if (!this.configFileAccessor.configFileExists()) {
-      this.configFileAccessor.save("workIntervalSec", 25 * 60);
-      this.configFileAccessor.save("shortBreakIntervalSec", 5 * 60);
-      this.configFileAccessor.save("longBreakIntervalSec", 20 * 60);
-      this.configFileAccessor.save("nWorkBeforeLongBreak", 4);
-      this.configFileAccessor.save("fps", 2);
-      this.configFileAccessor.save("workColors", [0xd38312, 0xa83279]);
-      this.configFileAccessor.save("shortBreakColors", [0x00b09b, 0x96c93d]);
-      this.configFileAccessor.save("longBreakColors", [0x43cea2, 0x1e90ff]);
-      this.configFileAccessor.save("backgroundColor", 0x000000);
-      this.configFileAccessor.save("ringBaseColor", 0x131313);
-      this.configFileAccessor.save("ringLabelColor", 0x4d4d4d);
-      this.configFileAccessor.save("ringFontColor", 0xc0c0c0);
-      this.configFileAccessor.save("preferenceButtonColor", 0x0e0e0e);
-      this.configFileAccessor.save("preferenceButtonHoverColor", 0xff6767); // pink
-      //this.configFileAccessor.save('preferenceButtonHoverColor', 0xb3ff66); // green
-      //this.configFileAccessor.save('preferenceButtonHoverColor', 0x454545); // gray
+      this.configFileAccessor.save(
+        "workIntervalSec",
+        defaultSettings.workIntervalSec
+      );
+      this.configFileAccessor.save(
+        "shortBreakIntervalSec",
+        defaultSettings.shortBreakIntervalSec
+      );
+      this.configFileAccessor.save(
+        "longBreakIntervalSec",
+        defaultSettings.longBreakIntervalSec
+      );
+      this.configFileAccessor.save(
+        "nWorkBeforeLongBreak",
+        defaultSettings.nWorkBeforeLongBreak
+      );
+      this.configFileAccessor.save("fps", defaultSettings.fps);
+      this.configFileAccessor.save("workColors", defaultSettings.workColors);
+      this.configFileAccessor.save(
+        "shortBreakColors",
+        defaultSettings.shortBreakColors
+      );
+      this.configFileAccessor.save(
+        "longBreakColors",
+        defaultSettings.longBreakColors
+      );
+      this.configFileAccessor.save(
+        "backgroundColor",
+        defaultSettings.backgroundColor
+      );
+      this.configFileAccessor.save(
+        "ringBaseColor",
+        defaultSettings.ringBaseColor
+      );
+      this.configFileAccessor.save(
+        "ringLabelColor",
+        defaultSettings.ringLabelColor
+      );
+      this.configFileAccessor.save(
+        "ringFontColor",
+        defaultSettings.ringFontColor
+      );
+      this.configFileAccessor.save(
+        "preferenceButtonColor",
+        defaultSettings.preferenceButtonColor
+      );
+      this.configFileAccessor.save(
+        "preferenceButtonHoverColor",
+        defaultSettings.preferenceButtonHoverColor
+      );
+      this.configFileAccessor.save(
+        "notificationIsEnabled",
+        defaultSettings.notificationIsEnabled
+      );
     }
 
     const {
@@ -489,28 +608,73 @@ export default {
       // Setting about preference
       preferenceButtonColor,
       preferenceButtonHoverColor,
+      notificationIsEnabled,
     } = this.configFileAccessor.getConfigObject();
 
     // The following data properties are used to save temporary settings of preference panel.
     // When the preferences are submitted, these values are copied to the store and the config file.
-    this.workIntervalMinute = workIntervalSec / 60;
-    this.shortBreakIntervalMinute = shortBreakIntervalSec / 60;
-    this.longBreakIntervalMinute = longBreakIntervalSec / 60;
-    this.nWorkBeforeLongBreak = nWorkBeforeLongBreak;
-    this.fps = fps;
-    this.workColorLeft = colorUtils.ntos(workColors[1]);
-    this.workColorRight = colorUtils.ntos(workColors[0]);
-    this.shortBreakColorLeft = colorUtils.ntos(shortBreakColors[1]);
-    this.shortBreakColorRight = colorUtils.ntos(shortBreakColors[0]);
-    this.longBreakColorLeft = colorUtils.ntos(longBreakColors[1]);
-    this.longBreakColorRight = colorUtils.ntos(longBreakColors[0]);
-    this.backgroundColor = colorUtils.ntos(backgroundColor);
-    this.ringBaseColor = colorUtils.ntos(ringBaseColor);
-    this.ringLabelColor = colorUtils.ntos(ringLabelColor);
-    this.ringFontColor = colorUtils.ntos(ringFontColor);
-    this.preferenceButtonColor = colorUtils.ntos(preferenceButtonColor);
+    this.workIntervalMinute =
+      valueOrDefault(workIntervalSec, defaultSettings.workIntervalSec) / 60;
+    this.shortBreakIntervalMinute =
+      valueOrDefault(
+        shortBreakIntervalSec,
+        defaultSettings.shortBreakIntervalSec
+      ) / 60;
+    this.longBreakIntervalMinute =
+      valueOrDefault(
+        longBreakIntervalSec,
+        defaultSettings.longBreakIntervalSec
+      ) / 60;
+    this.nWorkBeforeLongBreak = valueOrDefault(
+      nWorkBeforeLongBreak,
+      defaultSettings.nWorkBeforeLongBreak
+    );
+    this.fps = valueOrDefault(fps, defaultSettings.fps);
+    this.workColorLeft = colorUtils.ntos(
+      valueOrDefault(workColors[1], defaultSettings.workColors[1])
+    );
+    this.workColorRight = colorUtils.ntos(
+      valueOrDefault(workColors[0], defaultSettings.workColors[0])
+    );
+    this.shortBreakColorLeft = colorUtils.ntos(
+      valueOrDefault(shortBreakColors[1], defaultSettings.shortBreakColors[1])
+    );
+    this.shortBreakColorRight = colorUtils.ntos(
+      valueOrDefault(shortBreakColors[0], defaultSettings.shortBreakColors[0])
+    );
+    this.longBreakColorLeft = colorUtils.ntos(
+      valueOrDefault(longBreakColors[1], defaultSettings.longBreakColors[1])
+    );
+    this.longBreakColorRight = colorUtils.ntos(
+      valueOrDefault(longBreakColors[0], defaultSettings.longBreakColors[0])
+    );
+    this.backgroundColor = colorUtils.ntos(
+      valueOrDefault(backgroundColor, defaultSettings.backgroundColor)
+    );
+    this.ringBaseColor = colorUtils.ntos(
+      valueOrDefault(ringBaseColor, defaultSettings.ringBaseColor)
+    );
+    this.ringLabelColor = colorUtils.ntos(
+      valueOrDefault(ringLabelColor, defaultSettings.ringLabelColor)
+    );
+    this.ringFontColor = colorUtils.ntos(
+      valueOrDefault(ringFontColor, defaultSettings.ringFontColor)
+    );
+    this.preferenceButtonColor = colorUtils.ntos(
+      valueOrDefault(
+        preferenceButtonColor,
+        defaultSettings.preferenceButtonColor
+      )
+    );
     this.preferenceButtonHoverColor = colorUtils.ntos(
-      preferenceButtonHoverColor
+      valueOrDefault(
+        preferenceButtonHoverColor,
+        defaultSettings.preferenceButtonHoverColor
+      )
+    );
+    this.notificationIsEnabled = valueOrDefault(
+      notificationIsEnabled,
+      defaultSettings.notificationIsEnabled
     );
 
     this.copySettingToStore();
@@ -556,14 +720,21 @@ export default {
 
 .preference {
   position: absolute;
-  width: 370px;
   background: #0e0e0e;
   color: #4d4d4d;
   right: 0;
   bottom: 30px;
   top: 0;
   animation-name: fade;
-  animation-duration: 1.5s;
+  animation-duration: 2s;
+  display: flex;
+}
+
+/* Column */
+.preferenceColumn {
+  position: relative;
+  width: 368px;
+  padding: 0 1px;
 }
 
 /* Title */
@@ -634,6 +805,7 @@ export default {
   width: 60px;
   height: 20px;
   top: 0;
+  margin: 0;
 }
 
 .preference .content input[type="text"][class="invalid"] {
@@ -658,6 +830,65 @@ export default {
   vertical-align: -3px;
   padding: 0;
   margin-left: 13px;
+}
+
+.preference .content .checkboxKey {
+  margin: 10px 10px;
+  padding: 0 10px 10px;
+  font-size: 12px;
+  margin: 0;
+}
+
+.preference .content .checkboxValue {
+  padding: 10px 5px 10px;
+  font-size: 12px;
+  margin: 0;
+}
+
+.preference .content input[type="checkbox"] {
+  display: none;
+}
+
+.preference .content input[type="checkbox"] + label {
+  display: none;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding-left: 25px;
+  padding-right: 20px;
+  position: absolute;
+  right: 15px;
+}
+
+.preference .content input[type="checkbox"] + label::before {
+  content: "";
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  width: 13px;
+  height: 13px;
+  margin-top: 0;
+  left: 0;
+  top: 50%;
+  border: 1px solid;
+  border-color: #2f2f2f;
+  background: #0e0e0e;
+}
+
+.preference .content input[type="checkbox"]:checked + label::after {
+  content: "";
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  width: 10px;
+  height: 3px;
+  margin-top: 4px;
+  left: 1.5px;
+  top: 50%;
+  transform: rotate(-45deg);
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+  border-color: #587e4c;
 }
 
 /* Footer */

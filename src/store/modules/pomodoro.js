@@ -22,6 +22,7 @@ const state = () => ({
   ringBaseColor: 0x000000,
   ringLabelColor: 0x000000,
   ringFontColor: 0x000000,
+  notificationIsEnabled: false,
 });
 
 const mutations = {
@@ -92,41 +93,47 @@ const mutations = {
       if (state.working) {
         // end of work
         if (state.workCount >= state.nWorkBeforeLongBreak) {
-          // start of long break
-          let intervalStr = `${state.longBreakIntervalSec / 60} Minutes`;
-          if (state.longBreakIntervalSec / 60 < 1) {
-            intervalStr = `${state.longBreakIntervalSec} Seconds`;
+          // Send notification
+          if (state.notificationIsEnabled) {
+            // start of long break
+            let intervalStr = `${state.longBreakIntervalSec / 60} Minutes`;
+            if (state.longBreakIntervalSec / 60 < 1) {
+              intervalStr = `${state.longBreakIntervalSec} Seconds`;
+            }
+            new Notification("Long Break " + String.fromCodePoint(0x1f943), {
+              body: intervalStr,
+              icon: "public/pomodoroTimer.png",
+            });
+          } else {
+            let intervalStr = `${state.shortBreakIntervalSec / 60} Minutes`;
+            if (state.shortBreakIntervalSec / 60 < 1) {
+              intervalStr = `${state.shortBreakIntervalSec} Seconds`;
+            }
+            new Notification("Short Break " + String.fromCodePoint(0x2615), {
+              body: intervalStr,
+              icon: "public/pomodoroTimer.png",
+            });
           }
-          new Notification("Long Break " + String.fromCodePoint(0x1f943), {
-            body: intervalStr,
-            icon: "public/pomodoroTimer.png",
-          });
-        } else {
-          let intervalStr = `${state.shortBreakIntervalSec / 60} Minutes`;
-          if (state.shortBreakIntervalSec / 60 < 1) {
-            intervalStr = `${state.shortBreakIntervalSec} Seconds`;
-          }
-          new Notification("Short Break " + String.fromCodePoint(0x2615), {
-            body: intervalStr,
-            icon: "public/pomodoroTimer.png",
-          });
         }
         state.working = false;
       } else {
-        // end of break
-        let intervalStr = `${state.workIntervalSec / 60} Minutes`;
-        if (state.workIntervalSec / 60 < 1) {
-          intervalStr = `${state.workIntervalSec} Seconds`;
-        }
-        new Notification("Work " + String.fromCodePoint(0x1f680), {
-          body: intervalStr,
-          icon: "public/pomodoroTimer.png",
-        });
-        if (state.workCount >= state.nWorkBeforeLongBreak) {
-          // end of long break
-          state.workCount = 1;
-        } else {
-          state.workCount++;
+        // Send notification
+        if (state.notificationIsEnabled) {
+          // end of break
+          let intervalStr = `${state.workIntervalSec / 60} Minutes`;
+          if (state.workIntervalSec / 60 < 1) {
+            intervalStr = `${state.workIntervalSec} Seconds`;
+          }
+          new Notification("Work " + String.fromCodePoint(0x1f680), {
+            body: intervalStr,
+            icon: "public/pomodoroTimer.png",
+          });
+          if (state.workCount >= state.nWorkBeforeLongBreak) {
+            // end of long break
+            state.workCount = 1;
+          } else {
+            state.workCount++;
+          }
         }
         state.working = true;
       }
@@ -203,6 +210,9 @@ const mutations = {
   },
   setRingFontColor(state, color) {
     state.ringFontColor = color;
+  },
+  setNotificationIsEnabled(state, enabled) {
+    state.notificationIsEnabled = enabled;
   },
 };
 
