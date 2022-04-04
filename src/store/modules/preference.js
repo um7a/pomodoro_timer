@@ -3,6 +3,8 @@ const state = () => ({
   // The following fields are initialized by the values of config file.
   preferenceButtonColor: 0x000000,
   preferenceButtonHoverColor: 0x000000,
+  preferenceButtonFontColor: 0x000000,
+  preferenceButtonFontHoverColor: 0x000000,
 });
 
 const mutations = {
@@ -21,6 +23,12 @@ const mutations = {
   },
   setPreferenceButtonHoverColor(state, color) {
     state.preferenceButtonHoverColor = color;
+  },
+  setPreferenceButtonFontColor(state, color) {
+    state.preferenceButtonFontColor = color;
+  },
+  setPreferenceButtonFontHoverColor(state, color) {
+    state.preferenceButtonFontHoverColor = color;
   },
 };
 

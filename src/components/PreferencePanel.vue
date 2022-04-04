@@ -230,6 +230,18 @@
             </p>
           </div>
         </div>
+        <!-- Preference Button Font Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Preference Button Font Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="preferenceButtonFontColor" />
+              <input type="color" v-model="preferenceButtonFontHoverColor" />
+            </p>
+          </div>
+        </div>
       </div>
 
       <!-- Footer -->
@@ -239,6 +251,8 @@
           @click="submit()"
           :style="{
             '--preference-button-hover-color': savedPreferenceButtonHoverColor,
+            '--preference-button-font-hover-color':
+              savedPreferenceButtonFontHoverColor,
           }"
         >
           Submit
@@ -253,6 +267,9 @@
       :style="{
         '--preference-button-color': savedPreferenceButtonColor,
         '--preference-button-hover-color': savedPreferenceButtonHoverColor,
+        '--preference-button-font-color': savedPreferenceButtonFontColor,
+        '--preference-button-font-hover-color':
+          savedPreferenceButtonFontHoverColor,
       }"
     >
       Preference
@@ -263,6 +280,8 @@
       @click="closePreference()"
       :style="{
         '--preference-button-hover-color': savedPreferenceButtonHoverColor,
+        '--preference-button-font-hover-color':
+          savedPreferenceButtonFontHoverColor,
       }"
     >
       Close
@@ -292,6 +311,7 @@ export default {
       longBreakIntervalMinute: 0,
       nWorkBeforeLongBreak: 0,
       fps: 0,
+      notificationIsEnabled: false,
       workColorLeft: "#000000",
       workColorRight: "#000000",
       shortBreakColorLeft: "#000000",
@@ -304,7 +324,8 @@ export default {
       ringFontColor: "#000000",
       preferenceButtonColor: "#000000",
       preferenceButtonHoverColor: "#000000",
-      notificationIsEnabled: false,
+      preferenceButtonFontColor: "#000000",
+      preferenceButtonFontHoverColor: "#000000",
     };
   },
   computed: {
@@ -321,6 +342,17 @@ export default {
         this.$store.state.preference.preferenceButtonHoverColor
       );
       return preferenceButtonHoverColor;
+    },
+    savedPreferenceButtonFontColor() {
+      return colorUtils.ntos(
+        this.$store.state.preference.preferenceButtonFontColor
+      );
+    },
+    savedPreferenceButtonFontHoverColor() {
+      const preferenceButtonFontHoverColor = colorUtils.ntos(
+        this.$store.state.preference.preferenceButtonFontHoverColor
+      );
+      return preferenceButtonFontHoverColor;
     },
     notificationStr: {
       get: function () {
@@ -383,6 +415,10 @@ export default {
         Number.parseInt(this.nWorkBeforeLongBreak)
       );
       this.$store.commit("setFps", Number.parseInt(this.fps));
+      this.$store.commit(
+        "setNotificationIsEnabled",
+        this.notificationIsEnabled
+      );
       this.$store.commit("setWorkColors", [
         colorUtils.ston(this.workColorLeft),
         colorUtils.ston(this.workColorRight),
@@ -420,8 +456,12 @@ export default {
         colorUtils.ston(this.preferenceButtonHoverColor)
       );
       this.$store.commit(
-        "setNotificationIsEnabled",
-        this.notificationIsEnabled
+        "setPreferenceButtonFontColor",
+        colorUtils.ston(this.preferenceButtonFontColor)
+      );
+      this.$store.commit(
+        "setPreferenceButtonFontHoverColor",
+        colorUtils.ston(this.preferenceButtonFontHoverColor)
       );
     },
 
@@ -466,6 +506,10 @@ export default {
         this.nWorkBeforeLongBreak
       );
       configFileAccessor.save("fps", this.fps);
+      configFileAccessor.save(
+        "notificationIsEnabled",
+        this.notificationIsEnabled
+      );
       configFileAccessor.save("workColors", [
         colorUtils.ston(this.workColorRight),
         colorUtils.ston(this.workColorLeft),
@@ -503,8 +547,12 @@ export default {
         colorUtils.ston(this.preferenceButtonHoverColor)
       );
       configFileAccessor.save(
-        "notificationIsEnabled",
-        this.notificationIsEnabled
+        "preferenceButtonFontColor",
+        colorUtils.ston(this.preferenceButtonFontColor)
+      );
+      configFileAccessor.save(
+        "preferenceButtonFontHoverColor",
+        colorUtils.ston(this.preferenceButtonFontHoverColor)
       );
     },
   },
@@ -516,6 +564,7 @@ export default {
       longBreakIntervalSec: 20 * 60,
       nWorkBeforeLongBreak: 4,
       fps: 2,
+      notificationIsEnabled: true,
       workColors: [0xd38312, 0xa83279],
       shortBreakColors: [0x00b09b, 0x96c93d],
       longBreakColors: [0x43cea2, 0x1e90ff],
@@ -527,7 +576,8 @@ export default {
       preferenceButtonHoverColor: 0xff6767, // pink
       //preferenceButtonHoverColor: 0xb3ff66, // green
       //preferenceButtonHoverColor: 0x454545, // gray
-      notificationIsEnabled: true,
+      preferenceButtonFontColor: 0x4d4d4d,
+      preferenceButtonFontHoverColor: 0x000000,
     };
 
     this.configFileAccessor = new ConfigFileAccessor(
@@ -552,6 +602,10 @@ export default {
         defaultSettings.nWorkBeforeLongBreak
       );
       this.configFileAccessor.save("fps", defaultSettings.fps);
+      this.configFileAccessor.save(
+        "notificationIsEnabled",
+        defaultSettings.notificationIsEnabled
+      );
       this.configFileAccessor.save("workColors", defaultSettings.workColors);
       this.configFileAccessor.save(
         "shortBreakColors",
@@ -586,8 +640,12 @@ export default {
         defaultSettings.preferenceButtonHoverColor
       );
       this.configFileAccessor.save(
-        "notificationIsEnabled",
-        defaultSettings.notificationIsEnabled
+        "preferenceButtonFontColor",
+        defaultSettings.preferenceButtonColor
+      );
+      this.configFileAccessor.save(
+        "preferenceButtonFontHoverColor",
+        defaultSettings.preferenceButtonHoverColor
       );
     }
 
@@ -598,6 +656,7 @@ export default {
       longBreakIntervalSec,
       nWorkBeforeLongBreak,
       fps,
+      notificationIsEnabled,
       workColors,
       shortBreakColors,
       longBreakColors,
@@ -608,7 +667,8 @@ export default {
       // Setting about preference
       preferenceButtonColor,
       preferenceButtonHoverColor,
-      notificationIsEnabled,
+      preferenceButtonFontColor,
+      preferenceButtonFontHoverColor,
     } = this.configFileAccessor.getConfigObject();
 
     // The following data properties are used to save temporary settings of preference panel.
@@ -630,6 +690,10 @@ export default {
       defaultSettings.nWorkBeforeLongBreak
     );
     this.fps = valueOrDefault(fps, defaultSettings.fps);
+    this.notificationIsEnabled = valueOrDefault(
+      notificationIsEnabled,
+      defaultSettings.notificationIsEnabled
+    );
     this.workColorLeft = colorUtils.ntos(
       valueOrDefault(workColors[1], defaultSettings.workColors[1])
     );
@@ -672,11 +736,18 @@ export default {
         defaultSettings.preferenceButtonHoverColor
       )
     );
-    this.notificationIsEnabled = valueOrDefault(
-      notificationIsEnabled,
-      defaultSettings.notificationIsEnabled
+    this.preferenceButtonFontColor = colorUtils.ntos(
+      valueOrDefault(
+        preferenceButtonFontColor,
+        defaultSettings.preferenceButtonFontColor
+      )
     );
-
+    this.preferenceButtonFontHoverColor = colorUtils.ntos(
+      valueOrDefault(
+        preferenceButtonFontHoverColor,
+        defaultSettings.preferenceButtonFontHoverColor
+      )
+    );
     this.copySettingToStore();
 
     this.$store.commit("initPomodoro");
@@ -692,7 +763,7 @@ export default {
   cursor: pointer;
   position: absolute;
   bottom: 0;
-  color: #4d4d4d;
+  color: var(--preference-button-font-color);
   font-size: 12px;
   height: 30px;
   width: 100%;
@@ -715,7 +786,7 @@ export default {
 .openButton:hover,
 .closeButton {
   background: var(--preference-button-hover-color);
-  color: #000000;
+  color: var(--preference-button-font-hover-color);
 }
 
 .preference {
@@ -901,9 +972,9 @@ export default {
 }
 
 .preference .footer .button {
-  color: #000000;
   font-size: 11px;
   background: var(--preference-button-hover-color);
+  color: var(--preference-button-font-hover-color);
   float: right;
   margin: 0 12px;
   padding: 3px 10px;
