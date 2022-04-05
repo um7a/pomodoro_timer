@@ -23,7 +23,14 @@
         <!-- Work Interval -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Work interval</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Work interval
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -32,18 +39,43 @@
                 class="invalid"
                 v-model="workIntervalMinute"
                 v-if="isInvalid.workIntervalMinute"
+                :style="{
+                  '--preference-font-invalid-color':
+                    savedPreferenceFontInvalidColor,
+                }"
               />
-              <input type="text" v-model="workIntervalMinute" v-else />
+              <input
+                type="text"
+                v-model="workIntervalMinute"
+                v-else
+                :style="{
+                  '--preference-font-color': savedPreferenceFontColor,
+                }"
+              />
             </p>
           </div>
           <div class="unitSpace">
-            <p class="unit">minutes</p>
+            <p
+              class="unit"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              minutes
+            </p>
           </div>
         </div>
         <!-- Short Break Interval -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Short break interval</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Short break interval
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -52,18 +84,43 @@
                 class="invalid"
                 v-model="shortBreakIntervalMinute"
                 v-if="isInvalid.shortBreakIntervalMinute"
+                :style="{
+                  '--preference-font-invalid-color':
+                    savedPreferenceFontInvalidColor,
+                }"
               />
-              <input type="text" v-model="shortBreakIntervalMinute" v-else />
+              <input
+                type="text"
+                v-model="shortBreakIntervalMinute"
+                v-else
+                :style="{
+                  '--preference-font-color': savedPreferenceFontColor,
+                }"
+              />
             </p>
           </div>
           <div class="unitSpace">
-            <p class="unit">minutes</p>
+            <p
+              class="unit"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              minutes
+            </p>
           </div>
         </div>
         <!-- Long Break Interval -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Long break interval</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Long break interval
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -72,18 +129,43 @@
                 class="invalid"
                 v-model="longBreakIntervalMinute"
                 v-if="isInvalid.longBreakIntervalMinute"
+                :style="{
+                  '--preference-font-invalid-color':
+                    savedPreferenceFontInvalidColor,
+                }"
               />
-              <input type="text" v-model="longBreakIntervalMinute" v-else />
+              <input
+                type="text"
+                v-model="longBreakIntervalMinute"
+                v-else
+                :style="{
+                  '--preference-font-color': savedPreferenceFontColor,
+                }"
+              />
             </p>
           </div>
           <div class="unitSpace">
-            <p class="unit">minutes</p>
+            <p
+              class="unit"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              minutes
+            </p>
           </div>
         </div>
         <!-- Number of work -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Number of work before long break</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Number of work before long break
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -92,12 +174,30 @@
                 class="invalid"
                 v-model="nWorkBeforeLongBreak"
                 v-if="isInvalid.nWorkBeforeLongBreak"
+                :style="{
+                  '--preference-font-invalid-color':
+                    savedPreferenceFontInvalidColor,
+                }"
               />
-              <input type="text" v-model="nWorkBeforeLongBreak" v-else />
+              <input
+                type="text"
+                v-model="nWorkBeforeLongBreak"
+                v-else
+                :style="{
+                  '--preference-font-color': savedPreferenceFontColor,
+                }"
+              />
             </p>
           </div>
           <div class="unitSpace">
-            <p class="unit">times</p>
+            <p
+              class="unit"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              times
+            </p>
           </div>
         </div>
         <!-- Title Graphic -->
@@ -114,7 +214,14 @@
         <!-- Frame per sec -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Frame per sec</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Frame per sec
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -123,12 +230,30 @@
                 class="invalid"
                 v-model="fps"
                 v-if="isInvalid.fps"
+                :style="{
+                  '--preference-font-invalid-color':
+                    savedPreferenceFontInvalidColor,
+                }"
               />
-              <input type="text" v-model="fps" v-else />
+              <input
+                type="text"
+                v-model="fps"
+                v-else
+                :style="{
+                  '--preference-font-color': savedPreferenceFontColor,
+                }"
+              />
             </p>
           </div>
           <div class="unitSpace">
-            <p class="unit">fps</p>
+            <p
+              class="unit"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              fps
+            </p>
           </div>
         </div>
         <!-- Title Notification -->
@@ -144,7 +269,14 @@
         </div>
         <div class="content">
           <div class="keySpace">
-            <p class="checkboxKey">Send notification</p>
+            <p
+              class="checkboxKey"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Send notification
+            </p>
           </div>
           <div class="valueSpace">
             <p class="checkboxValue">
@@ -175,7 +307,14 @@
         <!-- Work Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Work Color ( Left / Right )</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Work Color ( Left / Right )
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -187,7 +326,14 @@
         <!-- Short Break Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Short Break Color ( Left / Right )</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Short Break Color ( Left / Right )
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -199,7 +345,14 @@
         <!-- Long Break Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Long Break Color ( Left / Right )</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Long Break Color ( Left / Right )
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -211,7 +364,14 @@
         <!-- Background Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Background Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Background Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -222,7 +382,14 @@
         <!-- Ring Base Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Ring Base Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Ring Base Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -233,7 +400,14 @@
         <!-- Ring Label Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Ring Label Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Ring Label Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -244,7 +418,14 @@
         <!-- Ring Font Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Ring Font Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Ring Font Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -255,7 +436,14 @@
         <!-- Ring Scale Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Scale Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Scale Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -266,7 +454,14 @@
         <!-- Preference Background Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Preference Background Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Preference Background Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -277,7 +472,14 @@
         <!-- Preference Label Background Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Preference Label Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Preference Label Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -288,7 +490,14 @@
         <!-- Preference Label Font Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Preference Label Font Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Preference Label Font Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -296,10 +505,37 @@
             </p>
           </div>
         </div>
+        <!-- Preference Font Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Preference Font Color
+            </p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="preferenceFontColor" />
+              <input type="color" v-model="preferenceFontInvalidColor" />
+            </p>
+          </div>
+        </div>
+
         <!-- Preference Button Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Preference Button Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Preference Button Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -311,7 +547,14 @@
         <!-- Preference Button Font Color -->
         <div class="content">
           <div class="keySpace">
-            <p class="key">Preference Button Font Color</p>
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Preference Button Font Color
+            </p>
           </div>
           <div class="valueSpace">
             <p class="value">
@@ -409,6 +652,8 @@ export default {
       preferenceBackgroundColor: "#000000",
       preferenceLabelBackgroundColor: "#000000",
       preferenceLabelFontColor: "#000000",
+      preferenceFontColor: "#000000",
+      preferenceFontInvalidColor: "#000000",
       preferenceButtonColor: "#000000",
       preferenceButtonHoverColor: "#000000",
       preferenceButtonFontColor: "#000000",
@@ -432,6 +677,14 @@ export default {
     savedPreferenceLabelFontColor() {
       return colorUtils.ntos(
         this.$store.state.preference.preferenceLabelFontColor
+      );
+    },
+    savedPreferenceFontColor() {
+      return colorUtils.ntos(this.$store.state.preference.preferenceFontColor);
+    },
+    savedPreferenceFontInvalidColor() {
+      return colorUtils.ntos(
+        this.$store.state.preference.preferenceFontInvalidColor
       );
     },
     savedPreferenceButtonColor() {
@@ -563,6 +816,14 @@ export default {
         colorUtils.ston(this.preferenceLabelFontColor)
       );
       this.$store.commit(
+        "setPreferenceFontColor",
+        colorUtils.ston(this.preferenceFontColor)
+      );
+      this.$store.commit(
+        "setPreferenceFontInvalidColor",
+        colorUtils.ston(this.preferenceFontInvalidColor)
+      );
+      this.$store.commit(
         "setPreferenceButtonColor",
         colorUtils.ston(this.preferenceButtonColor)
       );
@@ -663,6 +924,14 @@ export default {
         colorUtils.ston(this.preferenceLabelFontColor)
       );
       configFileAccessor.save(
+        "preferenceFontColor",
+        colorUtils.ston(this.preferenceFontColor)
+      );
+      configFileAccessor.save(
+        "preferenceFontInvalidColor",
+        colorUtils.ston(this.preferenceFontInvalidColor)
+      );
+      configFileAccessor.save(
         "preferenceBackgroundColor",
         colorUtils.ston(this.preferenceBackgroundColor)
       );
@@ -704,6 +973,8 @@ export default {
       preferenceBackgroundColor: 0x0e0e0e,
       preferenceLabelBackgroundColor: 0x171717,
       preferenceLabelFontColor: 0x4d4d4d,
+      preferenceFontColor: 0x4d4d4d,
+      preferenceFontInvalidColor: 0x9b0043,
       preferenceButtonColor: 0x0e0e0e,
       preferenceButtonHoverColor: 0xff6767, // pink
       //preferenceButtonHoverColor: 0xb3ff66, // green
@@ -777,6 +1048,14 @@ export default {
         defaultSettings.preferenceLabelFontColor
       );
       this.configFileAccessor.save(
+        "preferenceFontColor",
+        defaultSettings.preferenceFontColor
+      );
+      this.configFileAccessor.save(
+        "preferenceFontInvalidColor",
+        defaultSettings.preferenceFontInvalidColor
+      );
+      this.configFileAccessor.save(
         "preferenceButtonColor",
         defaultSettings.preferenceButtonColor
       );
@@ -814,6 +1093,8 @@ export default {
       preferenceBackgroundColor,
       preferenceLabelBackgroundColor,
       preferenceLabelFontColor,
+      preferenceFontColor,
+      preferenceFontInvalidColor,
       preferenceButtonColor,
       preferenceButtonHoverColor,
       preferenceButtonFontColor,
@@ -886,6 +1167,15 @@ export default {
       valueOrDefault(
         preferenceLabelFontColor,
         defaultSettings.preferenceLabelFontColor
+      )
+    );
+    this.preferenceFontColor = colorUtils.ntos(
+      valueOrDefault(preferenceFontColor, defaultSettings.preferenceFontColor)
+    );
+    this.preferenceFontInvalidColor = colorUtils.ntos(
+      valueOrDefault(
+        preferenceFontInvalidColor,
+        defaultSettings.preferenceFontInvalidColor
       )
     );
     this.preferenceBackgroundColor = colorUtils.ntos(
@@ -962,7 +1252,6 @@ export default {
 .preference {
   position: absolute;
   background: var(--preference-background-color);
-  color: #4d4d4d;
   right: 0;
   bottom: 30px;
   top: 0;
@@ -994,7 +1283,6 @@ export default {
 
 /* Content */
 .preference .content {
-  border-bottom: #000000;
   margin: 0;
 }
 
@@ -1015,17 +1303,13 @@ export default {
   margin-left: 0;
 }
 .preference .content .key {
+  color: var(--preference-font-color);
   margin: 10px 10px;
   padding: 0 10px;
   font-size: 12px;
   margin: 0;
 }
-.preference .content .key2Line {
-  margin: 10px 10px;
-  padding: 0 10px;
-  font-size: 11px;
-  margin: 0;
-}
+
 .preference .content .value {
   padding: 10px 5px;
   font-size: 12px;
@@ -1033,6 +1317,7 @@ export default {
 }
 
 .preference .content .unit {
+  color: var(--preference-font-color);
   padding: 10px 0;
   font-size: 12px;
   margin: 0;
@@ -1040,9 +1325,9 @@ export default {
 
 .preference .content input[type="text"] {
   background: #0e0e0e;
-  border: 1px solid #222222;
+  border: 1px solid var(--preference-font-color);
   border-radius: 4px;
-  color: #4d4d4d;
+  color: var(--preference-font-color);
   outline: none;
   width: 60px;
   height: 20px;
@@ -1052,9 +1337,9 @@ export default {
 
 .preference .content input[type="text"][class="invalid"] {
   background: #1a1010;
-  border: 1px solid #540000;
+  border: 1px solid var(--preference-font-invalid-color);
   border-radius: 4px;
-  color: #9b0043;
+  color: var(--preference-font-invalid-color);
   outline: none;
   width: 60px;
   height: 20px;
@@ -1064,7 +1349,6 @@ export default {
 .preference .content input[type="color"] {
   background: none;
   border: none;
-  color: #4d4d4d;
   outline: none;
   width: 40px;
   height: 22px;
@@ -1075,6 +1359,7 @@ export default {
 }
 
 .preference .content .checkboxKey {
+  color: var(--preference-font-color);
   margin: 10px 10px;
   padding: 0 10px 10px;
   font-size: 12px;

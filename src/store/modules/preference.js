@@ -4,6 +4,8 @@ const state = () => ({
   preferenceBackgroundColor: 0x000000,
   preferenceLabelBackgroundColor: 0x000000,
   preferenceLabelFontColor: 0x000000,
+  preferenceFontColor: 0x000000,
+  preferenceFontInvalidColor: 0x000000,
   preferenceButtonColor: 0x000000,
   preferenceButtonHoverColor: 0x000000,
   preferenceButtonFontColor: 0x000000,
@@ -29,6 +31,12 @@ const mutations = {
   },
   setPreferenceLabelFontColor(state, color) {
     state.preferenceLabelFontColor = color;
+  },
+  setPreferenceFontColor(state, color) {
+    state.preferenceFontColor = color;
+  },
+  setPreferenceFontInvalidColor(state, color) {
+    state.preferenceFontInvalidColor = color;
   },
   setPreferenceButtonColor(state, color) {
     state.preferenceButtonColor = color;
