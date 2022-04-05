@@ -1,6 +1,12 @@
 <template>
   <div id="preference">
-    <div class="preference" v-if="preferenceIsOpened">
+    <div
+      class="preference"
+      v-if="preferenceIsOpened"
+      :style="{
+        '--preference-background-color': savedPreferenceBackgroundColor,
+      }"
+    >
       <!-- 1st Column -->
       <div class="preferenceColumn">
         <!-- Title Pomodoro -->
@@ -229,6 +235,17 @@
             </p>
           </div>
         </div>
+        <!-- Preference Background Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Preference Background Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="preferenceBackgroundColor" />
+            </p>
+          </div>
+        </div>
         <!-- Preference Button Color -->
         <div class="content">
           <div class="keySpace">
@@ -254,7 +271,6 @@
           </div>
         </div>
       </div>
-
       <!-- Footer -->
       <div class="footer">
         <p
@@ -334,6 +350,7 @@ export default {
       ringLabelColor: "#000000",
       ringFontColor: "#000000",
       scaleColor: "#000000",
+      preferenceBackgroundColor: "#000000",
       preferenceButtonColor: "#000000",
       preferenceButtonHoverColor: "#000000",
       preferenceButtonFontColor: "#000000",
@@ -343,6 +360,11 @@ export default {
   computed: {
     preferenceIsOpened() {
       return this.$store.state.preference.preferenceIsOpened;
+    },
+    savedPreferenceBackgroundColor() {
+      return colorUtils.ntos(
+        this.$store.state.preference.preferenceBackgroundColor
+      );
     },
     savedPreferenceButtonColor() {
       return colorUtils.ntos(
@@ -461,6 +483,10 @@ export default {
       );
       this.$store.commit("setScaleColor", colorUtils.ston(this.scaleColor));
       this.$store.commit(
+        "setPreferenceBackgroundColor",
+        colorUtils.ston(this.preferenceBackgroundColor)
+      );
+      this.$store.commit(
         "setPreferenceButtonColor",
         colorUtils.ston(this.preferenceButtonColor)
       );
@@ -553,6 +579,10 @@ export default {
       );
       configFileAccessor.save("scaleColor", colorUtils.ston(this.scaleColor));
       configFileAccessor.save(
+        "preferenceBackgroundColor",
+        colorUtils.ston(this.preferenceBackgroundColor)
+      );
+      configFileAccessor.save(
         "preferenceButtonColor",
         colorUtils.ston(this.preferenceButtonColor)
       );
@@ -587,6 +617,7 @@ export default {
       ringLabelColor: 0x4d4d4d,
       ringFontColor: 0xc0c0c0,
       scaleColor: 0x131313,
+      preferenceBackgroundColor: 0x0e0e0e,
       preferenceButtonColor: 0x0e0e0e,
       preferenceButtonHoverColor: 0xff6767, // pink
       //preferenceButtonHoverColor: 0xb3ff66, // green
@@ -648,6 +679,10 @@ export default {
       );
       this.configFileAccessor.save("scaleColor", defaultSettings.scaleColor);
       this.configFileAccessor.save(
+        "preferenceBackgroundColor",
+        defaultSettings.preferenceBackgroundColor
+      );
+      this.configFileAccessor.save(
         "preferenceButtonColor",
         defaultSettings.preferenceButtonColor
       );
@@ -682,6 +717,7 @@ export default {
       ringFontColor,
       scaleColor,
       // Setting about preference
+      preferenceBackgroundColor,
       preferenceButtonColor,
       preferenceButtonHoverColor,
       preferenceButtonFontColor,
@@ -743,6 +779,12 @@ export default {
     );
     this.scaleColor = colorUtils.ntos(
       valueOrDefault(scaleColor, defaultSettings.scaleColor)
+    );
+    this.preferenceBackgroundColor = colorUtils.ntos(
+      valueOrDefault(
+        preferenceBackgroundColor,
+        defaultSettings.preferenceBackgroundColor
+      )
     );
     this.preferenceButtonColor = colorUtils.ntos(
       valueOrDefault(
@@ -811,7 +853,7 @@ export default {
 
 .preference {
   position: absolute;
-  background: #0e0e0e;
+  background: var(--preference-background-color);
   color: #4d4d4d;
   right: 0;
   bottom: 30px;

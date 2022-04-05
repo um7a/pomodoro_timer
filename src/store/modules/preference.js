@@ -1,6 +1,7 @@
 const state = () => ({
   preferenceIsOpened: false,
   // The following fields are initialized by the values of config file.
+  preferenceBackgroundColor: 0x000000,
   preferenceButtonColor: 0x000000,
   preferenceButtonHoverColor: 0x000000,
   preferenceButtonFontColor: 0x000000,
@@ -18,6 +19,9 @@ const mutations = {
   // The following mutations are called
   // when settings are updated from preference.
   //
+  setPreferenceBackgroundColor(state, color) {
+    state.preferenceBackgroundColor = color;
+  },
   setPreferenceButtonColor(state, color) {
     state.preferenceButtonColor = color;
   },
