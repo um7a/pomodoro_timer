@@ -218,6 +218,17 @@
             </p>
           </div>
         </div>
+        <!-- Ring Scale Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Scale Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="scaleColor" />
+            </p>
+          </div>
+        </div>
         <!-- Preference Button Color -->
         <div class="content">
           <div class="keySpace">
@@ -322,6 +333,7 @@ export default {
       ringBaseColor: "#000000",
       ringLabelColor: "#000000",
       ringFontColor: "#000000",
+      scaleColor: "#000000",
       preferenceButtonColor: "#000000",
       preferenceButtonHoverColor: "#000000",
       preferenceButtonFontColor: "#000000",
@@ -447,6 +459,7 @@ export default {
         "setRingFontColor",
         colorUtils.ston(this.ringFontColor)
       );
+      this.$store.commit("setScaleColor", colorUtils.ston(this.scaleColor));
       this.$store.commit(
         "setPreferenceButtonColor",
         colorUtils.ston(this.preferenceButtonColor)
@@ -538,6 +551,7 @@ export default {
         "ringFontColor",
         colorUtils.ston(this.ringFontColor)
       );
+      configFileAccessor.save("scaleColor", colorUtils.ston(this.scaleColor));
       configFileAccessor.save(
         "preferenceButtonColor",
         colorUtils.ston(this.preferenceButtonColor)
@@ -572,6 +586,7 @@ export default {
       ringBaseColor: 0x131313,
       ringLabelColor: 0x4d4d4d,
       ringFontColor: 0xc0c0c0,
+      scaleColor: 0x131313,
       preferenceButtonColor: 0x0e0e0e,
       preferenceButtonHoverColor: 0xff6767, // pink
       //preferenceButtonHoverColor: 0xb3ff66, // green
@@ -631,6 +646,7 @@ export default {
         "ringFontColor",
         defaultSettings.ringFontColor
       );
+      this.configFileAccessor.save("scaleColor", defaultSettings.scaleColor);
       this.configFileAccessor.save(
         "preferenceButtonColor",
         defaultSettings.preferenceButtonColor
@@ -664,6 +680,7 @@ export default {
       ringBaseColor,
       ringLabelColor,
       ringFontColor,
+      scaleColor,
       // Setting about preference
       preferenceButtonColor,
       preferenceButtonHoverColor,
@@ -723,6 +740,9 @@ export default {
     );
     this.ringFontColor = colorUtils.ntos(
       valueOrDefault(ringFontColor, defaultSettings.ringFontColor)
+    );
+    this.scaleColor = colorUtils.ntos(
+      valueOrDefault(scaleColor, defaultSettings.scaleColor)
     );
     this.preferenceButtonColor = colorUtils.ntos(
       valueOrDefault(

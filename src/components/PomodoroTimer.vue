@@ -12,6 +12,7 @@
       v-for="p in scalePercentage"
       :style="{
         '--percentage-no-percent': p,
+        '--scale-color': scaleColor,
       }"
       v-bind:key="p"
     ></div>
@@ -148,6 +149,12 @@ export default {
         this.$store.state.pomodoro.ringFontColor
       );
       return ringFontColorStr;
+    },
+    scaleColor: function () {
+      const scaleColorStr = colorUtils.ntos(
+        this.$store.state.pomodoro.scaleColor
+      );
+      return scaleColorStr;
     },
     pausing: {
       get: function () {
@@ -420,7 +427,7 @@ export default {
       var(--body-background-color) 66%,
       transparent 67%
     ),
-    conic-gradient(var(--ring-base-color) 0deg, transparent 1deg 359deg);
+    conic-gradient(var(--scale-color) 0deg, transparent 1deg 359deg);
   /*
    * Round the corners.
    * Radius of the corner is 50% of the element.

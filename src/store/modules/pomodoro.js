@@ -5,15 +5,16 @@ const state = () => ({
   lastUpdateTime: new Date(),
   workCount: 1,
   working: true,
-  // The following fields are initialized by the values of config file.
+  refreshLoop: undefined,
+  pausing: true,
   currentIntervalSec: 0,
+  remainingTimeSec: 0,
+  // The following fields are initialized by the values of config file.
   longBreakColors: [0x000000, 0x000000],
   longBreakIntervalSec: 0,
   nWorkBeforeLongBreak: 0,
-  pausing: true,
   fps: 0,
-  refreshLoop: undefined,
-  remainingTimeSec: 0,
+  notificationIsEnabled: false,
   shortBreakColors: [0x000000, 0x000000],
   shortBreakIntervalSec: 0,
   workColors: [0x000000, 0x000000],
@@ -22,7 +23,7 @@ const state = () => ({
   ringBaseColor: 0x000000,
   ringLabelColor: 0x000000,
   ringFontColor: 0x000000,
-  notificationIsEnabled: false,
+  scaleColor: 0x000000,
 });
 
 const mutations = {
@@ -210,6 +211,9 @@ const mutations = {
   },
   setRingFontColor(state, color) {
     state.ringFontColor = color;
+  },
+  setScaleColor(state, color) {
+    state.scaleColor = color;
   },
   setNotificationIsEnabled(state, enabled) {
     state.notificationIsEnabled = enabled;
