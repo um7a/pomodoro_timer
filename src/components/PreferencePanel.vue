@@ -322,7 +322,13 @@
         </div>
       </div>
       <!-- Footer -->
-      <div class="footer">
+      <div
+        class="footer"
+        :style="{
+          '--preference-label-background-color':
+            savedPreferenceLabelBackgroundColor,
+        }"
+      >
         <p
           class="button"
           @click="submit()"
@@ -1131,7 +1137,7 @@ export default {
 .preference .footer {
   position: absolute;
   bottom: 0;
-  background: #171717;
+  background: var(--preference-label-background-color);
   width: 100%;
   padding: 8px 0px;
 }
