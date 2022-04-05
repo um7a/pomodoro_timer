@@ -10,7 +10,13 @@
       <!-- 1st Column -->
       <div class="preferenceColumn">
         <!-- Title Pomodoro -->
-        <div class="title">
+        <div
+          class="title"
+          :style="{
+            '--preference-label-background-color':
+              savedPreferenceLabelBackgroundColor,
+          }"
+        >
           <p>Pomodoro</p>
         </div>
         <!-- Work Interval -->
@@ -94,7 +100,13 @@
           </div>
         </div>
         <!-- Title Graphic -->
-        <div class="title">
+        <div
+          class="title"
+          :style="{
+            '--preference-label-background-color':
+              savedPreferenceLabelBackgroundColor,
+          }"
+        >
           <p>Graphic</p>
         </div>
         <!-- Frame per sec -->
@@ -117,8 +129,14 @@
             <p class="unit">fps</p>
           </div>
         </div>
-        <!-- Notification -->
-        <div class="title">
+        <!-- Title Notification -->
+        <div
+          class="title"
+          :style="{
+            '--preference-label-background-color':
+              savedPreferenceLabelBackgroundColor,
+          }"
+        >
           <p>Notification</p>
         </div>
         <div class="content">
@@ -141,7 +159,13 @@
       <!-- 2nd Column -->
       <div class="preferenceColumn">
         <!-- Title Color -->
-        <div class="title">
+        <div
+          class="title"
+          :style="{
+            '--preference-label-background-color':
+              savedPreferenceLabelBackgroundColor,
+          }"
+        >
           <p>Color</p>
         </div>
         <!-- Work Color -->
@@ -243,6 +267,17 @@
           <div class="valueSpace">
             <p class="value">
               <input type="color" v-model="preferenceBackgroundColor" />
+            </p>
+          </div>
+        </div>
+        <!-- Preference Label Background Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Preference Label Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="preferenceLabelBackgroundColor" />
             </p>
           </div>
         </div>
@@ -351,6 +386,7 @@ export default {
       ringFontColor: "#000000",
       scaleColor: "#000000",
       preferenceBackgroundColor: "#000000",
+      preferenceLabelBackgroundColor: "#000000",
       preferenceButtonColor: "#000000",
       preferenceButtonHoverColor: "#000000",
       preferenceButtonFontColor: "#000000",
@@ -364,6 +400,11 @@ export default {
     savedPreferenceBackgroundColor() {
       return colorUtils.ntos(
         this.$store.state.preference.preferenceBackgroundColor
+      );
+    },
+    savedPreferenceLabelBackgroundColor() {
+      return colorUtils.ntos(
+        this.$store.state.preference.preferenceLabelBackgroundColor
       );
     },
     savedPreferenceButtonColor() {
@@ -487,6 +528,10 @@ export default {
         colorUtils.ston(this.preferenceBackgroundColor)
       );
       this.$store.commit(
+        "setPreferenceLabelBackgroundColor",
+        colorUtils.ston(this.preferenceLabelBackgroundColor)
+      );
+      this.$store.commit(
         "setPreferenceButtonColor",
         colorUtils.ston(this.preferenceButtonColor)
       );
@@ -579,6 +624,10 @@ export default {
       );
       configFileAccessor.save("scaleColor", colorUtils.ston(this.scaleColor));
       configFileAccessor.save(
+        "preferenceLabelBackgroundColor",
+        colorUtils.ston(this.preferenceLabelBackgroundColor)
+      );
+      configFileAccessor.save(
         "preferenceBackgroundColor",
         colorUtils.ston(this.preferenceBackgroundColor)
       );
@@ -618,6 +667,7 @@ export default {
       ringFontColor: 0xc0c0c0,
       scaleColor: 0x131313,
       preferenceBackgroundColor: 0x0e0e0e,
+      preferenceLabelBackgroundColor: 0x171717,
       preferenceButtonColor: 0x0e0e0e,
       preferenceButtonHoverColor: 0xff6767, // pink
       //preferenceButtonHoverColor: 0xb3ff66, // green
@@ -683,6 +733,10 @@ export default {
         defaultSettings.preferenceBackgroundColor
       );
       this.configFileAccessor.save(
+        "preferenceLabelBackgroundColor",
+        defaultSettings.preferenceLabelBackgroundColor
+      );
+      this.configFileAccessor.save(
         "preferenceButtonColor",
         defaultSettings.preferenceButtonColor
       );
@@ -718,6 +772,7 @@ export default {
       scaleColor,
       // Setting about preference
       preferenceBackgroundColor,
+      preferenceLabelBackgroundColor,
       preferenceButtonColor,
       preferenceButtonHoverColor,
       preferenceButtonFontColor,
@@ -779,6 +834,12 @@ export default {
     );
     this.scaleColor = colorUtils.ntos(
       valueOrDefault(scaleColor, defaultSettings.scaleColor)
+    );
+    this.preferenceLabelBackgroundColor = colorUtils.ntos(
+      valueOrDefault(
+        preferenceLabelBackgroundColor,
+        defaultSettings.preferenceLabelBackgroundColor
+      )
     );
     this.preferenceBackgroundColor = colorUtils.ntos(
       valueOrDefault(
@@ -872,7 +933,7 @@ export default {
 
 /* Title */
 .preference .title {
-  background: #171717;
+  background: var(--preference-label-background-color);
   margin: 0 0 4px;
   border-radius: 2px;
   padding: 5px 10px;
