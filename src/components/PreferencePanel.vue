@@ -774,7 +774,7 @@ export default {
       );
       this.configFileAccessor.save(
         "preferenceLabelFontColor",
-        defaultSettings.preferenceLabelLabelColor
+        defaultSettings.preferenceLabelFontColor
       );
       this.configFileAccessor.save(
         "preferenceButtonColor",
