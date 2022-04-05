@@ -40,6 +40,8 @@
                 v-model="workIntervalMinute"
                 v-if="isInvalid.workIntervalMinute"
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-invalid-color':
                     savedPreferenceFontInvalidColor,
                 }"
@@ -49,6 +51,8 @@
                 v-model="workIntervalMinute"
                 v-else
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
                 }"
               />
@@ -85,6 +89,8 @@
                 v-model="shortBreakIntervalMinute"
                 v-if="isInvalid.shortBreakIntervalMinute"
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-invalid-color':
                     savedPreferenceFontInvalidColor,
                 }"
@@ -94,6 +100,8 @@
                 v-model="shortBreakIntervalMinute"
                 v-else
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
                 }"
               />
@@ -130,6 +138,8 @@
                 v-model="longBreakIntervalMinute"
                 v-if="isInvalid.longBreakIntervalMinute"
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-invalid-color':
                     savedPreferenceFontInvalidColor,
                 }"
@@ -139,6 +149,8 @@
                 v-model="longBreakIntervalMinute"
                 v-else
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
                 }"
               />
@@ -175,6 +187,8 @@
                 v-model="nWorkBeforeLongBreak"
                 v-if="isInvalid.nWorkBeforeLongBreak"
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-invalid-color':
                     savedPreferenceFontInvalidColor,
                 }"
@@ -184,6 +198,8 @@
                 v-model="nWorkBeforeLongBreak"
                 v-else
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
                 }"
               />
@@ -231,6 +247,8 @@
                 v-model="fps"
                 v-if="isInvalid.fps"
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-invalid-color':
                     savedPreferenceFontInvalidColor,
                 }"
@@ -240,6 +258,8 @@
                 v-model="fps"
                 v-else
                 :style="{
+                  '--preference-background-color':
+                    savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
                 }"
               />
@@ -286,7 +306,12 @@
                 v-model="notificationStr"
                 true-value="true"
                 false-value="false"
-              /><label for="notification"></label>
+              /><label
+                for="notification"
+                :style="{
+                  '--preference-font-color': savedPreferenceFontColor,
+                }"
+              ></label>
             </p>
           </div>
         </div>
@@ -1324,7 +1349,7 @@ export default {
 }
 
 .preference .content input[type="text"] {
-  background: #0e0e0e;
+  background: var(--preference-background-color);
   border: 1px solid var(--preference-font-color);
   border-radius: 4px;
   color: var(--preference-font-color);
@@ -1336,7 +1361,7 @@ export default {
 }
 
 .preference .content input[type="text"][class="invalid"] {
-  background: #1a1010;
+  background: var(--preference-background-color);
   border: 1px solid var(--preference-font-invalid-color);
   border-radius: 4px;
   color: var(--preference-font-invalid-color);
@@ -1398,8 +1423,8 @@ export default {
   left: 0;
   top: 50%;
   border: 1px solid;
-  border-color: #2f2f2f;
-  background: #0e0e0e;
+  border-color: var(--preference-font-color);
+  border-radius: 3px;
 }
 
 .preference .content input[type="checkbox"]:checked + label::after {
