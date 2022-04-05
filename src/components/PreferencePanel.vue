@@ -15,6 +15,7 @@
           :style="{
             '--preference-label-background-color':
               savedPreferenceLabelBackgroundColor,
+            '--preference-label-font-color': savedPreferenceLabelFontColor,
           }"
         >
           <p>Pomodoro</p>
@@ -105,6 +106,7 @@
           :style="{
             '--preference-label-background-color':
               savedPreferenceLabelBackgroundColor,
+            '--preference-label-font-color': savedPreferenceLabelFontColor,
           }"
         >
           <p>Graphic</p>
@@ -135,6 +137,7 @@
           :style="{
             '--preference-label-background-color':
               savedPreferenceLabelBackgroundColor,
+            '--preference-label-font-color': savedPreferenceLabelFontColor,
           }"
         >
           <p>Notification</p>
@@ -164,6 +167,7 @@
           :style="{
             '--preference-label-background-color':
               savedPreferenceLabelBackgroundColor,
+            '--preference-label-font-color': savedPreferenceLabelFontColor,
           }"
         >
           <p>Color</p>
@@ -281,6 +285,17 @@
             </p>
           </div>
         </div>
+        <!-- Preference Label Font Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p class="key">Preference Label Font Color</p>
+          </div>
+          <div class="valueSpace">
+            <p class="value">
+              <input type="color" v-model="preferenceLabelFontColor" />
+            </p>
+          </div>
+        </div>
         <!-- Preference Button Color -->
         <div class="content">
           <div class="keySpace">
@@ -387,6 +402,7 @@ export default {
       scaleColor: "#000000",
       preferenceBackgroundColor: "#000000",
       preferenceLabelBackgroundColor: "#000000",
+      preferenceLabelFontColor: "#000000",
       preferenceButtonColor: "#000000",
       preferenceButtonHoverColor: "#000000",
       preferenceButtonFontColor: "#000000",
@@ -405,6 +421,11 @@ export default {
     savedPreferenceLabelBackgroundColor() {
       return colorUtils.ntos(
         this.$store.state.preference.preferenceLabelBackgroundColor
+      );
+    },
+    savedPreferenceLabelFontColor() {
+      return colorUtils.ntos(
+        this.$store.state.preference.preferenceLabelFontColor
       );
     },
     savedPreferenceButtonColor() {
@@ -532,6 +553,10 @@ export default {
         colorUtils.ston(this.preferenceLabelBackgroundColor)
       );
       this.$store.commit(
+        "setPreferenceLabelFontColor",
+        colorUtils.ston(this.preferenceLabelFontColor)
+      );
+      this.$store.commit(
         "setPreferenceButtonColor",
         colorUtils.ston(this.preferenceButtonColor)
       );
@@ -628,6 +653,10 @@ export default {
         colorUtils.ston(this.preferenceLabelBackgroundColor)
       );
       configFileAccessor.save(
+        "preferenceLabelFontColor",
+        colorUtils.ston(this.preferenceLabelFontColor)
+      );
+      configFileAccessor.save(
         "preferenceBackgroundColor",
         colorUtils.ston(this.preferenceBackgroundColor)
       );
@@ -668,6 +697,7 @@ export default {
       scaleColor: 0x131313,
       preferenceBackgroundColor: 0x0e0e0e,
       preferenceLabelBackgroundColor: 0x171717,
+      preferenceLabelFontColor: 0x4d4d4d,
       preferenceButtonColor: 0x0e0e0e,
       preferenceButtonHoverColor: 0xff6767, // pink
       //preferenceButtonHoverColor: 0xb3ff66, // green
@@ -737,6 +767,10 @@ export default {
         defaultSettings.preferenceLabelBackgroundColor
       );
       this.configFileAccessor.save(
+        "preferenceLabelFontColor",
+        defaultSettings.preferenceLabelLabelColor
+      );
+      this.configFileAccessor.save(
         "preferenceButtonColor",
         defaultSettings.preferenceButtonColor
       );
@@ -773,6 +807,7 @@ export default {
       // Setting about preference
       preferenceBackgroundColor,
       preferenceLabelBackgroundColor,
+      preferenceLabelFontColor,
       preferenceButtonColor,
       preferenceButtonHoverColor,
       preferenceButtonFontColor,
@@ -839,6 +874,12 @@ export default {
       valueOrDefault(
         preferenceLabelBackgroundColor,
         defaultSettings.preferenceLabelBackgroundColor
+      )
+    );
+    this.preferenceLabelFontColor = colorUtils.ntos(
+      valueOrDefault(
+        preferenceLabelFontColor,
+        defaultSettings.preferenceLabelFontColor
       )
     );
     this.preferenceBackgroundColor = colorUtils.ntos(
@@ -942,6 +983,7 @@ export default {
 .preference .title p {
   font-size: 12px;
   margin: 0;
+  color: var(--preference-label-font-color);
 }
 
 /* Content */
