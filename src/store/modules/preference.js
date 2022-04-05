@@ -10,6 +10,7 @@ const state = () => ({
   preferenceButtonHoverColor: 0x000000,
   preferenceButtonFontColor: 0x000000,
   preferenceButtonFontHoverColor: 0x000000,
+  checkMarkColor: 0x000000,
 });
 
 const mutations = {
@@ -49,6 +50,9 @@ const mutations = {
   },
   setPreferenceButtonFontHoverColor(state, color) {
     state.preferenceButtonFontHoverColor = color;
+  },
+  setCheckMarkColor(state, color) {
+    state.checkMarkColor = color;
   },
 };
 

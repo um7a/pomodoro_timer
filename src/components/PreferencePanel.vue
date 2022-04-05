@@ -310,6 +310,7 @@
                 for="notification"
                 :style="{
                   '--preference-font-color': savedPreferenceFontColor,
+                  '--checkmark-color': savedCheckMarkColor,
                 }"
               ></label>
             </p>
@@ -342,7 +343,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="workColorLeft" />
               <input type="color" v-model="workColorRight" />
             </p>
@@ -361,7 +362,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="shortBreakColorLeft" />
               <input type="color" v-model="shortBreakColorRight" />
             </p>
@@ -380,7 +381,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="longBreakColorLeft" />
               <input type="color" v-model="longBreakColorRight" />
             </p>
@@ -399,7 +400,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="backgroundColor" />
             </p>
           </div>
@@ -417,7 +418,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="ringBaseColor" />
             </p>
           </div>
@@ -435,7 +436,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="ringLabelColor" />
             </p>
           </div>
@@ -453,7 +454,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="ringFontColor" />
             </p>
           </div>
@@ -471,7 +472,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="scaleColor" />
             </p>
           </div>
@@ -489,7 +490,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="preferenceBackgroundColor" />
             </p>
           </div>
@@ -507,7 +508,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="preferenceLabelBackgroundColor" />
             </p>
           </div>
@@ -525,7 +526,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="preferenceLabelFontColor" />
             </p>
           </div>
@@ -543,7 +544,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="preferenceFontColor" />
               <input type="color" v-model="preferenceFontInvalidColor" />
             </p>
@@ -563,7 +564,7 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="preferenceButtonColor" />
               <input type="color" v-model="preferenceButtonHoverColor" />
             </p>
@@ -582,9 +583,27 @@
             </p>
           </div>
           <div class="valueSpace">
-            <p class="value">
+            <p class="colorValue">
               <input type="color" v-model="preferenceButtonFontColor" />
               <input type="color" v-model="preferenceButtonFontHoverColor" />
+            </p>
+          </div>
+        </div>
+        <!-- Check Mark Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Check Mark Color
+            </p>
+          </div>
+          <div class="valueSpace">
+            <p class="colorValue">
+              <input type="color" v-model="checkMarkColor" />
             </p>
           </div>
         </div>
@@ -683,6 +702,7 @@ export default {
       preferenceButtonHoverColor: "#000000",
       preferenceButtonFontColor: "#000000",
       preferenceButtonFontHoverColor: "#000000",
+      checkMarkColor: "#000000",
     };
   },
   computed: {
@@ -733,6 +753,12 @@ export default {
         this.$store.state.preference.preferenceButtonFontHoverColor
       );
       return preferenceButtonFontHoverColor;
+    },
+    savedCheckMarkColor() {
+      const checkMarkColor = colorUtils.ntos(
+        this.$store.state.preference.checkMarkColor
+      );
+      return checkMarkColor;
     },
     notificationStr: {
       get: function () {
@@ -864,6 +890,10 @@ export default {
         "setPreferenceButtonFontHoverColor",
         colorUtils.ston(this.preferenceButtonFontHoverColor)
       );
+      this.$store.commit(
+        "setCheckMarkColor",
+        colorUtils.ston(this.checkMarkColor)
+      );
     },
 
     submit() {
@@ -976,6 +1006,10 @@ export default {
         "preferenceButtonFontHoverColor",
         colorUtils.ston(this.preferenceButtonFontHoverColor)
       );
+      configFileAccessor.save(
+        "checkMarkColor",
+        colorUtils.ston(this.checkMarkColor)
+      );
     },
   },
   mounted: function () {
@@ -1006,6 +1040,7 @@ export default {
       //preferenceButtonHoverColor: 0x454545, // gray
       preferenceButtonFontColor: 0x4d4d4d,
       preferenceButtonFontHoverColor: 0x000000,
+      checkMarkColor: 0x72b66d,
     };
 
     this.configFileAccessor = new ConfigFileAccessor(
@@ -1096,6 +1131,10 @@ export default {
         "preferenceButtonFontHoverColor",
         defaultSettings.preferenceButtonHoverColor
       );
+      this.configFileAccessor.save(
+        "checkMarkColor",
+        defaultSettings.checkMarkColor
+      );
     }
 
     const {
@@ -1124,6 +1163,7 @@ export default {
       preferenceButtonHoverColor,
       preferenceButtonFontColor,
       preferenceButtonFontHoverColor,
+      checkMarkColor,
     } = this.configFileAccessor.getConfigObject();
 
     // The following data properties are used to save temporary settings of preference panel.
@@ -1232,6 +1272,9 @@ export default {
         preferenceButtonFontHoverColor,
         defaultSettings.preferenceButtonFontHoverColor
       )
+    );
+    this.checkMarkColor = colorUtils.ntos(
+      valueOrDefault(checkMarkColor, defaultSettings.checkMarkColor)
     );
     this.copySettingToStore();
 
@@ -1371,6 +1414,12 @@ export default {
   top: 0;
 }
 
+.preference .content .colorValue {
+  padding: 9px 5px;
+  font-size: 12px;
+  margin: 0;
+}
+
 .preference .content input[type="color"] {
   background: none;
   border: none;
@@ -1440,7 +1489,7 @@ export default {
   transform: rotate(-45deg);
   border-bottom: 1px solid;
   border-left: 1px solid;
-  border-color: #587e4c;
+  border-color: var(--checkmark-color);
 }
 
 /* Footer */
