@@ -1,18 +1,11 @@
 <template>
-  <div
-    class="ring"
-    :style="{
-      '--body-background-color': `${backgroundColor}`,
-      '--ring-base-color': ringBaseColor,
-    }"
-  >
+  <div class="ring">
     <!-- Scale -->
     <div
       class="scale"
       v-for="p in scalePercentage"
       :style="{
         '--percentage-no-percent': p,
-        '--scale-color': scaleColor,
       }"
       v-bind:key="p"
     ></div>
@@ -22,9 +15,6 @@
       class="outerRing"
       v-if="outerPercentage < 50"
       :style="{
-        '--percentage': outerPercentage,
-        '--front-color1': `${startColor()}`,
-        '--front-color2': `${endColor(outerPercentage)}`,
         'background-image':
           'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
           'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
@@ -34,9 +24,6 @@
       class="outerRing"
       v-else
       :style="{
-        '--percentage': outerPercentage,
-        '--front-color1': `${startColor()}`,
-        '--front-color2': `${endColor(outerPercentage)}`,
         'background-image':
           'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
           `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
@@ -48,9 +35,6 @@
       class="innerRing"
       v-if="innerPercentage < 50"
       :style="{
-        '--percentage': innerPercentage,
-        '--front-color1': `${startColor()}`,
-        '--front-color2': `${endColor(innerPercentage)}`,
         'background-image':
           'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
           'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
@@ -60,9 +44,6 @@
       class="innerRing"
       v-else
       :style="{
-        '--percentage': innerPercentage,
-        '--front-color1': `${startColor()}`,
-        '--front-color2': `${endColor(innerPercentage)}`,
         'background-image':
           'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
           `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
@@ -72,37 +53,16 @@
     <div class="ringTextArea">
       <div>
         <!-- Work/Short Break/Long Break label -->
-        <p
-          class="label"
-          :style="{
-            '--ring-label-color': ringLabelColor,
-            'letter-spacing': '3px',
-          }"
-          v-if="isWorking"
-        >
-          Work
-        </p>
-        <p
-          class="label"
-          :style="{ '--ring-label-color': ringLabelColor }"
-          v-else-if="isLongBreak"
-        >
-          Long Break
-        </p>
-        <p
-          class="label"
-          :style="{ '--ring-label-color': ringLabelColor }"
-          v-else
-        >
-          Short Break
-        </p>
+        <p class="workLabel" v-if="isWorking">Work</p>
+        <p class="label" v-else-if="isLongBreak">Long Break</p>
+        <p class="label" v-else>Short Break</p>
         <!-- HH:MM:SS -->
-        <p class="mainText" :style="{ '--ring-font-color': ringFontColor }">
+        <p class="mainText">
           {{ formatSec(remainingTimeSec) }}
         </p>
 
         <!-- < STOP/START > -->
-        <p class="button" :style="{ '--ring-label-color': ringLabelColor }">
+        <p class="button">
           <span @click="goToStart">◀︎</span>
           <span v-if="!pausing" @click="pausing = true">STOP</span>
           <span v-else @click="pausing = false">START</span>
@@ -280,12 +240,11 @@ export default {
   /* Page-Wide variables */
   position: absolute;
   padding: 15px;
-  /*height: 200px;*/
   height: 100%;
-  /*width: 200px;*/
   width: 100%;
   margin: 0;
-  background: var(--body-background-color);
+  /*background: var(--body-background-color);*/
+  background: v-bind(backgroundColor);
   -webkit-app-region: drag; /* To drag the window. */
 }
 
@@ -293,8 +252,8 @@ export default {
 .innerRing,
 .outerRing,
 .ringTextArea {
-  --ring-label-color: #4d4d4d;
-  --button-color: #4d4d4d;
+  --body-background-color: v-bind(backgroundColor);
+  --ring-base-color: v-bind(ringBaseColor);
   position: absolute;
   /*
    * Make this class to flexible box layout.
@@ -318,6 +277,9 @@ export default {
 .innerRing,
 .innerRing::before,
 .innerRing::after {
+  --percentage: v-bind(innerPercentage);
+  --front-color1: v-bind(startColor());
+  --front-color2: v-bind(endColor(innerPercentage));
   position: absolute;
   /* Size of inner ring */
   width: 170px;
@@ -361,12 +323,24 @@ export default {
 }
 
 .ringTextArea .label {
+  --ring-label-color: v-bind(ringLabelColor);
   color: var(--ring-label-color);
   font-size: 12px;
   margin: 20px 0px 0px;
   text-align: center;
   animation-name: fade-in;
   animation-duration: 1s;
+}
+
+.ringTextArea .workLabel {
+  --ring-label-color: v-bind(ringLabelColor);
+  color: var(--ring-label-color);
+  font-size: 12px;
+  margin: 20px 0px 0px;
+  text-align: center;
+  animation-name: fade-in;
+  animation-duration: 1s;
+  letter-spacing: 3px;
 }
 
 @keyframes fade-in {
@@ -379,14 +353,14 @@ export default {
 }
 
 .ringTextArea .mainText {
-  color: var(--ring-font-color);
+  color: v-bind(ringFontColor);
   font-size: 15px;
   margin: 0px 0px 0px;
   text-align: center;
 }
 
 .ringTextArea .button {
-  color: var(--ring-label-color);
+  color: v-bind(ringLabelColor);
   font-size: 11px;
   margin: 5px 0px 0px;
   text-align: center;
@@ -405,12 +379,15 @@ export default {
 }
 
 .ringTextArea .button ::selection {
-  color: var(--ring-label-color);
+  color: v-bind(ringLabelColor);
   background-color: transparent;
   cursor: default;
 }
 
 .outerRing {
+  --percentage: v-bind(outerPercentage);
+  --front-color1: v-bind(startColor());
+  --front-color2: v-bind(endColor(outerPercentage));
   /* Size of outer ring */
   width: 180px;
   height: 180px;
@@ -424,10 +401,10 @@ export default {
   height: 200px;
   margin: 0px;
   background-image: radial-gradient(
-      var(--body-background-color) 66%,
+      v-bind(backgroundColor) 66%,
       transparent 67%
     ),
-    conic-gradient(var(--scale-color) 0deg, transparent 1deg 359deg);
+    conic-gradient(v-bind(scaleColor) 0deg, transparent 1deg 359deg);
   /*
    * Round the corners.
    * Radius of the corner is 50% of the element.
