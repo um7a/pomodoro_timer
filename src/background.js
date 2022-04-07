@@ -73,7 +73,7 @@ ipcMain.on("open-preference", (/* event, arg */) => {
   const win = BrowserWindow.getAllWindows()[0];
   const currentSize = win.getSize();
   win.setSize(
-    currentSize[0] + 370 * 2, // width (1 column = 370 px)
+    currentSize[0] + 200 + 370 * 2, // width (1 column = 370 px)
     currentSize[1] + 450, // height
     true // animate
   );
@@ -83,7 +83,7 @@ ipcMain.on("close-preference", (/* event, arg */) => {
   const win = BrowserWindow.getAllWindows()[0];
   const currentSize = win.getSize();
   win.setSize(
-    currentSize[0] - 370 * 2, // width (1 column = 370 px)
+    currentSize[0] - 200 - 370 * 2, // width (1 column = 370 px)
     currentSize[1] - 450, // height
     true // animate
   );

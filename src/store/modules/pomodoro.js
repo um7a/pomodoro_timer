@@ -71,17 +71,16 @@ const mutations = {
       // Update elapsed time
       state.elapsedTimeSec +=
         (now.getTime() - state.lastUpdateTime.getTime()) / 1000;
-
-      // Update current interval
-      state.currentIntervalSec = state.working
-        ? state.workIntervalSec
-        : state.workCount >= state.nWorkBeforeLongBreak
-        ? state.longBreakIntervalSec
-        : state.shortBreakIntervalSec;
-
-      // Update remaining time
-      state.remainingTimeSec = state.currentIntervalSec - state.elapsedTimeSec;
     }
+    // Update current interval
+    state.currentIntervalSec = state.working
+      ? state.workIntervalSec
+      : state.workCount >= state.nWorkBeforeLongBreak
+      ? state.longBreakIntervalSec
+      : state.shortBreakIntervalSec;
+
+    // Update remaining time
+    state.remainingTimeSec = state.currentIntervalSec - state.elapsedTimeSec;
 
     // Update last update time
     state.lastUpdateTime = now;
@@ -144,12 +143,16 @@ const mutations = {
   // about refresh loop
   //
   startRefreshLoop(state) {
+    this.commit("stopRefreshLoop");
     const refreshLoop = setInterval(() => {
       this.commit("updatePomodoro");
     }, 1000 / state.fps);
     state.refreshLoop = refreshLoop;
   },
   stopRefreshLoop(state) {
+    if (!state.refreshLoop) {
+      return;
+    }
     clearInterval(state.refreshLoop);
     state.refreshLoop = undefined;
   },

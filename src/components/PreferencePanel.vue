@@ -7,6 +7,77 @@
         '--preference-background-color': savedPreferenceBackgroundColor,
       }"
     >
+      <!-- Profile Column -->
+      <div
+        class="preferenceShortColumn"
+        :style="{
+          '--preference-line-color': savedPreferenceLineColor,
+        }"
+      >
+        <!-- Profile Title -->
+        <div
+          class="title"
+          :style="{
+            '--preference-label-background-color':
+              savedPreferenceLabelBackgroundColor,
+            '--preference-label-font-color': savedPreferenceLabelFontColor,
+          }"
+        >
+          <p>Profiles</p>
+        </div>
+
+        <!-- - button -->
+        <div class="minusButton">
+          <p
+            @click="deleteProfile()"
+            :style="{
+              '--preference-label-font-color': savedPreferenceLabelFontColor,
+            }"
+          >
+            -
+          </p>
+        </div>
+
+        <!-- + button -->
+        <div class="plusButton">
+          <p
+            @click="createProfile()"
+            :style="{
+              '--preference-label-font-color': savedPreferenceLabelFontColor,
+            }"
+          >
+            +
+          </p>
+        </div>
+        <div v-for="profileName in profileNames" :key="profileName">
+          <!-- Selected Profile -->
+          <div
+            class="selectedProfile"
+            v-if="profileName === currentProfileName"
+            :style="{
+              '--preference-font-color': savedPreferenceFontColor,
+            }"
+          >
+            <input
+              type="text"
+              id="selectedProfile"
+              ref="selectedProfile"
+              v-model="renamedProfileName"
+              @blur="renameProfile()"
+              :style="{
+                '--preference-background-color': savedPreferenceBackgroundColor,
+              }"
+            />
+          </div>
+          <!-- Non Selected Profile -->
+          <div class="profile" v-else @click="selectProfile(profileName)">
+            <p :style="{ '--preference-font-color': savedPreferenceFontColor }">
+              {{ profileName }}
+            </p>
+          </div>
+        </div>
+      </div>
+
       <!-- 1st Column -->
       <div class="preferenceColumn">
         <!-- Title Pomodoro -->
@@ -54,6 +125,7 @@
                   '--preference-background-color':
                     savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
+                  '--preference-line-color': savedPreferenceLineColor,
                 }"
               />
             </p>
@@ -103,6 +175,7 @@
                   '--preference-background-color':
                     savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
+                  '--preference-line-color': savedPreferenceLineColor,
                 }"
               />
             </p>
@@ -152,6 +225,7 @@
                   '--preference-background-color':
                     savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
+                  '--preference-line-color': savedPreferenceLineColor,
                 }"
               />
             </p>
@@ -201,6 +275,7 @@
                   '--preference-background-color':
                     savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
+                  '--preference-line-color': savedPreferenceLineColor,
                 }"
               />
             </p>
@@ -261,6 +336,7 @@
                   '--preference-background-color':
                     savedPreferenceBackgroundColor,
                   '--preference-font-color': savedPreferenceFontColor,
+                  '--preference-line-color': savedPreferenceLineColor,
                 }"
               />
             </p>
@@ -309,7 +385,7 @@
               /><label
                 for="notification"
                 :style="{
-                  '--preference-font-color': savedPreferenceFontColor,
+                  '--preference-line-color': savedPreferenceLineColor,
                   '--checkmark-color': savedCheckMarkColor,
                 }"
               ></label>
@@ -495,6 +571,24 @@
             </p>
           </div>
         </div>
+        <!-- Preference Line Color -->
+        <div class="content">
+          <div class="keySpace">
+            <p
+              class="key"
+              :style="{
+                '--preference-font-color': savedPreferenceFontColor,
+              }"
+            >
+              Preference Line Color
+            </p>
+          </div>
+          <div class="valueSpace">
+            <p class="colorValue">
+              <input type="color" v-model="preferenceLineColor" />
+            </p>
+          </div>
+        </div>
         <!-- Preference Label Background Color -->
         <div class="content">
           <div class="keySpace">
@@ -662,6 +756,8 @@
 <script>
 import { ipcRenderer } from "electron";
 import * as os from "os";
+import * as fs from "fs";
+import * as path from "path";
 
 import * as colorUtils from "../utils/colorUtils";
 import { ConfigFileAccessor } from "../utils/configFileAccessor";
@@ -670,12 +766,46 @@ const valueOrDefault = (value, defaultValue) => {
   return typeof value === "undefined" || value === null ? defaultValue : value;
 };
 
+const defaultProfileSettings = {
+  workIntervalSec: 25 * 60,
+  shortBreakIntervalSec: 5 * 60,
+  longBreakIntervalSec: 20 * 60,
+  nWorkBeforeLongBreak: 4,
+  fps: 2,
+  notificationIsEnabled: true,
+  workColors: ["#d38312", "#a83279"],
+  shortBreakColors: ["#00b09b", "#96c93d"],
+  longBreakColors: ["#43cea2", "#1e90ff"],
+  backgroundColor: "#000000",
+  ringBaseColor: "#131313",
+  ringLabelColor: "#4d4d4d",
+  ringFontColor: "#c0c0c0",
+  scaleColor: "#131313",
+  preferenceBackgroundColor: "#0e0e0e",
+  preferenceLineColor: "#1e1e1e",
+  preferenceLabelBackgroundColor: "#171717",
+  preferenceLabelFontColor: "#4d4d4d",
+  preferenceFontColor: "#4d4d4d",
+  preferenceFontInvalidColor: "#9b0043",
+  preferenceButtonColor: "#0e0e0e",
+  preferenceButtonHoverColor: "#ff6767", // pink
+  //preferenceButtonHoverColor: "#b3ff66", // green
+  //preferenceButtonHoverColor: "#454545", // gray
+  preferenceButtonFontColor: "#4d4d4d",
+  preferenceButtonFontHoverColor: "#000000",
+  checkMarkColor: "#72b66d",
+};
+
 export default {
   name: "PreferencePanel",
   data() {
     return {
+      profileNames: [],
+      renamedProfileName: "",
+      currentProfileName: "",
       isInvalid: {},
-      configFileAccessor: undefined,
+      mainConfigFileAccessor: undefined,
+      profileConfigFileAccessor: undefined,
       workIntervalMinute: 0,
       shortBreakIntervalMinute: 0,
       longBreakIntervalMinute: 0,
@@ -694,6 +824,7 @@ export default {
       ringFontColor: "#000000",
       scaleColor: "#000000",
       preferenceBackgroundColor: "#000000",
+      preferenceLineColor: "#000000",
       preferenceLabelBackgroundColor: "#000000",
       preferenceLabelFontColor: "#000000",
       preferenceFontColor: "#000000",
@@ -713,6 +844,9 @@ export default {
       return colorUtils.ntos(
         this.$store.state.preference.preferenceBackgroundColor
       );
+    },
+    savedPreferenceLineColor() {
+      return colorUtils.ntos(this.$store.state.preference.preferenceLineColor);
     },
     savedPreferenceLabelBackgroundColor() {
       return colorUtils.ntos(
@@ -777,6 +911,279 @@ export default {
     closePreference() {
       this.$store.commit("closePreference");
       ipcRenderer.send("close-preference");
+    },
+    loadProfileNames() {
+      const profilePath = os.homedir() + "/.pomodoroTimer/profiles/";
+      const profileFileNames = fs.readdirSync(profilePath);
+      profileFileNames.forEach((profileFileName) => {
+        if (!profileFileName.endsWith(".json")) {
+          return;
+        }
+        const profileName = profileFileName.split(".json")[0];
+        if (typeof profileName === "undefined" || profileName.length === 0) {
+          return;
+        }
+        this.profileNames.push(profileName);
+      });
+    },
+    reloadProfileNames() {
+      this.profileNames = [];
+      this.loadProfileNames();
+    },
+    renameProfile() {
+      if (
+        typeof this.renamedProfileName === "undefined" ||
+        this.renamedProfileName.length === 0
+      ) {
+        this.renamedProfileName = this.currentProfileName;
+        return;
+      }
+      if (this.renamedProfileName === this.currentProfileName) {
+        return;
+      }
+      // rename profile file name.
+      const profilePath = os.homedir() + "/.pomodoroTimer/profiles/";
+      const newProfileFileName = this.renamedProfileName + ".json";
+      this.profileConfigFileAccessor.rename(profilePath + newProfileFileName);
+
+      this.reloadProfileNames();
+      this.selectProfile(this.renamedProfileName);
+    },
+    createProfile() {
+      // Copy current profile file.
+      this.profileConfigFileAccessor.copy();
+      const copyProfileName = path
+        .basename(this.profileConfigFileAccessor.getFilePath())
+        .split(".json")[0];
+
+      this.reloadProfileNames();
+      this.selectProfile(copyProfileName);
+    },
+    deleteProfile() {
+      // More than 1 profile should exists.
+      if (this.profileNames.length <= 1) {
+        return;
+      }
+      this.profileConfigFileAccessor.delete();
+      const targetProfileIndex = this.profileNames.indexOf(
+        this.currentProfileName
+      );
+      let nextProfileName = "";
+      if (targetProfileIndex === 0) {
+        nextProfileName = this.profileNames[1];
+      } else {
+        nextProfileName = this.profileNames[targetProfileIndex - 1];
+      }
+      this.reloadProfileNames();
+      this.selectProfile(nextProfileName);
+    },
+    createNewMainConfig() {
+      // Default values
+      const defaultSettings = {
+        currentProfileName: "Default",
+      };
+      const configFileAccessor = new ConfigFileAccessor(
+        os.homedir() + "/.pomodoroTimer/config.json"
+      );
+      Object.entries(defaultSettings).forEach((keyValue) => {
+        const key = keyValue[0];
+        const value = keyValue[1];
+        configFileAccessor.save(key, value);
+      });
+    },
+    createNewProfileConfig() {
+      Object.entries(defaultProfileSettings).forEach((keyValue) => {
+        const key = keyValue[0];
+        const value = keyValue[1];
+        this.profileConfigFileAccessor.save(key, value);
+      });
+    },
+    selectProfile(profileName) {
+      this.currentProfileName = profileName;
+      this.renamedProfileName = profileName;
+      const profileFilePath =
+        os.homedir() +
+        "/.pomodoroTimer/profiles/" +
+        this.currentProfileName +
+        ".json";
+      this.profileConfigFileAccessor.setFilePath(profileFilePath);
+      this.loadPreferenceFromProfile();
+
+      this.mainConfigFileAccessor.save(
+        "currentProfileName",
+        this.currentProfileName
+      );
+
+      // Restart refresh loop.
+      this.$store.commit("stopRefreshLoop");
+      this.$store.commit("startRefreshLoop");
+    },
+    loadPreferenceFromProfile() {
+      const {
+        // Setting about pomodoro
+        workIntervalSec,
+        shortBreakIntervalSec,
+        longBreakIntervalSec,
+        nWorkBeforeLongBreak,
+        fps,
+        notificationIsEnabled,
+        workColors,
+        shortBreakColors,
+        longBreakColors,
+        backgroundColor,
+        ringBaseColor,
+        ringLabelColor,
+        ringFontColor,
+        scaleColor,
+        // Setting about preference
+        preferenceBackgroundColor,
+        preferenceLineColor,
+        preferenceLabelBackgroundColor,
+        preferenceLabelFontColor,
+        preferenceFontColor,
+        preferenceFontInvalidColor,
+        preferenceButtonColor,
+        preferenceButtonHoverColor,
+        preferenceButtonFontColor,
+        preferenceButtonFontHoverColor,
+        checkMarkColor,
+      } = this.profileConfigFileAccessor.getConfigObject();
+
+      // The following data properties are used to save temporary settings of preference panel.
+      // When the preferences are submitted, these values are copied to the store and the config file.
+      this.workIntervalMinute =
+        valueOrDefault(
+          workIntervalSec,
+          defaultProfileSettings.workIntervalSec
+        ) / 60;
+      this.shortBreakIntervalMinute =
+        valueOrDefault(
+          shortBreakIntervalSec,
+          defaultProfileSettings.shortBreakIntervalSec
+        ) / 60;
+      this.longBreakIntervalMinute =
+        valueOrDefault(
+          longBreakIntervalSec,
+          defaultProfileSettings.longBreakIntervalSec
+        ) / 60;
+      this.nWorkBeforeLongBreak = valueOrDefault(
+        nWorkBeforeLongBreak,
+        defaultProfileSettings.nWorkBeforeLongBreak
+      );
+      this.fps = valueOrDefault(fps, defaultProfileSettings.fps);
+      this.notificationIsEnabled = valueOrDefault(
+        notificationIsEnabled,
+        defaultProfileSettings.notificationIsEnabled
+      );
+      this.workColorLeft = colorUtils.ntos(
+        valueOrDefault(workColors[1], defaultProfileSettings.workColors[1])
+      );
+      this.workColorRight = colorUtils.ntos(
+        valueOrDefault(workColors[0], defaultProfileSettings.workColors[0])
+      );
+      this.shortBreakColorLeft = colorUtils.ntos(
+        valueOrDefault(
+          shortBreakColors[1],
+          defaultProfileSettings.shortBreakColors[1]
+        )
+      );
+      this.shortBreakColorRight = colorUtils.ntos(
+        valueOrDefault(
+          shortBreakColors[0],
+          defaultProfileSettings.shortBreakColors[0]
+        )
+      );
+      this.longBreakColorLeft = colorUtils.ntos(
+        valueOrDefault(
+          longBreakColors[1],
+          defaultProfileSettings.longBreakColors[1]
+        )
+      );
+      this.longBreakColorRight = colorUtils.ntos(
+        valueOrDefault(
+          longBreakColors[0],
+          defaultProfileSettings.longBreakColors[0]
+        )
+      );
+      this.backgroundColor = colorUtils.ntos(
+        valueOrDefault(backgroundColor, defaultProfileSettings.backgroundColor)
+      );
+      this.ringBaseColor = colorUtils.ntos(
+        valueOrDefault(ringBaseColor, defaultProfileSettings.ringBaseColor)
+      );
+      this.ringLabelColor = colorUtils.ntos(
+        valueOrDefault(ringLabelColor, defaultProfileSettings.ringLabelColor)
+      );
+      this.ringFontColor = colorUtils.ntos(
+        valueOrDefault(ringFontColor, defaultProfileSettings.ringFontColor)
+      );
+      this.scaleColor = colorUtils.ntos(
+        valueOrDefault(scaleColor, defaultProfileSettings.scaleColor)
+      );
+      this.preferenceLabelBackgroundColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceLabelBackgroundColor,
+          defaultProfileSettings.preferenceLabelBackgroundColor
+        )
+      );
+      this.preferenceLabelFontColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceLabelFontColor,
+          defaultProfileSettings.preferenceLabelFontColor
+        )
+      );
+      this.preferenceFontColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceFontColor,
+          defaultProfileSettings.preferenceFontColor
+        )
+      );
+      this.preferenceFontInvalidColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceFontInvalidColor,
+          defaultProfileSettings.preferenceFontInvalidColor
+        )
+      );
+      this.preferenceBackgroundColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceBackgroundColor,
+          defaultProfileSettings.preferenceBackgroundColor
+        )
+      );
+      this.preferenceLineColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceLineColor,
+          defaultProfileSettings.preferenceLineColor
+        )
+      );
+      this.preferenceButtonColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceButtonColor,
+          defaultProfileSettings.preferenceButtonColor
+        )
+      );
+      this.preferenceButtonHoverColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceButtonHoverColor,
+          defaultProfileSettings.preferenceButtonHoverColor
+        )
+      );
+      this.preferenceButtonFontColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceButtonFontColor,
+          defaultProfileSettings.preferenceButtonFontColor
+        )
+      );
+      this.preferenceButtonFontHoverColor = colorUtils.ntos(
+        valueOrDefault(
+          preferenceButtonFontHoverColor,
+          defaultProfileSettings.preferenceButtonFontHoverColor
+        )
+      );
+      this.checkMarkColor = colorUtils.ntos(
+        valueOrDefault(checkMarkColor, defaultProfileSettings.checkMarkColor)
+      );
+      this.copySettingToStore();
     },
     validate() {
       let isValid = true;
@@ -859,6 +1266,10 @@ export default {
         colorUtils.ston(this.preferenceBackgroundColor)
       );
       this.$store.commit(
+        "setPreferenceLineColor",
+        colorUtils.ston(this.preferenceLineColor)
+      );
+      this.$store.commit(
         "setPreferenceLabelBackgroundColor",
         colorUtils.ston(this.preferenceLabelBackgroundColor)
       );
@@ -896,6 +1307,105 @@ export default {
       );
     },
 
+    copyToFile(config) {
+      // Save the new settings to the config file.
+      const configFileAccessor = this.profileConfigFileAccessor;
+      configFileAccessor.save(
+        "workIntervalSec",
+        config.workIntervalMinute * 60
+      );
+      configFileAccessor.save(
+        "shortBreakIntervalSec",
+        config.shortBreakIntervalMinute * 60
+      );
+      configFileAccessor.save(
+        "longBreakIntervalSec",
+        config.longBreakIntervalMinute * 60
+      );
+      configFileAccessor.save(
+        "nWorkBeforeLongBreak",
+        config.nWorkBeforeLongBreak
+      );
+      configFileAccessor.save("fps", config.fps);
+      configFileAccessor.save(
+        "notificationIsEnabled",
+        config.notificationIsEnabled
+      );
+      configFileAccessor.save("workColors", [
+        colorUtils.ston(config.workColorLeft),
+        colorUtils.ston(config.workColorRight),
+      ]);
+      configFileAccessor.save("shortBreakColors", [
+        colorUtils.ston(config.shortBreakColorLeft),
+        colorUtils.ston(config.shortBreakColorRight),
+      ]);
+      configFileAccessor.save("longBreakColors", [
+        colorUtils.ston(config.longBreakColorLeft),
+        colorUtils.ston(config.longBreakColorRight),
+      ]);
+      configFileAccessor.save(
+        "backgroundColor",
+        colorUtils.ston(config.backgroundColor)
+      );
+      configFileAccessor.save(
+        "ringBaseColor",
+        colorUtils.ston(config.ringBaseColor)
+      );
+      configFileAccessor.save(
+        "ringLabelColor",
+        colorUtils.ston(config.ringLabelColor)
+      );
+      configFileAccessor.save(
+        "ringFontColor",
+        colorUtils.ston(config.ringFontColor)
+      );
+      configFileAccessor.save("scaleColor", colorUtils.ston(config.scaleColor));
+      configFileAccessor.save(
+        "preferenceLabelBackgroundColor",
+        colorUtils.ston(config.preferenceLabelBackgroundColor)
+      );
+      configFileAccessor.save(
+        "preferenceLabelFontColor",
+        colorUtils.ston(config.preferenceLabelFontColor)
+      );
+      configFileAccessor.save(
+        "preferenceFontColor",
+        colorUtils.ston(config.preferenceFontColor)
+      );
+      configFileAccessor.save(
+        "preferenceFontInvalidColor",
+        colorUtils.ston(config.preferenceFontInvalidColor)
+      );
+      configFileAccessor.save(
+        "preferenceBackgroundColor",
+        colorUtils.ston(config.preferenceBackgroundColor)
+      );
+      configFileAccessor.save(
+        "preferenceLineColor",
+        colorUtils.ston(config.preferenceLineColor)
+      );
+      configFileAccessor.save(
+        "preferenceButtonColor",
+        colorUtils.ston(config.preferenceButtonColor)
+      );
+      configFileAccessor.save(
+        "preferenceButtonHoverColor",
+        colorUtils.ston(config.preferenceButtonHoverColor)
+      );
+      configFileAccessor.save(
+        "preferenceButtonFontColor",
+        colorUtils.ston(config.preferenceButtonFontColor)
+      );
+      configFileAccessor.save(
+        "preferenceButtonFontHoverColor",
+        colorUtils.ston(config.preferenceButtonFontHoverColor)
+      );
+      configFileAccessor.save(
+        "checkMarkColor",
+        colorUtils.ston(config.checkMarkColor)
+      );
+    },
+
     submit() {
       // Validate new settings.
       if (!this.validate()) {
@@ -915,368 +1425,48 @@ export default {
 
       this.copySettingToStore();
 
+      // exec updatePomodoro to update view of HH:MM:SS
+      this.$store.commit("updatePomodoro");
+
       // Restart refresh loop.
       this.$store.commit("stopRefreshLoop");
       this.$store.commit("startRefreshLoop");
 
       // Save the new settings to the config file.
-      const configFileAccessor = new ConfigFileAccessor(
-        os.homedir() + "/.pomodoroTimer/config.json"
-      );
-      configFileAccessor.save("workIntervalSec", this.workIntervalMinute * 60);
-      configFileAccessor.save(
-        "shortBreakIntervalSec",
-        this.shortBreakIntervalMinute * 60
-      );
-      configFileAccessor.save(
-        "longBreakIntervalSec",
-        this.longBreakIntervalMinute * 60
-      );
-      configFileAccessor.save(
-        "nWorkBeforeLongBreak",
-        this.nWorkBeforeLongBreak
-      );
-      configFileAccessor.save("fps", this.fps);
-      configFileAccessor.save(
-        "notificationIsEnabled",
-        this.notificationIsEnabled
-      );
-      configFileAccessor.save("workColors", [
-        colorUtils.ston(this.workColorRight),
-        colorUtils.ston(this.workColorLeft),
-      ]);
-      configFileAccessor.save("shortBreakColors", [
-        colorUtils.ston(this.shortBreakColorRight),
-        colorUtils.ston(this.shortBreakColorLeft),
-      ]);
-      configFileAccessor.save("longBreakColors", [
-        colorUtils.ston(this.longBreakColorRight),
-        colorUtils.ston(this.longBreakColorLeft),
-      ]);
-      configFileAccessor.save(
-        "backgroundColor",
-        colorUtils.ston(this.backgroundColor)
-      );
-      configFileAccessor.save(
-        "ringBaseColor",
-        colorUtils.ston(this.ringBaseColor)
-      );
-      configFileAccessor.save(
-        "ringLabelColor",
-        colorUtils.ston(this.ringLabelColor)
-      );
-      configFileAccessor.save(
-        "ringFontColor",
-        colorUtils.ston(this.ringFontColor)
-      );
-      configFileAccessor.save("scaleColor", colorUtils.ston(this.scaleColor));
-      configFileAccessor.save(
-        "preferenceLabelBackgroundColor",
-        colorUtils.ston(this.preferenceLabelBackgroundColor)
-      );
-      configFileAccessor.save(
-        "preferenceLabelFontColor",
-        colorUtils.ston(this.preferenceLabelFontColor)
-      );
-      configFileAccessor.save(
-        "preferenceFontColor",
-        colorUtils.ston(this.preferenceFontColor)
-      );
-      configFileAccessor.save(
-        "preferenceFontInvalidColor",
-        colorUtils.ston(this.preferenceFontInvalidColor)
-      );
-      configFileAccessor.save(
-        "preferenceBackgroundColor",
-        colorUtils.ston(this.preferenceBackgroundColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonColor",
-        colorUtils.ston(this.preferenceButtonColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonHoverColor",
-        colorUtils.ston(this.preferenceButtonHoverColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonFontColor",
-        colorUtils.ston(this.preferenceButtonFontColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonFontHoverColor",
-        colorUtils.ston(this.preferenceButtonFontHoverColor)
-      );
-      configFileAccessor.save(
-        "checkMarkColor",
-        colorUtils.ston(this.checkMarkColor)
-      );
+      this.copyToFile(this);
     },
   },
   mounted: function () {
-    // Default values
-    const defaultSettings = {
-      workIntervalSec: 25 * 60,
-      shortBreakIntervalSec: 5 * 60,
-      longBreakIntervalSec: 20 * 60,
-      nWorkBeforeLongBreak: 4,
-      fps: 2,
-      notificationIsEnabled: true,
-      workColors: [0xd38312, 0xa83279],
-      shortBreakColors: [0x00b09b, 0x96c93d],
-      longBreakColors: [0x43cea2, 0x1e90ff],
-      backgroundColor: 0x000000,
-      ringBaseColor: 0x131313,
-      ringLabelColor: 0x4d4d4d,
-      ringFontColor: 0xc0c0c0,
-      scaleColor: 0x131313,
-      preferenceBackgroundColor: 0x0e0e0e,
-      preferenceLabelBackgroundColor: 0x171717,
-      preferenceLabelFontColor: 0x4d4d4d,
-      preferenceFontColor: 0x4d4d4d,
-      preferenceFontInvalidColor: 0x9b0043,
-      preferenceButtonColor: 0x0e0e0e,
-      preferenceButtonHoverColor: 0xff6767, // pink
-      //preferenceButtonHoverColor: 0xb3ff66, // green
-      //preferenceButtonHoverColor: 0x454545, // gray
-      preferenceButtonFontColor: 0x4d4d4d,
-      preferenceButtonFontHoverColor: 0x000000,
-      checkMarkColor: 0x72b66d,
-    };
+    // Load profile file names from directory.
+    this.loadProfileNames();
 
-    this.configFileAccessor = new ConfigFileAccessor(
+    // Create file accessor of main config.
+    this.mainConfigFileAccessor = new ConfigFileAccessor(
       os.homedir() + "/.pomodoroTimer/config.json"
     );
     // Create new file with default values.
-    if (!this.configFileAccessor.configFileExists()) {
-      this.configFileAccessor.save(
-        "workIntervalSec",
-        defaultSettings.workIntervalSec
-      );
-      this.configFileAccessor.save(
-        "shortBreakIntervalSec",
-        defaultSettings.shortBreakIntervalSec
-      );
-      this.configFileAccessor.save(
-        "longBreakIntervalSec",
-        defaultSettings.longBreakIntervalSec
-      );
-      this.configFileAccessor.save(
-        "nWorkBeforeLongBreak",
-        defaultSettings.nWorkBeforeLongBreak
-      );
-      this.configFileAccessor.save("fps", defaultSettings.fps);
-      this.configFileAccessor.save(
-        "notificationIsEnabled",
-        defaultSettings.notificationIsEnabled
-      );
-      this.configFileAccessor.save("workColors", defaultSettings.workColors);
-      this.configFileAccessor.save(
-        "shortBreakColors",
-        defaultSettings.shortBreakColors
-      );
-      this.configFileAccessor.save(
-        "longBreakColors",
-        defaultSettings.longBreakColors
-      );
-      this.configFileAccessor.save(
-        "backgroundColor",
-        defaultSettings.backgroundColor
-      );
-      this.configFileAccessor.save(
-        "ringBaseColor",
-        defaultSettings.ringBaseColor
-      );
-      this.configFileAccessor.save(
-        "ringLabelColor",
-        defaultSettings.ringLabelColor
-      );
-      this.configFileAccessor.save(
-        "ringFontColor",
-        defaultSettings.ringFontColor
-      );
-      this.configFileAccessor.save("scaleColor", defaultSettings.scaleColor);
-      this.configFileAccessor.save(
-        "preferenceBackgroundColor",
-        defaultSettings.preferenceBackgroundColor
-      );
-      this.configFileAccessor.save(
-        "preferenceLabelBackgroundColor",
-        defaultSettings.preferenceLabelBackgroundColor
-      );
-      this.configFileAccessor.save(
-        "preferenceLabelFontColor",
-        defaultSettings.preferenceLabelFontColor
-      );
-      this.configFileAccessor.save(
-        "preferenceFontColor",
-        defaultSettings.preferenceFontColor
-      );
-      this.configFileAccessor.save(
-        "preferenceFontInvalidColor",
-        defaultSettings.preferenceFontInvalidColor
-      );
-      this.configFileAccessor.save(
-        "preferenceButtonColor",
-        defaultSettings.preferenceButtonColor
-      );
-      this.configFileAccessor.save(
-        "preferenceButtonHoverColor",
-        defaultSettings.preferenceButtonHoverColor
-      );
-      this.configFileAccessor.save(
-        "preferenceButtonFontColor",
-        defaultSettings.preferenceButtonColor
-      );
-      this.configFileAccessor.save(
-        "preferenceButtonFontHoverColor",
-        defaultSettings.preferenceButtonHoverColor
-      );
-      this.configFileAccessor.save(
-        "checkMarkColor",
-        defaultSettings.checkMarkColor
-      );
+    if (!this.mainConfigFileAccessor.configFileExists()) {
+      this.createNewMainConfig();
     }
 
-    const {
-      // Setting about pomodoro
-      workIntervalSec,
-      shortBreakIntervalSec,
-      longBreakIntervalSec,
-      nWorkBeforeLongBreak,
-      fps,
-      notificationIsEnabled,
-      workColors,
-      shortBreakColors,
-      longBreakColors,
-      backgroundColor,
-      ringBaseColor,
-      ringLabelColor,
-      ringFontColor,
-      scaleColor,
-      // Setting about preference
-      preferenceBackgroundColor,
-      preferenceLabelBackgroundColor,
-      preferenceLabelFontColor,
-      preferenceFontColor,
-      preferenceFontInvalidColor,
-      preferenceButtonColor,
-      preferenceButtonHoverColor,
-      preferenceButtonFontColor,
-      preferenceButtonFontHoverColor,
-      checkMarkColor,
-    } = this.configFileAccessor.getConfigObject();
+    this.currentProfileName =
+      this.mainConfigFileAccessor.getConfigObject().currentProfileName;
 
-    // The following data properties are used to save temporary settings of preference panel.
-    // When the preferences are submitted, these values are copied to the store and the config file.
-    this.workIntervalMinute =
-      valueOrDefault(workIntervalSec, defaultSettings.workIntervalSec) / 60;
-    this.shortBreakIntervalMinute =
-      valueOrDefault(
-        shortBreakIntervalSec,
-        defaultSettings.shortBreakIntervalSec
-      ) / 60;
-    this.longBreakIntervalMinute =
-      valueOrDefault(
-        longBreakIntervalSec,
-        defaultSettings.longBreakIntervalSec
-      ) / 60;
-    this.nWorkBeforeLongBreak = valueOrDefault(
-      nWorkBeforeLongBreak,
-      defaultSettings.nWorkBeforeLongBreak
+    // Create file accessor of profile config.
+    this.profileConfigFileAccessor = new ConfigFileAccessor(
+      os.homedir() +
+        "/.pomodoroTimer/profiles/" +
+        this.currentProfileName +
+        ".json"
     );
-    this.fps = valueOrDefault(fps, defaultSettings.fps);
-    this.notificationIsEnabled = valueOrDefault(
-      notificationIsEnabled,
-      defaultSettings.notificationIsEnabled
-    );
-    this.workColorLeft = colorUtils.ntos(
-      valueOrDefault(workColors[1], defaultSettings.workColors[1])
-    );
-    this.workColorRight = colorUtils.ntos(
-      valueOrDefault(workColors[0], defaultSettings.workColors[0])
-    );
-    this.shortBreakColorLeft = colorUtils.ntos(
-      valueOrDefault(shortBreakColors[1], defaultSettings.shortBreakColors[1])
-    );
-    this.shortBreakColorRight = colorUtils.ntos(
-      valueOrDefault(shortBreakColors[0], defaultSettings.shortBreakColors[0])
-    );
-    this.longBreakColorLeft = colorUtils.ntos(
-      valueOrDefault(longBreakColors[1], defaultSettings.longBreakColors[1])
-    );
-    this.longBreakColorRight = colorUtils.ntos(
-      valueOrDefault(longBreakColors[0], defaultSettings.longBreakColors[0])
-    );
-    this.backgroundColor = colorUtils.ntos(
-      valueOrDefault(backgroundColor, defaultSettings.backgroundColor)
-    );
-    this.ringBaseColor = colorUtils.ntos(
-      valueOrDefault(ringBaseColor, defaultSettings.ringBaseColor)
-    );
-    this.ringLabelColor = colorUtils.ntos(
-      valueOrDefault(ringLabelColor, defaultSettings.ringLabelColor)
-    );
-    this.ringFontColor = colorUtils.ntos(
-      valueOrDefault(ringFontColor, defaultSettings.ringFontColor)
-    );
-    this.scaleColor = colorUtils.ntos(
-      valueOrDefault(scaleColor, defaultSettings.scaleColor)
-    );
-    this.preferenceLabelBackgroundColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceLabelBackgroundColor,
-        defaultSettings.preferenceLabelBackgroundColor
-      )
-    );
-    this.preferenceLabelFontColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceLabelFontColor,
-        defaultSettings.preferenceLabelFontColor
-      )
-    );
-    this.preferenceFontColor = colorUtils.ntos(
-      valueOrDefault(preferenceFontColor, defaultSettings.preferenceFontColor)
-    );
-    this.preferenceFontInvalidColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceFontInvalidColor,
-        defaultSettings.preferenceFontInvalidColor
-      )
-    );
-    this.preferenceBackgroundColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceBackgroundColor,
-        defaultSettings.preferenceBackgroundColor
-      )
-    );
-    this.preferenceButtonColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceButtonColor,
-        defaultSettings.preferenceButtonColor
-      )
-    );
-    this.preferenceButtonHoverColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceButtonHoverColor,
-        defaultSettings.preferenceButtonHoverColor
-      )
-    );
-    this.preferenceButtonFontColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceButtonFontColor,
-        defaultSettings.preferenceButtonFontColor
-      )
-    );
-    this.preferenceButtonFontHoverColor = colorUtils.ntos(
-      valueOrDefault(
-        preferenceButtonFontHoverColor,
-        defaultSettings.preferenceButtonFontHoverColor
-      )
-    );
-    this.checkMarkColor = colorUtils.ntos(
-      valueOrDefault(checkMarkColor, defaultSettings.checkMarkColor)
-    );
-    this.copySettingToStore();
+    // Create new file with default values.
+    if (!this.profileConfigFileAccessor.configFileExists()) {
+      this.createNewProfileConfig();
+    }
+
+    this.loadPreferenceFromProfile();
+
+    this.selectProfile(this.currentProfileName);
 
     this.$store.commit("initPomodoro");
     this.$store.commit("startRefreshLoop");
@@ -1326,6 +1516,91 @@ export default {
   animation-name: fade;
   animation-duration: 2s;
   display: flex;
+}
+
+/* Profile Column */
+.preferenceShortColumn {
+  width: 194px;
+  margin: 0 2px 33px 0;
+  border-right: 1px solid var(--preference-line-color);
+  border-radius: 2px;
+  position: relative;
+}
+
+.preferenceShortColumn .title {
+  background: var(--preference-label-background-color);
+  margin: 0 0 4px;
+  border-radius: 2px;
+  padding: 0 10px;
+}
+
+.preferenceShortColumn .title p {
+  font-size: 12px;
+  margin: 0;
+  color: var(--preference-label-font-color);
+}
+
+.preferenceShortColumn .plusButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0;
+}
+
+.preferenceShortColumn .minusButton {
+  position: absolute;
+  right: 30px;
+  top: 0;
+  padding: 0;
+}
+
+.preferenceShortColumn .minusButton p {
+  color: var(--preference-label-font-color);
+  margin: 0;
+  padding: 1px 3px 4px;
+  transform: scaleX(2);
+}
+
+.preferenceShortColumn .plusButton p {
+  color: var(--preference-label-font-color);
+  margin: 0;
+  padding: 1px 7px 4px;
+}
+
+.preferenceShortColumn .profile {
+  padding: 5px 10px;
+  margin: 1px 3px;
+  cursor: pointer;
+}
+
+.preferenceShortColumn .selectedProfile {
+  padding: 0 10px 3px;
+  margin: 1px 3px;
+  background: var(--preference-font-color);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.preferenceShortColumn .profile p {
+  color: var(--preference-font-color);
+  font-size: 12px;
+  margin: 0px 0;
+}
+
+.preferenceShortColumn .selectedProfile p {
+  color: var(--preference-background-color);
+  font-size: 12px;
+  margin: 0;
+}
+
+.preferenceShortColumn .selectedProfile input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--preference-background-color);
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
 }
 
 /* Column */
@@ -1393,7 +1668,7 @@ export default {
 
 .preference .content input[type="text"] {
   background: var(--preference-background-color);
-  border: 1px solid var(--preference-font-color);
+  border: 1px solid var(--preference-line-color);
   border-radius: 4px;
   color: var(--preference-font-color);
   outline: none;
@@ -1415,7 +1690,7 @@ export default {
 }
 
 .preference .content .colorValue {
-  padding: 9px 5px;
+  padding: 7px 5px;
   font-size: 12px;
   margin: 0;
 }
@@ -1472,7 +1747,7 @@ export default {
   left: 0;
   top: 50%;
   border: 1px solid;
-  border-color: var(--preference-font-color);
+  border-color: var(--preference-line-color);
   border-radius: 3px;
 }
 

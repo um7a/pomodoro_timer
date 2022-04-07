@@ -2,6 +2,7 @@ const state = () => ({
   preferenceIsOpened: false,
   // The following fields are initialized by the values of config file.
   preferenceBackgroundColor: 0x000000,
+  preferenceLineColor: 0x000000,
   preferenceLabelBackgroundColor: 0x000000,
   preferenceLabelFontColor: 0x000000,
   preferenceFontColor: 0x000000,
@@ -26,6 +27,9 @@ const mutations = {
   //
   setPreferenceBackgroundColor(state, color) {
     state.preferenceBackgroundColor = color;
+  },
+  setPreferenceLineColor(state, color) {
+    state.preferenceLineColor = color;
   },
   setPreferenceLabelBackgroundColor(state, color) {
     state.preferenceLabelBackgroundColor = color;

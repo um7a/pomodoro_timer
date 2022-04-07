@@ -1,4 +1,12 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  unlinkSync,
+  writeFileSync,
+} from "fs";
 import { dirname } from "path";
 
 export class ConfigFileAccessor {
@@ -12,6 +20,14 @@ export class ConfigFileAccessor {
   //
   constructor(filePath) {
     this.filePath = filePath;
+  }
+
+  setFilePath(filePath) {
+    this.filePath = filePath;
+  }
+
+  getFilePath() {
+    return this.filePath;
   }
 
   configFileExists() {
@@ -47,5 +63,29 @@ export class ConfigFileAccessor {
       // If the config file exists and failed to read file, Re-throw error.
       throw err;
     }
+  }
+
+  rename(newFilePath) {
+    renameSync(this.filePath, newFilePath);
+    this.filePath = newFilePath;
+  }
+
+  copy() {
+    if (!this.filePath.endsWith(".json")) {
+      throw new Error(`Unexpected file path. Not .json file.`);
+    }
+    const withoutExtension = this.filePath.split(".json")[0];
+
+    let i = 2;
+    while (existsSync(withoutExtension + "." + i.toString() + ".json")) {
+      i++;
+    }
+    const copyFilePath = withoutExtension + "." + i.toString() + ".json";
+    copyFileSync(this.filePath, copyFilePath);
+    this.filePath = copyFilePath;
+  }
+
+  delete() {
+    unlinkSync(this.filePath);
   }
 }
