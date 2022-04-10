@@ -14,6 +14,13 @@ Pomodoro timer for Mac.
 If you use intel mac, you can download PomodoroTimer.app from [Release](https://github.com/um7a/pomodoro_timer/releases) page.  
 Or you can also build PomodoroTimer.app for both intel mac and apple silicon mac from source code. __(Building from source code is recomended.)__
 
+## Uninstall
+You can uninstall this app by deleting PomodoroTimer.app file and remove the following directory.
+```
+$ rm -r ~/.pomodoroTimer
+```
+
+
 ## Build
 You can build PomodoroTimer.app from source code by the following steps.
 
