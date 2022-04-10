@@ -1,241 +1,395 @@
 <template>
-  <div class="ring">
-    <!-- Scale -->
-    <div
-      class="scale"
-      v-for="p in scalePercentage"
-      :style="{
-        '--percentage-no-percent': p,
-      }"
-      v-bind:key="p"
-    ></div>
+  <div id="app">
+    <div class="ring">
+      <!-- Scale -->
+      <div
+        class="scale"
+        v-for="p in scalePercentage"
+        :style="{
+          '--percentage-no-percent': p,
+        }"
+        v-bind:key="p"
+      ></div>
 
-    <!-- outer ring -->
-    <div
-      class="outerRing"
-      v-if="outerPercentage < 50"
-      :style="{
-        'background-image':
-          'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
-          'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
-      }"
-    ></div>
-    <div
-      class="outerRing"
-      v-else
-      :style="{
-        'background-image':
-          'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
-          `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
-      }"
-    ></div>
+      <!-- outer ring -->
+      <div
+        class="outerRing"
+        v-if="outerPercentage < 50"
+        :style="{
+          'background-image':
+            'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
+            'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
+        }"
+      ></div>
+      <div
+        class="outerRing"
+        v-else
+        :style="{
+          'background-image':
+            'radial-gradient(var(--body-background-color) 68%, transparent 69%),' +
+            `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
+        }"
+      ></div>
 
-    <!-- inner ring -->
-    <div
-      class="innerRing"
-      v-if="innerPercentage < 50"
-      :style="{
-        'background-image':
-          'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
-          'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
-      }"
-    ></div>
-    <div
-      class="innerRing"
-      v-else
-      :style="{
-        'background-image':
-          'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
-          `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
-      }"
-    ></div>
-    <!-- texts -->
-    <div class="ringTextArea">
-      <div>
-        <!-- Work/Short Break/Long Break label -->
-        <p class="workLabel" v-if="isWorking">Work</p>
-        <p class="label" v-else-if="isLongBreak">Long Break</p>
-        <p class="label" v-else>Short Break</p>
-        <!-- HH:MM:SS -->
-        <p class="mainText">
-          {{ formatSec(remainingTimeSec) }}
-        </p>
+      <!-- inner ring -->
+      <div
+        class="innerRing"
+        v-if="innerPercentage < 50"
+        :style="{
+          'background-image':
+            'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
+            'conic-gradient(from 90deg, var(--front-color1) 0% 0%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)',
+        }"
+      ></div>
+      <div
+        class="innerRing"
+        v-else
+        :style="{
+          'background-image':
+            'radial-gradient(var(--body-background-color) 64%, transparent 65%),' +
+            `conic-gradient(from 90deg, var(--front-color1) 0% 0%, ${fiftyColor()} 50% 50%, var(--front-color2) calc(1% * var(--percentage)) calc(1% * var(--percentage)), var(--ring-base-color) calc(1% * var(--percentage)) 100%)`,
+        }"
+      ></div>
+      <!-- texts -->
+      <div class="ringTextArea">
+        <div>
+          <!-- Work/Short Break/Long Break label -->
+          <p class="workLabel" v-if="isWorking">Work</p>
+          <p class="label" v-else-if="isLongBreak">Long Break</p>
+          <p class="label" v-else>Short Break</p>
+          <!-- HH:MM:SS -->
+          <p class="mainText">
+            {{ formatSec(remainingTimeSec) }}
+          </p>
 
-        <!-- < STOP/START > -->
-        <p class="button">
-          <span @click="goToStart">◀︎</span>
-          <span v-if="!pausing" @click="pausing = true">STOP</span>
-          <span v-else @click="pausing = false">START</span>
-          <span @click="goToEnd">▶︎</span>
-        </p>
+          <!-- < STOP/START > -->
+          <p class="button">
+            <span @click="goToStart">◀︎</span>
+            <span v-if="!pausing" @click="stopRefreshLoop()">STOP</span>
+            <span v-else @click="startRefreshLoop()">START</span>
+            <span @click="goToNext">▶︎</span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ipcRenderer } from "electron";
+
 import * as utils from "../utils/timeUtils";
 import * as colorUtils from "../utils/colorUtils";
+import { ProfileConfigFileAccessor } from "../modules/profileConfigFileAccessor";
+import { MainConfigFileAccessor } from "../modules/mainConfigFileAccessor";
+
+const calcColor = (edgeColors) => {
+  const colors = [];
+  const leftColor = edgeColors[0];
+  const rightColor = edgeColors[1];
+  for (let percentage = 0; percentage <= 50; percentage += 1) {
+    colors.push(colorUtils.calcColor(leftColor, rightColor, percentage));
+  }
+  return colors;
+};
 
 export default {
   name: "PomodoroTimer",
-  computed: {
-    scalePercentage: function () {
-      return [
+  data() {
+    return {
+      currentIntervalSec: 0,
+      pausing: true,
+      refreshLoop: undefined,
+      remainingTimeSec: 0,
+      scalePercentage: [
         0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85,
         90, 95,
-      ];
-    },
-    backgroundColor: function () {
-      const backgroundColorStr = colorUtils.ntos(
-        this.$store.state.pomodoro.backgroundColor
-      );
-      return backgroundColorStr;
-    },
-    ringBaseColor: function () {
-      const ringBaseColorStr = colorUtils.ntos(
-        this.$store.state.pomodoro.ringBaseColor
-      );
-      return ringBaseColorStr;
-    },
-    ringLabelColor: function () {
-      const ringLabelColorStr = colorUtils.ntos(
-        this.$store.state.pomodoro.ringLabelColor
-      );
-      return ringLabelColorStr;
-    },
-    ringFontColor: function () {
-      const ringFontColorStr = colorUtils.ntos(
-        this.$store.state.pomodoro.ringFontColor
-      );
-      return ringFontColorStr;
-    },
-    scaleColor: function () {
-      const scaleColorStr = colorUtils.ntos(
-        this.$store.state.pomodoro.scaleColor
-      );
-      return scaleColorStr;
-    },
-    pausing: {
-      get: function () {
-        return this.$store.state.pomodoro.pausing;
-      },
-      set: function (val) {
-        this.$store.commit("setPausing", val);
-      },
-    },
-    remainingTimeSec() {
-      return this.$store.state.pomodoro.remainingTimeSec;
-    },
+      ],
+      workCount: 1,
+      working: true,
+
+      //
+      // The following fields are initialized by the main config file.
+      //
+      currentProfileName: "",
+
+      //
+      // The following fields are initialized by the profile config file.
+      //
+      // Pomodoro
+      workIntervalSec: 0,
+      shortBreakIntervalSec: 0,
+      longBreakIntervalSec: 0,
+      nWorkBeforeLongBreak: 0,
+      // Graphic
+      fps: 0,
+      // Notification
+      notificationIsEnabled: false,
+      // Color
+      workColors: ["#000000", "#000000"],
+      shortBreakColors: ["#000000", "#000000"],
+      longBreakColors: ["#000000", "#000000"],
+      backgroundColor: "#000000",
+      ringBaseColor: "#000000",
+      ringLabelColor: "#000000",
+      ringFontColor: "#000000",
+      scaleColor: "#000000",
+    };
+  },
+  computed: {
     innerPercentage() {
-      const { elapsedTimeSec, currentIntervalSec } = this.$store.state.pomodoro;
-      if (elapsedTimeSec === 0 || currentIntervalSec === 0) {
+      const elapsedTimeSec = this.currentIntervalSec - this.remainingTimeSec;
+      if (elapsedTimeSec === 0 || this.currentIntervalSec === 0) {
         return 0;
       }
-      return Math.min((elapsedTimeSec / currentIntervalSec) * 100, 100);
+      return Math.min((elapsedTimeSec / this.currentIntervalSec) * 100, 100);
     },
     outerPercentage() {
-      const { working, workCount, nWorkBeforeLongBreak } =
-        this.$store.state.pomodoro;
       let percentage =
-        workCount > 1 ? ((workCount - 1) / nWorkBeforeLongBreak) * 100 : 0;
-      const innerPercentage = working ? this.innerPercentage : 100;
+        this.workCount > 1
+          ? ((this.workCount - 1) / this.nWorkBeforeLongBreak) * 100
+          : 0;
+      const innerPercentage = this.working ? this.innerPercentage : 100;
       if (innerPercentage > 0) {
-        percentage += innerPercentage / nWorkBeforeLongBreak;
+        percentage += innerPercentage / this.nWorkBeforeLongBreak;
       }
       return percentage;
     },
     isWorking() {
-      return this.$store.state.pomodoro.working;
+      return this.working;
     },
     isLongBreak() {
-      return (
-        !this.$store.state.pomodoro.working &&
-        this.$store.state.pomodoro.nWorkBeforeLongBreak ===
-          this.$store.state.pomodoro.workCount
-      );
+      return !this.working && this.nWorkBeforeLongBreak === this.workCount;
     },
   },
   methods: {
     startColor() {
-      const {
-        longBreakColors,
-        shortBreakColors,
-        workColors,
-        workCount,
-        nWorkBeforeLongBreak,
-        working,
-      } = this.$store.state.pomodoro;
-
-      let startColor = undefined;
-      if (working) {
-        startColor = workColors[0];
-      } else if (workCount === nWorkBeforeLongBreak) {
-        startColor = longBreakColors[0];
+      if (this.working) {
+        return this.workColors[this.workColors.length - 1];
+      } else if (this.workCount === this.nWorkBeforeLongBreak) {
+        return this.longBreakColors[this.workColors.length - 1];
       } else {
-        startColor = shortBreakColors[0];
+        return this.shortBreakColors[this.workColors.length - 1];
       }
-      return colorUtils.ntos(startColor);
     },
     fiftyColor() {
-      const {
-        longBreakColors,
-        shortBreakColors,
-        workColors,
-        workCount,
-        nWorkBeforeLongBreak,
-        working,
-      } = this.$store.state.pomodoro;
-
-      let leftColor = undefined;
-      if (working) {
-        leftColor = workColors[workColors.length - 1];
-      } else if (workCount === nWorkBeforeLongBreak) {
-        leftColor = longBreakColors[longBreakColors.length - 1];
+      if (this.working) {
+        return this.workColors[0];
+      } else if (this.workCount === this.nWorkBeforeLongBreak) {
+        return this.longBreakColors[0];
       } else {
-        leftColor = shortBreakColors[shortBreakColors.length - 1];
+        return this.shortBreakColors[0];
       }
-      return colorUtils.ntos(leftColor);
     },
     endColor(percentage) {
-      const {
-        longBreakColors,
-        shortBreakColors,
-        workColors,
-        workCount,
-        nWorkBeforeLongBreak,
-        working,
-      } = this.$store.state.pomodoro;
-
       // percentage to index
       percentage = percentage < 50 ? percentage : 100 - percentage;
-      const colorIndex = Math.floor(percentage);
+      const colorIndex = 50 - Math.floor(percentage);
 
-      let endColor = undefined;
-      if (working) {
-        endColor = workColors[colorIndex];
-      } else if (workCount === nWorkBeforeLongBreak) {
-        endColor = longBreakColors[colorIndex];
+      if (this.working) {
+        return this.workColors[colorIndex];
+      } else if (this.workCount === this.nWorkBeforeLongBreak) {
+        return this.longBreakColors[colorIndex];
       } else {
-        endColor = shortBreakColors[colorIndex];
+        return this.shortBreakColors[colorIndex];
       }
-      return colorUtils.ntos(endColor);
     },
     // Return "HH:MM:SS" format string from second Number.
     formatSec: function (seconds) {
       return utils.formatSec(seconds);
     },
-    goToEnd: function () {
-      this.$store.commit("goToEnd");
-    },
     goToStart: function () {
-      this.$store.commit("goToStart");
+      this.remainingTimeSec = this.currentIntervalSec;
     },
+    goToNext: function () {
+      // If this is end of break time, Update workCount.
+      if (!this.working) {
+        this.workCount =
+          this.workCount >= this.nWorkBeforeLongBreak ? 1 : this.workCount + 1;
+      }
+
+      // Invert working
+      this.working = !this.working;
+
+      this.initPomodoro();
+    },
+    loadConfig() {
+      // Load main config.
+      const mainConfigFileAccessor = new MainConfigFileAccessor();
+      // If the current main config file is invalid format, recreate.
+      if (!mainConfigFileAccessor.isMainConfigFormat()) {
+        mainConfigFileAccessor.deleteMainConfigFile();
+        mainConfigFileAccessor.createNewMainConfigFile();
+      }
+      const currentProfileName = mainConfigFileAccessor.getCurrentProfileName();
+
+      // Load profile config.
+      const profileConfigFileAccessor = new ProfileConfigFileAccessor(
+        currentProfileName
+      );
+      // If the current profile config file is invalid format, recreate.
+      if (!profileConfigFileAccessor.isProfileConfigFormat()) {
+        profileConfigFileAccessor.deleteProfileConfigFile();
+        profileConfigFileAccessor.createNewProfileConfigFile();
+      }
+
+      // Copy profile data to data properties.
+      const profile = profileConfigFileAccessor.getProfile();
+      Object.keys(profile).forEach((key) => {
+        this[key] = profile[key];
+      });
+      this.workColors = calcColor(this.workColors);
+      this.shortBreakColors = calcColor(this.shortBreakColors);
+      this.longBreakColors = calcColor(this.longBreakColors);
+    },
+    reloadConfig() {
+      const oldElapsedTimeSec = this.currentIntervalSec - this.remainingTimeSec;
+      console.log(`oldElapsedTimeSec: ${oldElapsedTimeSec}`);
+
+      this.loadConfig();
+
+      // Recalculate currentIntervalSec
+      if (this.working) {
+        // If the next is work
+        this.currentIntervalSec = this.workIntervalSec;
+      } else if (this.workCount >= this.nWorkBeforeLongBreak) {
+        // If the next is long break
+        this.currentIntervalSec = this.longBreakIntervalSec;
+      } else {
+        // If the next is short break
+        this.currentIntervalSec = this.shortBreakIntervalSec;
+      }
+      console.log(`currentIntervalSec: ${this.currentIntervalSec}`);
+
+      // Recalculate remainingTimeSec
+      if (oldElapsedTimeSec > this.currentIntervalSec) {
+        this.remainingTimeSec = 0;
+      } else {
+        this.remainingTimeSec = this.currentIntervalSec - oldElapsedTimeSec;
+      }
+      console.log(`remainingTimeSec: ${this.remainingTimeSec}`);
+
+      // Recalculate workCount
+      this.workCount = this.workCount % this.nWorkBeforeLongBreak;
+    },
+    initPomodoro() {
+      if (this.working) {
+        // If the next is work
+        this.currentIntervalSec = this.workIntervalSec;
+      } else if (this.workCount >= this.nWorkBeforeLongBreak) {
+        // If the next is long break
+        this.currentIntervalSec = this.longBreakIntervalSec;
+      } else {
+        // If the next is short break
+        this.currentIntervalSec = this.shortBreakIntervalSec;
+      }
+      this.remainingTimeSec = this.currentIntervalSec;
+    },
+    updatePomodoro() {
+      if (this.pausing) {
+        return;
+      }
+      const duration = 1 / this.fps;
+
+      // Update remainingTimeSec
+      this.remainingTimeSec -= duration;
+      console.log(
+        `remainingTimeSec: ${this.remainingTimeSec}, fps: ${this.fps}, duration: ${duration}`
+      );
+      if (this.remainingTimeSec > 0) {
+        return;
+      }
+
+      // Send notification
+      if (this.notificationIsEnabled) {
+        if (this.working && this.nWorkBeforeLongBreak === this.workCount) {
+          // This is the end of final work. And the start of long break.
+          const intervalStr = `${this.longBreakIntervalSec / 60} Minutes`;
+          new Notification("Long Break " + String.fromCodePoint(0x1f943), {
+            body: intervalStr,
+            icon: "public/pomodoroTimer.png",
+          });
+        } else if (this.working) {
+          // This is the end of work. And the start of short break.
+          const intervalStr = `${this.shortBreakIntervalSec / 60} Minutes`;
+          new Notification("Short Break " + String.fromCodePoint(0x2615), {
+            body: intervalStr,
+            icon: "public/pomodoroTimer.png",
+          });
+        } else {
+          // This is the end of short or long break.
+          const intervalStr = `${this.workIntervalSec / 60} Minutes`;
+          new Notification("Work " + String.fromCodePoint(0x1f680), {
+            body: intervalStr,
+            icon: "public/pomodoroTimer.png",
+          });
+        }
+      }
+
+      this.goToNext();
+    },
+    startRefreshLoop() {
+      this.stopRefreshLoop();
+      this.pausing = false;
+      this.refreshLoop = setInterval(() => {
+        this.updatePomodoro();
+      }, 1000 / this.fps);
+    },
+    stopRefreshLoop() {
+      this.pausing = true;
+      if (!this.refreshLoop) {
+        return;
+      }
+      clearInterval(this.refreshLoop);
+      this.refreshLoop = undefined;
+    },
+  },
+  mounted: function () {
+    this.loadConfig();
+    this.initPomodoro();
+    ipcRenderer.on("notify-config-change", () => {
+      const pausing = this.pausing;
+      this.stopRefreshLoop();
+      this.reloadConfig();
+      if (!pausing) {
+        this.startRefreshLoop();
+      }
+    });
+    ipcRenderer.on("notify-temporary-change", (event, arg) => {
+      const key = arg.key;
+      const value = arg.value;
+
+      this[key] = value;
+      // The following data are recalculated if updated.
+      if (key === "workColors") {
+        this.workColors = calcColor(this.workColors);
+      }
+      if (key === "shortBreakColors") {
+        this.shortBreakColors = calcColor(this.shortBreakColors);
+      }
+      if (key === "longBreakColors") {
+        this.longBreakColors = calcColor(this.longBreakColors);
+      }
+    });
+  },
+  created() {
+    document.body.style.background = this.backgroundColor;
   },
 };
 </script>
 
 <style>
+body {
+  margin: 0;
+  overflow: hidden;
+}
+#app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
 .ring {
   /* Page-Wide variables */
   position: absolute;

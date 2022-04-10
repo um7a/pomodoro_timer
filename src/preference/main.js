@@ -1,10 +1,10 @@
 import { createApp } from "vue";
 import { createStore } from "vuex";
 
-import pomodoroStore from "./store/modules/pomodoro";
-import preferenceStore from "./store/modules/preference";
+import pomodoroStore from "../store/modules/pomodoro";
+import preferenceStore from "../store/modules/preference";
 
-import App from "./components/App.vue";
+import App from "../components/PreferencePanel.vue";
 
 // Create Vuex store.
 const store = createStore({

@@ -1,6 +1,6 @@
 <template>
   <div id="preference">
-    <div class="preference" v-if="preferenceIsOpened">
+    <div class="preference">
       <!-- Profile Column -->
       <div class="preferenceShortColumn">
         <!-- Profile Title -->
@@ -15,7 +15,7 @@
 
         <!-- + button -->
         <div class="plusButton">
-          <p @click="createProfile()">+</p>
+          <p @click="copyProfile()">+</p>
         </div>
 
         <div v-for="profileName in profileNames" :key="profileName">
@@ -115,10 +115,10 @@
               <input
                 type="text"
                 class="invalid"
-                v-model="nWorkBeforeLongBreak"
+                v-model="nWorkBeforeLongBreakStr"
                 v-if="isInvalid.nWorkBeforeLongBreak"
               />
-              <input type="text" v-model="nWorkBeforeLongBreak" v-else />
+              <input type="text" v-model="nWorkBeforeLongBreakStr" v-else />
             </p>
           </div>
           <div class="unitSpace">
@@ -139,10 +139,10 @@
               <input
                 type="text"
                 class="invalid"
-                v-model="fps"
+                v-model="fpsStr"
                 v-if="isInvalid.fps"
               />
-              <input type="text" v-model="fps" v-else />
+              <input type="text" v-model="fpsStr" v-else />
             </p>
           </div>
           <div class="unitSpace">
@@ -162,7 +162,7 @@
               <input
                 type="checkbox"
                 id="notification"
-                v-model="notificationStr"
+                v-model="notificationIsEnabledStr"
                 true-value="true"
                 false-value="false"
               /><label for="notification"></label>
@@ -183,8 +183,16 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="workColorLeft" />
-              <input type="color" v-model="workColorRight" />
+              <input
+                type="color"
+                v-model="wrappedWorkColorLeft"
+                @change="notifyTemporaryChange('workColors')"
+              />
+              <input
+                type="color"
+                v-model="wrappedWorkColorRight"
+                @blur="notifyTemporaryChange('workColors')"
+              />
             </p>
           </div>
         </div>
@@ -195,8 +203,16 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="shortBreakColorLeft" />
-              <input type="color" v-model="shortBreakColorRight" />
+              <input
+                type="color"
+                v-model="wrappedShortBreakColorLeft"
+                @blur="notifyTemporaryChange('shortBreakColors')"
+              />
+              <input
+                type="color"
+                v-model="wrappedShortBreakColorRight"
+                @blur="notifyTemporaryChange('shortBreakColors')"
+              />
             </p>
           </div>
         </div>
@@ -207,8 +223,16 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="longBreakColorLeft" />
-              <input type="color" v-model="longBreakColorRight" />
+              <input
+                type="color"
+                v-model="wrappedLongBreakColorLeft"
+                @blur="notifyTemporaryChange('longBreakColors')"
+              />
+              <input
+                type="color"
+                v-model="wrappedLongBreakColorRight"
+                @blur="notifyTemporaryChange('longBreakColors')"
+              />
             </p>
           </div>
         </div>
@@ -219,7 +243,11 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="backgroundColor" />
+              <input
+                type="color"
+                v-model="wrappedBackgroundColor"
+                @blur="notifyTemporaryChange('backgroundColor')"
+              />
             </p>
           </div>
         </div>
@@ -230,7 +258,11 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="ringBaseColor" />
+              <input
+                type="color"
+                v-model="wrappedRingBaseColor"
+                @blur="notifyTemporaryChange('ringBaseColor')"
+              />
             </p>
           </div>
         </div>
@@ -241,7 +273,11 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="ringLabelColor" />
+              <input
+                type="color"
+                v-model="wrappedRingLabelColor"
+                @blur="notifyTemporaryChange('ringLabelColor')"
+              />
             </p>
           </div>
         </div>
@@ -252,7 +288,11 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="ringFontColor" />
+              <input
+                type="color"
+                v-model="wrappedRingFontColor"
+                @blur="notifyTemporaryChange('ringFontColor')"
+              />
             </p>
           </div>
         </div>
@@ -263,7 +303,11 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="scaleColor" />
+              <input
+                type="color"
+                v-model="wrappedScaleColor"
+                @blur="notifyTemporaryChange('scaleColor')"
+              />
             </p>
           </div>
         </div>
@@ -355,7 +399,7 @@
           </div>
           <div class="valueSpace">
             <p class="colorValue">
-              <input type="color" v-model="checkMarkColor" />
+              <input type="color" v-model="preferenceCheckMarkColor" />
             </p>
           </div>
         </div>
@@ -363,86 +407,55 @@
       <!-- Footer -->
       <div class="footer">
         <p class="button" @click="submit()">Submit</p>
+        <p class="button" @click="closePreference()">Close</p>
       </div>
     </div>
-    <!-- Preference Open/Close Button -->
-    <p class="openButton" v-if="!preferenceIsOpened" @click="openPreference()">
-      Preference
-    </p>
-    <p class="closeButton" v-else @click="closePreference()">Close</p>
   </div>
 </template>
 
 <script>
 import { ipcRenderer } from "electron";
-import * as os from "os";
-import * as fs from "fs";
-import * as path from "path";
 
-import * as colorUtils from "../utils/colorUtils";
-import { ConfigFileAccessor } from "../utils/configFileAccessor";
-
-const valueOrDefault = (value, defaultValue) => {
-  return typeof value === "undefined" || value === null ? defaultValue : value;
-};
-
-const defaultProfileSettings = {
-  workIntervalSec: 25 * 60,
-  shortBreakIntervalSec: 5 * 60,
-  longBreakIntervalSec: 20 * 60,
-  nWorkBeforeLongBreak: 4,
-  fps: 2,
-  notificationIsEnabled: true,
-  workColors: ["#d38312", "#a83279"],
-  shortBreakColors: ["#00b09b", "#96c93d"],
-  longBreakColors: ["#43cea2", "#1e90ff"],
-  backgroundColor: "#000000",
-  ringBaseColor: "#131313",
-  ringLabelColor: "#4d4d4d",
-  ringFontColor: "#c0c0c0",
-  scaleColor: "#131313",
-  preferenceBackgroundColor: "#0e0e0e",
-  preferenceLineColor: "#1e1e1e",
-  preferenceLabelBackgroundColor: "#171717",
-  preferenceLabelFontColor: "#4d4d4d",
-  preferenceFontColor: "#4d4d4d",
-  preferenceFontInvalidColor: "#9b0043",
-  preferenceButtonColor: "#0e0e0e",
-  preferenceButtonHoverColor: "#ff6767", // pink
-  //preferenceButtonHoverColor: "#b3ff66", // green
-  //preferenceButtonHoverColor: "#454545", // gray
-  preferenceButtonFontColor: "#4d4d4d",
-  preferenceButtonFontHoverColor: "#000000",
-  checkMarkColor: "#72b66d",
-};
+import { ProfileConfigFileAccessor } from "../modules/profileConfigFileAccessor";
+import { MainConfigFileAccessor } from "../modules/mainConfigFileAccessor";
 
 export default {
   name: "PreferencePanel",
   data() {
     return {
+      isInvalid: {},
       profileNames: [],
       renamedProfileName: "",
-      currentProfileName: "",
-      isInvalid: {},
       mainConfigFileAccessor: undefined,
       profileConfigFileAccessor: undefined,
-      workIntervalMinute: 0,
-      shortBreakIntervalMinute: 0,
-      longBreakIntervalMinute: 0,
+
+      //
+      // The following fields are initialized by the main config file
+      //
+      currentProfileName: "",
+
+      //
+      // The following fields are initialized by the profile config file.
+      //
+      // Pomodoro
+      workIntervalSec: 0,
+      shortBreakIntervalSec: 0,
+      longBreakIntervalSec: 0,
       nWorkBeforeLongBreak: 0,
+      // Graphic
       fps: 0,
+      // Notification
       notificationIsEnabled: false,
-      workColorLeft: "#000000",
-      workColorRight: "#000000",
-      shortBreakColorLeft: "#000000",
-      shortBreakColorRight: "#000000",
-      longBreakColorLeft: "#000000",
-      longBreakColorRight: "#000000",
+      // Color of Pomodoro
+      workColors: ["#000000", "#000000"],
+      shortBreakColors: ["#000000", "#000000"],
+      longBreakColors: ["#000000", "#000000"],
       backgroundColor: "#000000",
       ringBaseColor: "#000000",
       ringLabelColor: "#000000",
       ringFontColor: "#000000",
       scaleColor: "#000000",
+      // Color of Preference
       preferenceBackgroundColor: "#000000",
       preferenceLineColor: "#000000",
       preferenceLabelBackgroundColor: "#000000",
@@ -453,68 +466,188 @@ export default {
       preferenceButtonHoverColor: "#000000",
       preferenceButtonFontColor: "#000000",
       preferenceButtonFontHoverColor: "#000000",
-      checkMarkColor: "#000000",
+      preferenceCheckMarkColor: "#000000",
     };
   },
   computed: {
-    preferenceIsOpened() {
-      return this.$store.state.preference.preferenceIsOpened;
+    wrappedWorkColorLeft: {
+      get: function () {
+        return this.workColors[0];
+      },
+      set: function (color) {
+        this.workColors[0] = color;
+        this.notifyTemporaryChange("workColors");
+      },
     },
-    savedPreferenceBackgroundColor() {
-      return colorUtils.ntos(
-        this.$store.state.preference.preferenceBackgroundColor
-      );
+    wrappedWorkColorRight: {
+      get: function () {
+        return this.workColors[1];
+      },
+      set: function (color) {
+        this.workColors[1] = color;
+        this.notifyTemporaryChange("workColors");
+      },
     },
-    savedPreferenceLineColor() {
-      return colorUtils.ntos(this.$store.state.preference.preferenceLineColor);
+    wrappedShortBreakColorLeft: {
+      get: function () {
+        return this.shortBreakColors[0];
+      },
+      set: function (color) {
+        this.shortBreakColors[0] = color;
+        this.notifyTemporaryChange("shortBreakColors");
+      },
     },
-    savedPreferenceLabelBackgroundColor() {
-      return colorUtils.ntos(
-        this.$store.state.preference.preferenceLabelBackgroundColor
-      );
+    wrappedShortBreakColorRight: {
+      get: function () {
+        return this.shortBreakColors[1];
+      },
+      set: function (color) {
+        this.shortBreakColors[1] = color;
+        this.notifyTemporaryChange("shortBreakColors");
+      },
     },
-    savedPreferenceLabelFontColor() {
-      return colorUtils.ntos(
-        this.$store.state.preference.preferenceLabelFontColor
-      );
+    wrappedLongBreakColorLeft: {
+      get: function () {
+        return this.longBreakColors[0];
+      },
+      set: function (color) {
+        this.longBreakColors[0] = color;
+        this.notifyTemporaryChange("longBreakColors");
+      },
     },
-    savedPreferenceFontColor() {
-      return colorUtils.ntos(this.$store.state.preference.preferenceFontColor);
+    wrappedLongBreakColorRight: {
+      get: function () {
+        return this.longBreakColors[1];
+      },
+      set: function (color) {
+        this.longBreakColors[1] = color;
+        this.notifyTemporaryChange("longBreakColors");
+      },
     },
-    savedPreferenceFontInvalidColor() {
-      return colorUtils.ntos(
-        this.$store.state.preference.preferenceFontInvalidColor
-      );
+    wrappedBackgroundColor: {
+      get: function () {
+        return this.backgroundColor;
+      },
+      set: function (color) {
+        this.backgroundColor = color;
+        this.notifyTemporaryChange("backgroundColor");
+      },
     },
-    savedPreferenceButtonColor() {
-      return colorUtils.ntos(
-        this.$store.state.preference.preferenceButtonColor
-      );
+    wrappedRingBaseColor: {
+      get: function () {
+        return this.ringBaseColor;
+      },
+      set: function (color) {
+        this.ringBaseColor = color;
+        this.notifyTemporaryChange("ringBaseColor");
+      },
     },
-    savedPreferenceButtonHoverColor() {
-      const preferenceButtonHoverColor = colorUtils.ntos(
-        this.$store.state.preference.preferenceButtonHoverColor
-      );
-      return preferenceButtonHoverColor;
+    wrappedRingLabelColor: {
+      get: function () {
+        return this.ringLabelColor;
+      },
+      set: function (color) {
+        this.ringLabelColor = color;
+        this.notifyTemporaryChange("ringLabelColor");
+      },
     },
-    savedPreferenceButtonFontColor() {
-      return colorUtils.ntos(
-        this.$store.state.preference.preferenceButtonFontColor
-      );
+    wrappedRingFontColor: {
+      get: function () {
+        return this.ringFontColor;
+      },
+      set: function (color) {
+        this.ringFontColor = color;
+        this.notifyTemporaryChange("ringFontColor");
+      },
     },
-    savedPreferenceButtonFontHoverColor() {
-      const preferenceButtonFontHoverColor = colorUtils.ntos(
-        this.$store.state.preference.preferenceButtonFontHoverColor
-      );
-      return preferenceButtonFontHoverColor;
+    wrappedScaleColor: {
+      get: function () {
+        return this.scaleColor;
+      },
+      set: function (color) {
+        this.scaleColor = color;
+        this.notifyTemporaryChange("scaleColor");
+      },
     },
-    savedCheckMarkColor() {
-      const checkMarkColor = colorUtils.ntos(
-        this.$store.state.preference.checkMarkColor
-      );
-      return checkMarkColor;
+    workIntervalMinute: {
+      get: function () {
+        if (
+          typeof this.workIntervalSec !== "number" ||
+          Number.isNaN(this.workIntervalSec)
+        ) {
+          return this.workIntervalSec;
+        }
+        return this.workIntervalSec / 60;
+      },
+      set: function (minute) {
+        if (Number.isNaN(Number.parseInt(minute))) {
+          this.workIntervalSec = minute;
+          return;
+        }
+        this.workIntervalSec = minute * 60;
+      },
     },
-    notificationStr: {
+    shortBreakIntervalMinute: {
+      get: function () {
+        if (
+          typeof this.shortBreakIntervalSec !== "number" ||
+          Number.isNaN(this.shortBreakIntervalSec)
+        ) {
+          return this.shortBreakIntervalSec;
+        }
+        return this.shortBreakIntervalSec / 60;
+      },
+      set: function (minute) {
+        if (Number.isNaN(Number.parseInt(minute))) {
+          this.shortBreakIntervalSec = minute;
+          return;
+        }
+        this.shortBreakIntervalSec = minute * 60;
+      },
+    },
+    longBreakIntervalMinute: {
+      get: function () {
+        if (
+          typeof this.longBreakIntervalSec !== "number" ||
+          Number.isNaN(this.longBreakIntervalSec)
+        ) {
+          return this.longBreakIntervalSec;
+        }
+        return this.longBreakIntervalSec / 60;
+      },
+      set: function (minute) {
+        if (Number.isNaN(Number.parseInt(minute))) {
+          this.longBreakIntervalSec = minute;
+          return;
+        }
+        this.longBreakIntervalSec = minute * 60;
+      },
+    },
+    nWorkBeforeLongBreakStr: {
+      get: function () {
+        return this.nWorkBeforeLongBreak;
+      },
+      set: function (num) {
+        if (Number.isNaN(Number.parseInt(num))) {
+          this.nWorkBeforeLongBreak = num;
+          return;
+        }
+        this.nWorkBeforeLongBreak = Number.parseInt(num);
+      },
+    },
+    fpsStr: {
+      get: function () {
+        return this.fps;
+      },
+      set: function (num) {
+        if (Number.isNaN(Number.parseInt(num))) {
+          this.fps = num;
+          return;
+        }
+        this.fps = Number.parseInt(num);
+      },
+    },
+    notificationIsEnabledStr: {
       get: function () {
         return this.notificationIsEnabled ? "true" : "false";
       },
@@ -524,33 +657,15 @@ export default {
     },
   },
   methods: {
-    openPreference() {
-      this.$store.commit("openPreference");
-      ipcRenderer.send("open-preference");
-    },
     closePreference() {
-      this.$store.commit("closePreference");
-      ipcRenderer.send("close-preference");
+      const unsavedData = this.getUnSavedData();
+      ipcRenderer.send("close-preference", unsavedData);
     },
     loadProfileNames() {
-      const profilePath = os.homedir() + "/.pomodoroTimer/profiles/";
-      const profileFileNames = fs.readdirSync(profilePath);
-      profileFileNames.forEach((profileFileName) => {
-        if (!profileFileName.endsWith(".json")) {
-          return;
-        }
-        const profileName = profileFileName.split(".json")[0];
-        if (typeof profileName === "undefined" || profileName.length === 0) {
-          return;
-        }
-        this.profileNames.push(profileName);
-      });
-    },
-    reloadProfileNames() {
-      this.profileNames = [];
-      this.loadProfileNames();
+      this.profileNames = this.profileConfigFileAccessor.getProfileNames();
     },
     renameProfile() {
+      // If rename candidate is invalid, reset it and return.
       if (
         typeof this.renamedProfileName === "undefined" ||
         this.renamedProfileName.length === 0
@@ -558,33 +673,38 @@ export default {
         this.renamedProfileName = this.currentProfileName;
         return;
       }
+      // If rename candidate has already existed, reset it and return.
+      const unique = this.profileNames.every(
+        (profileName) => profileName !== this.renamedProfileName
+      );
+      if (!unique) {
+        this.renamedProfileName = this.currentProfileName;
+        return;
+      }
+
+      // If rename candidate is same with current, do nothing and return.
       if (this.renamedProfileName === this.currentProfileName) {
         return;
       }
-      // rename profile file name.
-      const profilePath = os.homedir() + "/.pomodoroTimer/profiles/";
-      const newProfileFileName = this.renamedProfileName + ".json";
-      this.profileConfigFileAccessor.rename(profilePath + newProfileFileName);
 
-      this.reloadProfileNames();
+      // Rename profile file name.
+      this.profileConfigFileAccessor.renameProfileConfigFile(
+        this.renamedProfileName
+      );
       this.selectProfile(this.renamedProfileName);
     },
-    createProfile() {
+    copyProfile() {
       // Copy current profile file.
-      this.profileConfigFileAccessor.copy();
-      const copyProfileName = path
-        .basename(this.profileConfigFileAccessor.getFilePath())
-        .split(".json")[0];
-
-      this.reloadProfileNames();
-      this.selectProfile(copyProfileName);
+      const newProfileName =
+        this.profileConfigFileAccessor.copyProfileConfigFile();
+      this.selectProfile(newProfileName);
     },
     deleteProfile() {
       // More than 1 profile should exists.
       if (this.profileNames.length <= 1) {
         return;
       }
-      this.profileConfigFileAccessor.delete();
+      this.profileConfigFileAccessor.deleteProfileConfigFile();
       const targetProfileIndex = this.profileNames.indexOf(
         this.currentProfileName
       );
@@ -594,579 +714,184 @@ export default {
       } else {
         nextProfileName = this.profileNames[targetProfileIndex - 1];
       }
-      this.reloadProfileNames();
       this.selectProfile(nextProfileName);
-    },
-    createNewMainConfig() {
-      // Default values
-      const defaultSettings = {
-        currentProfileName: "Default",
-      };
-      const configFileAccessor = new ConfigFileAccessor(
-        os.homedir() + "/.pomodoroTimer/config.json"
-      );
-      Object.entries(defaultSettings).forEach((keyValue) => {
-        const key = keyValue[0];
-        const value = keyValue[1];
-        configFileAccessor.save(key, value);
-      });
-    },
-    createNewProfileConfig() {
-      Object.entries(defaultProfileSettings).forEach((keyValue) => {
-        const key = keyValue[0];
-        const value = keyValue[1];
-        this.profileConfigFileAccessor.save(key, value);
-      });
     },
     selectProfile(profileName) {
       this.currentProfileName = profileName;
       this.renamedProfileName = profileName;
-      const profileFilePath =
-        os.homedir() +
-        "/.pomodoroTimer/profiles/" +
-        this.currentProfileName +
-        ".json";
-      this.profileConfigFileAccessor.setFilePath(profileFilePath);
+      this.loadProfileNames();
+
+      // Load preference from selected profile.
+      this.profileConfigFileAccessor.changeProfile(this.currentProfileName);
       this.loadPreferenceFromProfile();
 
-      this.mainConfigFileAccessor.save(
-        "currentProfileName",
+      // Update Main config file.
+      this.mainConfigFileAccessor.setCurrentProfileName(
         this.currentProfileName
       );
 
-      // Restart refresh loop.
-      this.$store.commit("stopRefreshLoop");
-      this.$store.commit("startRefreshLoop");
+      // Notify Pomodoro to reload
+      ipcRenderer.send("notify-config-change");
     },
     loadPreferenceFromProfile() {
-      const {
-        // Setting about pomodoro
-        workIntervalSec,
-        shortBreakIntervalSec,
-        longBreakIntervalSec,
-        nWorkBeforeLongBreak,
-        fps,
-        notificationIsEnabled,
-        workColors,
-        shortBreakColors,
-        longBreakColors,
-        backgroundColor,
-        ringBaseColor,
-        ringLabelColor,
-        ringFontColor,
-        scaleColor,
-        // Setting about preference
-        preferenceBackgroundColor,
-        preferenceLineColor,
-        preferenceLabelBackgroundColor,
-        preferenceLabelFontColor,
-        preferenceFontColor,
-        preferenceFontInvalidColor,
-        preferenceButtonColor,
-        preferenceButtonHoverColor,
-        preferenceButtonFontColor,
-        preferenceButtonFontHoverColor,
-        checkMarkColor,
-      } = this.profileConfigFileAccessor.getConfigObject();
-
-      // The following data properties are used to save temporary settings of preference panel.
-      // When the preferences are submitted, these values are copied to the store and the config file.
-      this.workIntervalMinute =
-        valueOrDefault(
-          workIntervalSec,
-          defaultProfileSettings.workIntervalSec
-        ) / 60;
-      this.shortBreakIntervalMinute =
-        valueOrDefault(
-          shortBreakIntervalSec,
-          defaultProfileSettings.shortBreakIntervalSec
-        ) / 60;
-      this.longBreakIntervalMinute =
-        valueOrDefault(
-          longBreakIntervalSec,
-          defaultProfileSettings.longBreakIntervalSec
-        ) / 60;
-      this.nWorkBeforeLongBreak = valueOrDefault(
-        nWorkBeforeLongBreak,
-        defaultProfileSettings.nWorkBeforeLongBreak
-      );
-      this.fps = valueOrDefault(fps, defaultProfileSettings.fps);
-      this.notificationIsEnabled = valueOrDefault(
-        notificationIsEnabled,
-        defaultProfileSettings.notificationIsEnabled
-      );
-      this.workColorLeft = colorUtils.ntos(
-        valueOrDefault(workColors[1], defaultProfileSettings.workColors[1])
-      );
-      this.workColorRight = colorUtils.ntos(
-        valueOrDefault(workColors[0], defaultProfileSettings.workColors[0])
-      );
-      this.shortBreakColorLeft = colorUtils.ntos(
-        valueOrDefault(
-          shortBreakColors[1],
-          defaultProfileSettings.shortBreakColors[1]
-        )
-      );
-      this.shortBreakColorRight = colorUtils.ntos(
-        valueOrDefault(
-          shortBreakColors[0],
-          defaultProfileSettings.shortBreakColors[0]
-        )
-      );
-      this.longBreakColorLeft = colorUtils.ntos(
-        valueOrDefault(
-          longBreakColors[1],
-          defaultProfileSettings.longBreakColors[1]
-        )
-      );
-      this.longBreakColorRight = colorUtils.ntos(
-        valueOrDefault(
-          longBreakColors[0],
-          defaultProfileSettings.longBreakColors[0]
-        )
-      );
-      this.backgroundColor = colorUtils.ntos(
-        valueOrDefault(backgroundColor, defaultProfileSettings.backgroundColor)
-      );
-      this.ringBaseColor = colorUtils.ntos(
-        valueOrDefault(ringBaseColor, defaultProfileSettings.ringBaseColor)
-      );
-      this.ringLabelColor = colorUtils.ntos(
-        valueOrDefault(ringLabelColor, defaultProfileSettings.ringLabelColor)
-      );
-      this.ringFontColor = colorUtils.ntos(
-        valueOrDefault(ringFontColor, defaultProfileSettings.ringFontColor)
-      );
-      this.scaleColor = colorUtils.ntos(
-        valueOrDefault(scaleColor, defaultProfileSettings.scaleColor)
-      );
-      this.preferenceLabelBackgroundColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceLabelBackgroundColor,
-          defaultProfileSettings.preferenceLabelBackgroundColor
-        )
-      );
-      this.preferenceLabelFontColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceLabelFontColor,
-          defaultProfileSettings.preferenceLabelFontColor
-        )
-      );
-      this.preferenceFontColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceFontColor,
-          defaultProfileSettings.preferenceFontColor
-        )
-      );
-      this.preferenceFontInvalidColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceFontInvalidColor,
-          defaultProfileSettings.preferenceFontInvalidColor
-        )
-      );
-      this.preferenceBackgroundColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceBackgroundColor,
-          defaultProfileSettings.preferenceBackgroundColor
-        )
-      );
-      this.preferenceLineColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceLineColor,
-          defaultProfileSettings.preferenceLineColor
-        )
-      );
-      this.preferenceButtonColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceButtonColor,
-          defaultProfileSettings.preferenceButtonColor
-        )
-      );
-      this.preferenceButtonHoverColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceButtonHoverColor,
-          defaultProfileSettings.preferenceButtonHoverColor
-        )
-      );
-      this.preferenceButtonFontColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceButtonFontColor,
-          defaultProfileSettings.preferenceButtonFontColor
-        )
-      );
-      this.preferenceButtonFontHoverColor = colorUtils.ntos(
-        valueOrDefault(
-          preferenceButtonFontHoverColor,
-          defaultProfileSettings.preferenceButtonFontHoverColor
-        )
-      );
-      this.checkMarkColor = colorUtils.ntos(
-        valueOrDefault(checkMarkColor, defaultProfileSettings.checkMarkColor)
-      );
-      this.copySettingToStore();
+      const profile = this.profileConfigFileAccessor.getProfile();
+      Object.keys(profile).forEach((key) => {
+        this[key] = profile[key];
+      });
+    },
+    getUnSavedData() {
+      const unsavedData = {};
+      const profile = this.profileConfigFileAccessor.getProfile();
+      Object.keys(profile).forEach((key) => {
+        if (Array.isArray(profile[key])) {
+          for (let i = 0; i < profile[key].length; i++) {
+            if (profile[key][i] !== this[key][i]) {
+              unsavedData[key] = [...this[key]];
+              break;
+            }
+          }
+        } else {
+          if (profile[key] !== this[key]) {
+            unsavedData[key] = this[key];
+          }
+        }
+      });
+      return unsavedData;
     },
     validate() {
       let isValid = true;
       const isInvalid = {};
-
-      if (!/^[1-9][0-9]*$/.test(this.workIntervalMinute)) {
+      if (typeof this.workIntervalSec !== "number") {
         isInvalid.workIntervalMinute = true;
         isValid = false;
       }
-      if (!/^[1-9][0-9]*$/.test(this.shortBreakIntervalMinute)) {
+      if (typeof this.shortBreakIntervalSec !== "number") {
         isInvalid.shortBreakIntervalMinute = true;
         isValid = false;
       }
-      if (!/^[1-9][0-9]*$/.test(this.longBreakIntervalMinute)) {
+      if (typeof this.longBreakIntervalSec !== "number") {
         isInvalid.longBreakIntervalMinute = true;
         isValid = false;
       }
-      if (!/^[1-9][0-9]*$/.test(this.nWorkBeforeLongBreak)) {
+      if (typeof this.nWorkBeforeLongBreak !== "number") {
         isInvalid.nWorkBeforeLongBreak = true;
         isValid = false;
       }
-      if (!/^[1-9][0-9]*$/.test(this.fps)) {
+      if (typeof this.fps !== "number") {
         isInvalid.fps = true;
         isValid = false;
       }
       this.isInvalid = isInvalid;
       return isValid;
     },
-    copySettingToStore() {
-      // Set new settings to store.
-      this.$store.commit("setWorkIntervalSec", this.workIntervalMinute * 60);
-      this.$store.commit(
-        "setShortBreakIntervalSec",
-        this.shortBreakIntervalMinute * 60
-      );
-      this.$store.commit(
-        "setLongBreakIntervalSec",
-        this.longBreakIntervalMinute * 60
-      );
-      this.$store.commit(
-        "setNWorkBeforeLongBreak",
-        Number.parseInt(this.nWorkBeforeLongBreak)
-      );
-      this.$store.commit("setFps", Number.parseInt(this.fps));
-      this.$store.commit(
-        "setNotificationIsEnabled",
-        this.notificationIsEnabled
-      );
-      this.$store.commit("setWorkColors", [
-        colorUtils.ston(this.workColorLeft),
-        colorUtils.ston(this.workColorRight),
-      ]);
-      this.$store.commit("setShortBreakColors", [
-        colorUtils.ston(this.shortBreakColorLeft),
-        colorUtils.ston(this.shortBreakColorRight),
-      ]);
-      this.$store.commit("setLongBreakColors", [
-        colorUtils.ston(this.longBreakColorLeft),
-        colorUtils.ston(this.longBreakColorRight),
-      ]);
-      this.$store.commit(
-        "setBackgroundColor",
-        colorUtils.ston(this.backgroundColor)
-      );
-      this.$store.commit(
-        "setRingBaseColor",
-        colorUtils.ston(this.ringBaseColor)
-      );
-      this.$store.commit(
-        "setRingLabelColor",
-        colorUtils.ston(this.ringLabelColor)
-      );
-      this.$store.commit(
-        "setRingFontColor",
-        colorUtils.ston(this.ringFontColor)
-      );
-      this.$store.commit("setScaleColor", colorUtils.ston(this.scaleColor));
-      this.$store.commit(
-        "setPreferenceBackgroundColor",
-        colorUtils.ston(this.preferenceBackgroundColor)
-      );
-      this.$store.commit(
-        "setPreferenceLineColor",
-        colorUtils.ston(this.preferenceLineColor)
-      );
-      this.$store.commit(
-        "setPreferenceLabelBackgroundColor",
-        colorUtils.ston(this.preferenceLabelBackgroundColor)
-      );
-      this.$store.commit(
-        "setPreferenceLabelFontColor",
-        colorUtils.ston(this.preferenceLabelFontColor)
-      );
-      this.$store.commit(
-        "setPreferenceFontColor",
-        colorUtils.ston(this.preferenceFontColor)
-      );
-      this.$store.commit(
-        "setPreferenceFontInvalidColor",
-        colorUtils.ston(this.preferenceFontInvalidColor)
-      );
-      this.$store.commit(
-        "setPreferenceButtonColor",
-        colorUtils.ston(this.preferenceButtonColor)
-      );
-      this.$store.commit(
-        "setPreferenceButtonHoverColor",
-        colorUtils.ston(this.preferenceButtonHoverColor)
-      );
-      this.$store.commit(
-        "setPreferenceButtonFontColor",
-        colorUtils.ston(this.preferenceButtonFontColor)
-      );
-      this.$store.commit(
-        "setPreferenceButtonFontHoverColor",
-        colorUtils.ston(this.preferenceButtonFontHoverColor)
-      );
-      this.$store.commit(
-        "setCheckMarkColor",
-        colorUtils.ston(this.checkMarkColor)
-      );
+    copyToFile() {
+      const profile = this.profileConfigFileAccessor.getProfile();
+      Object.keys(profile).forEach((key) => {
+        this.profileConfigFileAccessor.set(key, this[key]);
+      });
     },
-
-    copyToFile(config) {
-      // Save the new settings to the config file.
-      const configFileAccessor = this.profileConfigFileAccessor;
-      configFileAccessor.save(
-        "workIntervalSec",
-        config.workIntervalMinute * 60
-      );
-      configFileAccessor.save(
-        "shortBreakIntervalSec",
-        config.shortBreakIntervalMinute * 60
-      );
-      configFileAccessor.save(
-        "longBreakIntervalSec",
-        config.longBreakIntervalMinute * 60
-      );
-      configFileAccessor.save(
-        "nWorkBeforeLongBreak",
-        config.nWorkBeforeLongBreak
-      );
-      configFileAccessor.save("fps", config.fps);
-      configFileAccessor.save(
-        "notificationIsEnabled",
-        config.notificationIsEnabled
-      );
-      configFileAccessor.save("workColors", [
-        colorUtils.ston(config.workColorLeft),
-        colorUtils.ston(config.workColorRight),
-      ]);
-      configFileAccessor.save("shortBreakColors", [
-        colorUtils.ston(config.shortBreakColorLeft),
-        colorUtils.ston(config.shortBreakColorRight),
-      ]);
-      configFileAccessor.save("longBreakColors", [
-        colorUtils.ston(config.longBreakColorLeft),
-        colorUtils.ston(config.longBreakColorRight),
-      ]);
-      configFileAccessor.save(
-        "backgroundColor",
-        colorUtils.ston(config.backgroundColor)
-      );
-      configFileAccessor.save(
-        "ringBaseColor",
-        colorUtils.ston(config.ringBaseColor)
-      );
-      configFileAccessor.save(
-        "ringLabelColor",
-        colorUtils.ston(config.ringLabelColor)
-      );
-      configFileAccessor.save(
-        "ringFontColor",
-        colorUtils.ston(config.ringFontColor)
-      );
-      configFileAccessor.save("scaleColor", colorUtils.ston(config.scaleColor));
-      configFileAccessor.save(
-        "preferenceLabelBackgroundColor",
-        colorUtils.ston(config.preferenceLabelBackgroundColor)
-      );
-      configFileAccessor.save(
-        "preferenceLabelFontColor",
-        colorUtils.ston(config.preferenceLabelFontColor)
-      );
-      configFileAccessor.save(
-        "preferenceFontColor",
-        colorUtils.ston(config.preferenceFontColor)
-      );
-      configFileAccessor.save(
-        "preferenceFontInvalidColor",
-        colorUtils.ston(config.preferenceFontInvalidColor)
-      );
-      configFileAccessor.save(
-        "preferenceBackgroundColor",
-        colorUtils.ston(config.preferenceBackgroundColor)
-      );
-      configFileAccessor.save(
-        "preferenceLineColor",
-        colorUtils.ston(config.preferenceLineColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonColor",
-        colorUtils.ston(config.preferenceButtonColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonHoverColor",
-        colorUtils.ston(config.preferenceButtonHoverColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonFontColor",
-        colorUtils.ston(config.preferenceButtonFontColor)
-      );
-      configFileAccessor.save(
-        "preferenceButtonFontHoverColor",
-        colorUtils.ston(config.preferenceButtonFontHoverColor)
-      );
-      configFileAccessor.save(
-        "checkMarkColor",
-        colorUtils.ston(config.checkMarkColor)
-      );
+    notifyTemporaryChange(key) {
+      let dataCopy;
+      if (Array.isArray(this[key])) {
+        dataCopy = [...this[key]];
+      } else {
+        dataCopy = this[key];
+      }
+      ipcRenderer.send("notify-temporary-change", { key, value: dataCopy });
     },
-
     submit() {
       // Validate new settings.
       if (!this.validate()) {
         return;
       }
-
       // If notification become enabled, send notification.
-      if (
-        !this.$store.state.pomodoro.notificationIsEnabled &&
-        this.notificationIsEnabled
-      ) {
+      const savedNotificationIsEnabled = this.profileConfigFileAccessor.get(
+        "notificationIsEnabled"
+      );
+      if (!savedNotificationIsEnabled && this.notificationIsEnabled) {
         new Notification("Pomodoro Timer", {
           body: "Notification is Enabled " + String.fromCodePoint(0x1f508),
           icon: "public/pomodoroTimer.png",
         });
       }
-
-      this.copySettingToStore();
-
-      // exec updatePomodoro to update view of HH:MM:SS
-      this.$store.commit("updatePomodoro");
-
-      // Restart refresh loop.
-      this.$store.commit("stopRefreshLoop");
-      this.$store.commit("startRefreshLoop");
-
       // Save the new settings to the config file.
-      this.copyToFile(this);
+      this.copyToFile();
+      this.loadPreferenceFromProfile();
+      // Notify Pomodoro to reload
+      ipcRenderer.send("notify-config-change");
     },
   },
   mounted: function () {
-    // Load profile file names from directory.
-    this.loadProfileNames();
-
     // Create file accessor of main config.
-    this.mainConfigFileAccessor = new ConfigFileAccessor(
-      os.homedir() + "/.pomodoroTimer/config.json"
-    );
-    // Create new file with default values.
-    if (!this.mainConfigFileAccessor.configFileExists()) {
-      this.createNewMainConfig();
+    this.mainConfigFileAccessor = new MainConfigFileAccessor();
+    // If the file was not found or invalid format, create new file with default values.
+    if (!this.mainConfigFileAccessor.isMainConfigFormat()) {
+      this.mainConfigFileAccessor.deleteMainConfigFile();
+      this.mainConfigFileAccessor.createNewMainConfigFile();
     }
 
+    // Load profile name
     this.currentProfileName =
-      this.mainConfigFileAccessor.getConfigObject().currentProfileName;
+      this.mainConfigFileAccessor.getCurrentProfileName();
 
     // Create file accessor of profile config.
-    this.profileConfigFileAccessor = new ConfigFileAccessor(
-      os.homedir() +
-        "/.pomodoroTimer/profiles/" +
-        this.currentProfileName +
-        ".json"
+    this.profileConfigFileAccessor = new ProfileConfigFileAccessor(
+      this.currentProfileName
     );
-    // Create new file with default values.
-    if (!this.profileConfigFileAccessor.configFileExists()) {
-      this.createNewProfileConfig();
+
+    // If the file was not found or invalid format, create new file with default values.
+    if (!this.profileConfigFileAccessor.isProfileConfigFormat()) {
+      this.profileConfigFileAccessor.deleteProfileConfigFile();
+      this.profileConfigFileAccessor.createNewProfileConfig();
     }
 
-    this.loadPreferenceFromProfile();
-
     this.selectProfile(this.currentProfileName);
-
-    this.$store.commit("initPomodoro");
-    this.$store.commit("startRefreshLoop");
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.openButton,
-.closeButton {
-  cursor: pointer;
-  position: absolute;
-  bottom: 0;
-  font-size: 12px;
-  height: 30px;
-  width: 100%;
-  margin: 0;
-  transition: all 0.5s ease;
-  border-radius: 2px;
-  /*
-   * Make this class to flexible box layout.
-   * I want to use justify-content which is
-   * the sub property of the flexible box layout.
-   */
-  display: flex;
-  /* Horizontal Middle */
-  justify-content: center;
-  /* Vertical Middle */
-  align-items: center;
-}
-
-.openButton {
-  color: v-bind(savedPreferenceButtonFontColor);
-  background: v-bind(savedPreferenceButtonColor);
-}
-
-.openButton:hover,
-.closeButton {
-  background: v-bind(savedPreferenceButtonHoverColor);
-  color: v-bind(savedPreferenceButtonFontHoverColor);
-}
-
 .preference {
   position: absolute;
-  background: v-bind(savedPreferenceBackgroundColor);
-  right: 0;
-  bottom: 30px;
+  background: v-bind(preferenceBackgroundColor);
   top: 0;
+  right: 0;
+  bottom: 0;
   animation-name: fade;
   animation-duration: 2s;
   display: flex;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-app-region: drag; /* To drag the window. */
 }
 
 /* Profile Column */
 .preferenceShortColumn {
   width: 194px;
   margin: 0 2px 33px 0;
-  border-right: 1px solid v-bind(savedPreferenceLineColor);
+  border-right: 1px solid v-bind(preferenceLineColor);
   border-radius: 2px;
   position: relative;
 }
 
 .preferenceShortColumn .title {
-  background: v-bind(savedPreferenceLabelBackgroundColor);
-  margin: 0 0 4px;
+  background: v-bind(preferenceLabelBackgroundColor);
+  margin: 2px 0 4px;
   border-radius: 2px;
-  padding: 0 10px;
+  padding: 5px 10px;
 }
 
 .preferenceShortColumn .title p {
   font-size: 12px;
   margin: 0;
-  color: v-bind(savedPreferenceLabelFontColor);
+  color: v-bind(preferenceLabelFontColor);
 }
 
 .preferenceShortColumn .plusButton {
   position: absolute;
   right: 0;
   top: 0;
+  margin: 2px 0 0;
   padding: 0;
 }
 
@@ -1174,18 +899,19 @@ export default {
   position: absolute;
   right: 30px;
   top: 0;
+  margin: 2px 0 0;
   padding: 0;
 }
 
 .preferenceShortColumn .minusButton p {
-  color: v-bind(savedPreferenceLabelFontColor);
+  color: v-bind(preferenceLabelFontColor);
   margin: 0;
   padding: 1px 3px 4px;
   transform: scaleX(2);
 }
 
 .preferenceShortColumn .plusButton p {
-  color: v-bind(savedPreferenceLabelFontColor);
+  color: v-bind(preferenceLabelFontColor);
   margin: 0;
   padding: 1px 7px 4px;
 }
@@ -1199,13 +925,13 @@ export default {
 .preferenceShortColumn .selectedProfile {
   padding: 0 10px 3px;
   margin: 1px 3px;
-  background: v-bind(savedPreferenceFontColor);
+  background: v-bind(preferenceFontColor);
   border-radius: 2px;
   cursor: pointer;
 }
 
 .preferenceShortColumn .profile p {
-  color: v-bind(savedPreferenceFontColor);
+  color: v-bind(preferenceFontColor);
   font-size: 12px;
   margin: 0px 0;
 }
@@ -1214,7 +940,7 @@ export default {
   background: none;
   border: none;
   outline: none;
-  color: v-bind(savedPreferenceBackgroundColor);
+  color: v-bind(preferenceBackgroundColor);
   font-size: 12px;
   margin: 0;
   padding: 0;
@@ -1228,17 +954,17 @@ export default {
 }
 
 /* Title */
-.preference .title {
-  background: v-bind(savedPreferenceLabelBackgroundColor);
+.preferenceColumn .title {
+  background: v-bind(preferenceLabelBackgroundColor);
   margin: 0 0 4px;
   border-radius: 2px;
   padding: 5px 10px;
 }
 
-.preference .title p {
+.preferenceColumn .title p {
   font-size: 12px;
   margin: 0;
-  color: v-bind(savedPreferenceLabelFontColor);
+  color: v-bind(preferenceLabelFontColor);
 }
 
 /* Content */
@@ -1263,7 +989,7 @@ export default {
   margin-left: 0;
 }
 .preference .content .key {
-  color: v-bind(savedPreferenceFontColor);
+  color: v-bind(preferenceFontColor);
   margin: 10px 10px;
   padding: 0 10px;
   font-size: 12px;
@@ -1277,17 +1003,17 @@ export default {
 }
 
 .preference .content .unit {
-  color: v-bind(savedPreferenceFontColor);
+  color: v-bind(preferenceFontColor);
   padding: 10px 0;
   font-size: 12px;
   margin: 0;
 }
 
 .preference .content .value input[type="text"] {
-  background: v-bind(savedPreferenceBackgroundColor);
-  border: 1px solid v-bind(savedPreferenceLineColor);
+  background: v-bind(preferenceBackgroundColor);
+  border: 1px solid v-bind(preferenceLineColor);
   border-radius: 4px;
-  color: v-bind(savedPreferenceFontColor);
+  color: v-bind(preferenceFontColor);
   outline: none;
   width: 60px;
   height: 20px;
@@ -1296,10 +1022,10 @@ export default {
 }
 
 .preference .content .value input[type="text"][class="invalid"] {
-  background: v-bind(savedPreferenceBackgroundColor);
-  border: 1px solid v-bind(savedPreferenceFontInvalidColor);
+  background: v-bind(preferenceBackgroundColor);
+  border: 1px solid v-bind(preferenceFontInvalidColor);
   border-radius: 4px;
-  color: v-bind(savedPreferenceFontInvalidColor);
+  color: v-bind(preferenceFontInvalidColor);
   outline: none;
   width: 60px;
   height: 20px;
@@ -1325,7 +1051,7 @@ export default {
 }
 
 .preference .content .checkboxKey {
-  color: v-bind(savedPreferenceFontColor);
+  color: v-bind(preferenceFontColor);
   margin: 10px 10px;
   padding: 0 10px 10px;
   font-size: 12px;
@@ -1364,7 +1090,7 @@ export default {
   left: 0;
   top: 50%;
   border: 1px solid;
-  border-color: v-bind(savedPreferenceLineColor);
+  border-color: v-bind(preferenceLineColor);
   border-radius: 3px;
 }
 
@@ -1381,22 +1107,22 @@ export default {
   transform: rotate(-45deg);
   border-bottom: 1px solid;
   border-left: 1px solid;
-  border-color: v-bind(savedCheckMarkColor);
+  border-color: v-bind(preferenceCheckMarkColor);
 }
 
 /* Footer */
 .preference .footer {
   position: absolute;
   bottom: 0;
-  background: v-bind(savedPreferenceLabelBackgroundColor);
+  background: v-bind(preferenceLabelBackgroundColor);
   width: 100%;
   padding: 8px 0px;
 }
 
 .preference .footer .button {
   font-size: 11px;
-  background: v-bind(savedPreferenceButtonHoverColor);
-  color: v-bind(savedPreferenceButtonFontHoverColor);
+  background: v-bind(preferenceButtonHoverColor);
+  color: v-bind(preferenceButtonFontHoverColor);
   float: right;
   margin: 0 12px;
   padding: 3px 10px;

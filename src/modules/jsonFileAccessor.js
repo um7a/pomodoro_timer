@@ -9,12 +9,7 @@ import {
 } from "fs";
 import { dirname } from "path";
 
-export class ConfigFileAccessor {
-  //
-  // private
-  //
-  filePath;
-
+export class JsonFileAccessor {
   //
   // public
   //
@@ -30,13 +25,13 @@ export class ConfigFileAccessor {
     return this.filePath;
   }
 
-  configFileExists() {
+  jsonFileExists() {
     return existsSync(this.filePath);
   }
 
   save(key, value) {
-    const currentConfigObject = this.getConfigObject();
-    currentConfigObject[key] = value;
+    const currentJsonObject = this.getJsonObject();
+    currentJsonObject[key] = value;
 
     const dirPath = dirname(this.filePath);
     if (!existsSync(dirPath)) {
@@ -47,22 +42,30 @@ export class ConfigFileAccessor {
     }
     writeFileSync(
       this.filePath,
-      JSON.stringify(currentConfigObject, undefined, 2)
+      JSON.stringify(currentJsonObject, undefined, 2)
     );
   }
 
-  getConfigObject() {
+  getJsonObject() {
     try {
-      const configStr = readFileSync(this.filePath, "utf8");
-      return JSON.parse(configStr);
+      const jsonStr = readFileSync(this.filePath, "utf8");
+      return JSON.parse(jsonStr);
     } catch (err) {
       if (err.code === "ENOENT") {
-        // If the config file does not exist return empty object.
+        // If the json file does not exist return empty object.
         return {};
       }
-      // If the config file exists and failed to read file, Re-throw error.
+      // If the json file exists and failed to read file, Re-throw error.
       throw err;
     }
+  }
+
+  get(key) {
+    const jsonObject = this.getJsonObject();
+    if (typeof jsonObject !== "object") {
+      return undefined;
+    }
+    return jsonObject[key];
   }
 
   rename(newFilePath) {
@@ -72,11 +75,13 @@ export class ConfigFileAccessor {
 
   copy() {
     if (!this.filePath.endsWith(".json")) {
-      throw new Error(`Unexpected file path. Not .json file.`);
+      throw new Error(
+        `Unexpected file path. Not .json file: "${this.filePath}"`
+      );
     }
     const withoutExtension = this.filePath.split(".json")[0];
 
-    let i = 2;
+    let i = 1;
     while (existsSync(withoutExtension + "." + i.toString() + ".json")) {
       i++;
     }
@@ -86,6 +91,12 @@ export class ConfigFileAccessor {
   }
 
   delete() {
-    unlinkSync(this.filePath);
+    try {
+      unlinkSync(this.filePath);
+    } catch (err) {
+      if (err.code !== "ENOENT") {
+        throw err;
+      }
+    }
   }
 }
