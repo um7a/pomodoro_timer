@@ -1,6 +1,6 @@
 module.exports = {
   pages: {
-    index: "src/pomodoro/main.js",
+    pomodoro: "src/pomodoro/main.js",
     preference: "src/preference/main.js",
   },
   pluginOptions: {

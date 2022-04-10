@@ -57,7 +57,7 @@ async function createPomodoroWindow() {
   } else {
     createProtocol("app");
     // Load the index.html when not in development
-    win.loadURL("app://pomodoro.html");
+    win.loadURL("app://./pomodoro.html");
   }
 
   return win;
