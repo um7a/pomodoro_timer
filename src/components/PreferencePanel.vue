@@ -867,7 +867,7 @@ export default {
 
 /* Profile Column */
 .preferenceShortColumn {
-  width: 194px;
+  width: 198px;
   margin: 0 2px 33px 0;
   border-right: 1px solid v-bind(preferenceLineColor);
   border-radius: 2px;
