@@ -93,7 +93,6 @@ async function createPreferenceWindow() {
     createProtocol("app");
     // Load the index.html when not in development
     win.loadURL("app://./preference.html");
-    win.webContents.openDevTools();
   }
   return win;
 }
