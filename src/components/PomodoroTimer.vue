@@ -65,8 +65,8 @@
           <!-- < STOP/START > -->
           <p class="button">
             <span @click="goToStart">◀︎</span>
-            <span v-if="!pausing" @click="stopRefreshLoop()">STOP</span>
-            <span v-else @click="startRefreshLoop()">START</span>
+            <span v-if="!pausing" @click="setPausing(true)">STOP</span>
+            <span v-else @click="setPausing(false)">START</span>
             <span @click="goToNext">▶︎</span>
           </p>
         </div>
@@ -107,6 +107,9 @@ export default {
       ],
       workCount: 1,
       working: true,
+
+      // This value is set and used only in updatePomodoro() to put the time of the last function call.
+      lastUpdateTimeSec: 0,
 
       //
       // The following fields are initialized by the main config file.
@@ -259,7 +262,6 @@ export default {
         // If the next is short break
         this.currentIntervalSec = this.shortBreakIntervalSec;
       }
-      console.log(`currentIntervalSec: ${this.currentIntervalSec}`);
 
       // Recalculate remainingTimeSec
       if (oldElapsedTimeSec > this.currentIntervalSec) {
@@ -267,7 +269,6 @@ export default {
       } else {
         this.remainingTimeSec = this.currentIntervalSec - oldElapsedTimeSec;
       }
-      console.log(`remainingTimeSec: ${this.remainingTimeSec}`);
 
       // Recalculate workCount
       this.workCount = this.workCount % this.nWorkBeforeLongBreak;
@@ -286,16 +287,18 @@ export default {
       this.remainingTimeSec = this.currentIntervalSec;
     },
     updatePomodoro() {
+      let elapsedTimeSec = 0;
+      if (this.lastUpdateTimeSec !== 0) {
+        elapsedTimeSec = (new Date().getTime() - this.lastUpdateTimeSec) / 1000;
+      }
+      this.lastUpdateTimeSec = new Date().getTime();
+
       if (this.pausing) {
         return;
       }
-      const duration = 1 / this.fps;
 
       // Update remainingTimeSec
-      this.remainingTimeSec -= duration;
-      console.log(
-        `remainingTimeSec: ${this.remainingTimeSec}, fps: ${this.fps}, duration: ${duration}`
-      );
+      this.remainingTimeSec -= elapsedTimeSec;
       if (this.remainingTimeSec > 0) {
         return;
       }
@@ -330,23 +333,25 @@ export default {
     },
     startRefreshLoop() {
       this.stopRefreshLoop();
-      this.pausing = false;
       this.refreshLoop = setInterval(() => {
         this.updatePomodoro();
       }, 1000 / this.fps);
     },
     stopRefreshLoop() {
-      this.pausing = true;
       if (!this.refreshLoop) {
         return;
       }
       clearInterval(this.refreshLoop);
       this.refreshLoop = undefined;
     },
+    setPausing(isPausing) {
+      this.pausing = isPausing;
+    },
   },
   mounted: function () {
     this.loadConfig();
     this.initPomodoro();
+    this.startRefreshLoop();
     ipcRenderer.on("notify-config-change", () => {
       const pausing = this.pausing;
       this.stopRefreshLoop();
