@@ -353,12 +353,9 @@ export default {
     this.initPomodoro();
     this.startRefreshLoop();
     ipcRenderer.on("notify-config-change", () => {
-      const pausing = this.pausing;
       this.stopRefreshLoop();
       this.reloadConfig();
-      if (!pausing) {
-        this.startRefreshLoop();
-      }
+      this.startRefreshLoop();
     });
     ipcRenderer.on("notify-temporary-change", (event, arg) => {
       const key = arg.key;
