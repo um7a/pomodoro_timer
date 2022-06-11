@@ -1,6 +1,6 @@
 {
   "name": "PomodoroTimer",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "um7a",
   "description": "Pomodoro Timer for mac.",
   "private": true,
@@ -16,22 +16,22 @@
   },
   "main": "background.js",
   "dependencies": {
-    "electron": "^18.0.0",
+    "electron": "^19.0.4",
     "electron-localshortcut": "^3.2.1",
-    "vue": "^3.2.31",
+    "vue": "^3.2.37",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.8",
-    "@babel/eslint-parser": "^7.17.0",
+    "@babel/core": "^7.18.2",
+    "@babel/eslint-parser": "^7.18.2",
     "@vue/cli-plugin-babel": "^5.0.4",
     "@vue/cli-plugin-eslint": "^5.0.4",
     "@vue/cli-service": "^5.0.4",
-    "electron-devtools-installer": "^3.1.0",
-    "eslint": "^8.12.0",
-    "eslint-plugin-vue": "^9.0.1",
+    "electron-devtools-installer": "^3.2.0",
+    "eslint": "^8.17.0",
+    "eslint-plugin-vue": "^9.1.0",
     "vue-cli-plugin-electron-builder": "^2.1.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
     "root": true,
