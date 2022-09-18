@@ -72,7 +72,7 @@ jobs:
         run: |
           tag_name=$(echo ${{ github.ref }} | cut -d / -f 3)
           npx generate-release-note > ./release_note
-          release_body=$(sed -z 's/\n/\\n/g' ./release_note)
+          release_body=$(gsed -z 's/\n/\\n/g' ./release_note)
           echo "{ \"tag_name\": \"$tag_name\", \"prerelease\": true, \"body\": \"$release_body\" }" > ./request_body
           curl \
           $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases \
@@ -88,7 +88,7 @@ jobs:
       - name: Upload Release Asset for x64
         run: |
           upload_filepath=./dist/mac/PomodoroTimer.app.x64.zip
-          upload_url=$(cat ./response_body | jq .upload_url | sed s/\"//g | cut -d "{" -f 1)
+          upload_url=$(cat ./response_body | jq .upload_url | gsed s/\"//g | cut -d "{" -f 1)
           curl \
           "$upload_url?name=$(basename $upload_filepath)" \
           -X POST \
@@ -100,7 +100,7 @@ jobs:
       - name: Upload Release Asset for arm64
         run: |
           upload_filepath=./dist/mac-arm64/PomodoroTimer.app.arm64.zip
-          upload_url=$(cat ./response_body | jq .upload_url | sed s/\"//g | cut -d "{" -f 1)
+          upload_url=$(cat ./response_body | jq .upload_url | gsed s/\"//g | cut -d "{" -f 1)
           curl \
           "$upload_url?name=$(basename $upload_filepath)" \
           -X POST \
