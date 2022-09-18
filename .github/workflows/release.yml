@@ -66,8 +66,7 @@ jobs:
           popd
 
       - name: Use GNU sed
-      - run: |
-          brew install sed
+      - run: brew install sed
 
       - name: Create Release
         run: |
