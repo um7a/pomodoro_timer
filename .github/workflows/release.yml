@@ -7,7 +7,7 @@ on:
       - "v*.*.*"
 jobs:
   check-tag-version:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
 
   release:
     needs: check-tag-version
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
@@ -44,27 +44,24 @@ jobs:
       - name: Audit
         run: npm audit --production
 
-      - name: Lint
-        run: npm run lint
-
       - name: Test
         run: npm test
 
       - name: Build App for x64
-        run: npm run electron:build -- --x64 --mac --dir
+        run: npm run build:x64
 
       - name: Build App for arm64
-        run: npm run electron:build -- --arm64 --mac --dir
+        run: npm run build:arm64
 
       - name: Zip Release Asset for x64
         run: |
-          pushd dist_electron/mac/
+          pushd dist/mac/
           zip -r PomodoroTimer.app.x64.zip PomodoroTimer.app
           popd
 
       - name: Zip Release Asset for arm64
         run: |
-          pushd dist_electron/mac-arm64/
+          pushd dist/mac-arm64/
           zip -r PomodoroTimer.app.arm64.zip PomodoroTimer.app
           popd
 
@@ -87,7 +84,7 @@ jobs:
 
       - name: Upload Release Asset for x64
         run: |
-          upload_filepath=./dist_electron/mac/PomodoroTimer.app.x64.zip
+          upload_filepath=./dist/mac/PomodoroTimer.app.x64.zip
           upload_url=$(cat ./response_body | jq .upload_url | sed s/\"//g | cut -d "{" -f 1)
           curl \
           "$upload_url?name=$(basename $upload_filepath)" \

@@ -1,0 +1,28 @@
+.ProfileNumberInput {
+  color: var(--font-color);
+  font-size: 12px;
+}
+
+.ProfileNumberInput .key {
+  display: inline-block;
+  margin-left: 10px;
+  width: 210px;
+}
+
+.ProfileNumberInput .value {
+  background-color: transparent;
+  border: 1px solid var(--line-color);
+  border-radius: 4px;
+  color: var(--font-color);
+  display: inline-block;
+  height: 20px;
+  margin: 0 5px;
+  outline: none;
+  width: 60px;
+}
+
+.ProfileNumberInput .unit {
+  display: inline-block;
+  right: 10px;
+  margin: 0 5px 0 0;
+}

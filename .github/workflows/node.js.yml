@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
@@ -24,7 +24,6 @@ jobs:
       - run: npm ci
       - run: npm audit --production
       - run: npm outdated
-      - run: npm run lint
-      - run: npm test
-      - run: npm run electron:build -- --arm64 --mac --dir
-      - run: npm run electron:build -- --x64 --mac --dir
+      - run: npm run test
+      - run: npm run build:x64
+      - run: npm run build:arm64

@@ -1,0 +1,21 @@
+.ProfileColorInput {
+  color: var(--font-color);
+  font-size: 12px;
+}
+
+.ProfileColorInput .key {
+  display: inline-block;
+  margin-left: 10px;
+  width: 210px;
+}
+
+.ProfileColorInput input[type="color"] {
+  background: none;
+  border: none;
+  vertical-align: -3px;
+  display: inline-block;
+  height: 25px;
+  margin: 0 5px;
+  outline: none;
+  width: 40px;
+}

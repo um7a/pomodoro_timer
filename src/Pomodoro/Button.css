@@ -1,0 +1,32 @@
+.Button {
+  animation-duration: 1s;
+  cursor: default;
+  position: absolute;
+  text-align: center;
+  top: 140px;
+  width: 100%;
+  -webkit-app-region: drag; /* To drag the window. */
+}
+
+.Button p {
+  /*color: #242430;*/
+  color: var(--color);
+  cursor: pointer;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  visibility: hidden;
+}
+
+.Button:hover p {
+  visibility: visible;
+}
+
+.Button p span {
+  margin: 0px 5px;
+}
+
+.Button p span::selection {
+  margin: 0px 5px;
+  background-color: transparent;
+}

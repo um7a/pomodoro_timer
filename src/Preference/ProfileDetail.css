@@ -1,0 +1,62 @@
+.ProfileDetail {
+  height: 100%;
+  left: 200px;
+  position: absolute;
+  width: calc(100% - 200px);
+  -webkit-app-region: drag; /* To drag the window. */
+}
+
+.ProfileDetailColumn {
+  float: left;
+  height: 100%;
+  padding-right: 1px;
+  width: calc(50% - 1px);
+}
+
+.ProfileDetailHeader {
+  background-color: var(--label-bg-color);
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.ProfileDetailHeader p {
+  color: var(--label-font-color);
+  font-size: 12px;
+  margin: 0;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.ProfileDetailHeader p::selection {
+  background-color: transparent;
+}
+
+.ProfileLine {
+  color: var(--font-color);
+  font-size: 12px;
+}
+
+.key {
+  display: inline-block;
+  margin-left: 10px;
+  width: 210px;
+}
+
+.value {
+  background-color: transparent;
+  border: 1px solid var(--line-color);
+  border-radius: 4px;
+  color: var(--font-color);
+  display: inline-block;
+  height: 20px;
+  margin: 0 5px;
+  outline: none;
+  width: 60px;
+}
+
+.unit {
+  display: inline-block;
+  right: 10px;
+  margin: 0 5px 0 0;
+}

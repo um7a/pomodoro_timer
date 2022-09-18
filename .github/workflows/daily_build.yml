@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       # Set 1 to run 16.x job before other jobs.
       max-parallel: 1
@@ -37,10 +37,9 @@ jobs:
           npm update
       - run: npm audit --production
       - run: npm outdated
-      - run: npm run lint
       - run: npm test
-      - run: npm run electron:build -- --arm64 --mac --dir
-      - run: npm run electron:build -- --x64 --mac --dir
+      - run: npm run build:x64
+      - run: npm run build:arm64
       - name: Push package.json and package-lock.json if needed
         if: ${{ matrix.node-version == '16.x' }}
         run: |

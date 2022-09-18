@@ -1,0 +1,29 @@
+.Timer {
+  animation-name: fade-in;
+  animation-duration: 1s;
+  cursor: default;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  top: 100px;
+  width: 100%;
+  -webkit-app-region: drag; /* To drag the window. */
+}
+
+.Timer p {
+  color: var(--color);
+  font-size: 15px;
+}
+
+.Timer p::selection {
+  background-color: transparent;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

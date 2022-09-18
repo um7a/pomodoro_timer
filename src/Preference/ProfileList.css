@@ -1,0 +1,65 @@
+.ProfileList {
+  height: 100%;
+  position: absolute;
+  width: 199px;
+  border-right: 1px solid var(--line-color);
+}
+
+.ProfileList p {
+  color: var(--font-color);
+  cursor: pointer;
+  font-size: 12px;
+  margin: 0;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.ProfileList input.selected {
+  background-color: var(--label-bg-color);
+  border: none;
+  color: var(--font-color);
+  font-size: 12px;
+  outline: none;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+  width: calc(100% - 11px);
+}
+
+.ProfileList p::selection {
+  background-color: transparent;
+}
+
+.ProfileList .ProfileListHeader {
+  background-color: var(--label-bg-color);
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.ProfileList .ProfileListHeader p {
+  color: var(--label-font-color);
+  margin: 0;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.ProfileList .ProfileListHeader p::selection {
+  background-color: transparent;
+}
+
+.ProfileList .ProfileListHeader .Title {
+  display: inline-block;
+  width: 70%;
+}
+
+.ProfileList .ProfileListHeader .MinusButton {
+  display: inline-block;
+  width: 10px;
+}
+
+.ProfileList .ProfileListHeader .PlusButton {
+  display: inline-block;
+  width: 10px;
+}

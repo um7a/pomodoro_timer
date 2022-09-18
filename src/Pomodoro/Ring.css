@@ -1,0 +1,6 @@
+#Ring {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  -webkit-app-region: drag; /* To drag the window. */
+}

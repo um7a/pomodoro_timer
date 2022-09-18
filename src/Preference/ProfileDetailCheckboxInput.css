@@ -1,0 +1,56 @@
+.ProfileCheckboxInput {
+  color: var(--font-color);
+  font-size: 12px;
+}
+
+.ProfileCheckboxInput .key {
+  display: inline-block;
+  margin-left: 10px;
+  width: 280px;
+}
+
+.ProfileCheckboxInput input[type="checkbox"] {
+  display: none;
+}
+
+.ProfileCheckboxInput input[type="checkbox"] + label {
+  display: none;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding-left: 25px;
+  padding-right: 20px;
+  right: 15px;
+  bottom: 12px;
+}
+
+/*
+ * Outer box
+ */
+.ProfileCheckboxInput input[type="checkbox"] + label::before {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  margin-top: 0;
+  left: 0;
+  border: 1px solid;
+  border-color: var(--line-color);
+  border-radius: 3px;
+}
+
+/*
+ * Check mark
+ */
+.ProfileCheckboxInput input[type="checkbox"]:checked + label::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 4px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+  border-color: var(--check-mark-color);
+  height: 3px;
+  transform: rotate(-45deg);
+  width: 8px;
+}

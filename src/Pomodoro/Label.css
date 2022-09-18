@@ -1,0 +1,29 @@
+.Label {
+  animation-name: fade-in;
+  animation-duration: 1s;
+  cursor: default;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  top: 90px;
+  width: 100%;
+  -webkit-app-region: drag; /* To drag the window. */
+}
+
+.Label p {
+  color: var(--color);
+  font-size: 12px;
+}
+
+.Label p::selection {
+  background-color: transparent;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

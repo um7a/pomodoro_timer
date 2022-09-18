@@ -1,0 +1,17 @@
+.Pomodoro {
+  /*
+   * Please set alpha only to 1.
+   * If you set alpha to 0 ~ 0.9, you will step on the following bug.
+   * https://github.com/electron/electron/issues/32450
+   */
+  background-color: rgba(
+    var(--background-color-red),
+    var(--background-color-green),
+    var(--background-color-blue),
+    var(--background-transparent)
+  );
+  height: 240px;
+  position: relative;
+  width: 230px;
+  -webkit-app-region: drag; /* To drag the window. */
+}
