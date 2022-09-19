@@ -5,6 +5,10 @@ Pomodoro timer for Mac.
 ![node.js](https://github.com/um7a/pomodoro_timer/actions/workflows/node.js.yml/badge.svg?branch=main)
 ![daily_build](https://github.com/um7a/pomodoro_timer/actions/workflows/daily_build.yml/badge.svg?branch=main)
 
+<div align="center">
+  <img src="https://github.com/um7a/pomodoro_timer/raw/v0.4.1/docs/pomodoro_timer_on_desktop.png" width="500px">
+</div>
+
 ## Install
 
 If you use intel mac, you can download PomodoroTimer.app from [Release](https://github.com/um7a/pomodoro_timer/releases) page.  
