@@ -9,43 +9,46 @@ Pomodoro timer for Mac.
   <img src="https://github.com/um7a/pomodoro_timer/raw/v0.4.1/docs/pomodoro_timer_on_desktop.png" width="500px">
 </div>
 
-## Install
+## 1. Install
 
 If you use intel mac, you can download PomodoroTimer.app from [Release](https://github.com/um7a/pomodoro_timer/releases) page.  
-Or you can also build PomodoroTimer.app for both intel mac and apple silicon mac from source code. **(Building from source code is recomended.)**
+Or you can also build PomodoroTimer.app for both intel mac and apple silicon mac from source code. **(Recomended)**
 
-## Uninstall
+## 2. Uninstall
 
-You can uninstall this app by deleting PomodoroTimer.app file and remove the following directory.
+You can uninstall this app by the following steps.
+
+1. Delete PomodoroTimer.app file.
+2. Remove the following directory.
 
 ```
 $ rm -r ~/.pomodoroTimer
 ```
 
-## Build
+## 3. Build
 
 You can build PomodoroTimer.app from source code by the following steps.
 
-### Prerequisites
+### 3.1. Prerequisites
 
 - git
 - node
 - npm
 
-### Download the source code
+### 3.2. Download the source code
 
 ```bash
 $ git clone https://github.com/um7a/pomodoro_timer.git
 $ cd pomodoro_timer
 ```
 
-### Project setup
+### 3.3. Project setup
 
 ```bash
 $ npm install
 ```
 
-### Compile app
+### 3.4. Compile app
 
 - for x64
 
@@ -63,17 +66,17 @@ $ npm run build:arm64
 
 Compiled app is in `dist/mac-arm64/`.
 
-## Other commands
+## 4. Other commands
 
 The following commands are useful when you edit the source code.
 
-### Execute test
+### 4.1. Execute test
 
 ```bash
 $ npm run test
 ```
 
-### Compiles and start for development
+### 4.2. Compiles and start for development
 
 ```bash
 $ npm run start
