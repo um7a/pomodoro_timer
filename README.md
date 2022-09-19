@@ -9,6 +9,17 @@ Pomodoro timer for Mac.
   <img src="https://github.com/um7a/pomodoro_timer/raw/v0.4.1/docs/pomodoro_timer_on_desktop.png" width="500px">
 </div>
 
+- [1. Install](#1-install)
+- [2. Uninstall](#2-uninstall)
+- [3. Build](#3-build)
+  - [3.1. Prerequisites](#31-prerequisites)
+  - [3.2. Download the source code](#32-download-the-source-code)
+  - [3.3. Project setup](#33-project-setup)
+  - [3.4. Compile app](#34-compile-app)
+- [4. Other commands](#4-other-commands)
+  - [4.1. Execute test](#41-execute-test)
+  - [4.2. Compiles and start for development](#42-compiles-and-start-for-development)
+
 ## 1. Install
 
 If you use intel mac, you can download PomodoroTimer.app from [Release](https://github.com/um7a/pomodoro_timer/releases) page.  
