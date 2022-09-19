@@ -97,14 +97,16 @@ jobs:
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           --data-binary @$upload_filepath
 
-      - name: Upload Release Asset for arm64
-        run: |
-          upload_filepath=./dist/mac-arm64/PomodoroTimer.app.arm64.zip
-          upload_url=$(cat ./response_body | jq .upload_url | gsed s/\"//g | cut -d "{" -f 1)
-          curl \
-          "$upload_url?name=$(basename $upload_filepath)" \
-          -X POST \
-          -H "Content-Type: $(file -b --mime-type $upload_filepath)" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          --data-binary @$upload_filepath
+      # TODO: App for arm64 is treated as damaged. So comment out.
+      #
+      #- name: Upload Release Asset for arm64
+      #  run: |
+      #    upload_filepath=./dist/mac-arm64/PomodoroTimer.app.arm64.zip
+      #    upload_url=$(cat ./response_body | jq .upload_url | gsed s/\"//g | cut -d "{" -f 1)
+      #    curl \
+      #    "$upload_url?name=$(basename $upload_filepath)" \
+      #    -X POST \
+      #    -H "Content-Type: $(file -b --mime-type $upload_filepath)" \
+      #    -H "Accept: application/vnd.github.v3+json" \
+      #    -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+      #    --data-binary @$upload_filepath
