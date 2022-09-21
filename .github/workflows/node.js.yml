@@ -13,17 +13,36 @@ jobs:
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        node-version: [16.x]
+        node-version: [16.x, 14.x]
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
-      - run: npm audit --production
-      - run: npm outdated
-      - run: npm run test
-      - run: npm run build:x64
-      - run: npm run build:arm64
+
+      - name: Install npm packages
+        run: npm install
+
+      - name: Check npm package vulnerabilities
+        run: npm audit
+
+      - name: Test
+        run: npm run test
+
+      - name: Build app for x64
+        run: npm run build:x64
+
+      - name: Build app for arm64
+        run: npm run build:arm64
+
+      - name: Commit and push package-lock.json if needed
+        if: ${{ matrix.node-version == '16.x' && github.event_name == 'push' }}
+        run: |
+          if [[ ! -z $(git diff --shortstat package-lock.json) ]]; then
+            git add package-lock.json
+            git commit -m "deps: Update package-lock.json"
+            git push origin ${{ matrix.branch }}
+          fi
