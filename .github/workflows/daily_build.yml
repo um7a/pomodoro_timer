@@ -18,34 +18,56 @@ jobs:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
         # We should execute 16.x first. Because only 16.x job updates package.json if necessary.
-        node-version: [16.x]
+        node-version: [16.x, 14.x]
         branch: [main]
     steps:
       - name: Checkout to ${{ matrix.branch }}
         uses: actions/checkout@v2
         with:
           ref: ${{ matrix.branch }}
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
+
+      - name: Configure git
+        run: git config --global user.name "github actions"
+
       - name: Update npm packages
         if: ${{ matrix.node-version == '16.x' }}
         run: |
-          npm update
-      - run: npm audit --production
-      - run: npm outdated
-      - run: npm test
-      - run: npm run build:x64
-      - run: npm run build:arm64
+          cp package.json package.json.old
+          npm install -g npm-package-updater
+          npm-package-updater --caret --git --commit-prefix "deps: " --debug
+
+      - name: Install npm packages
+        run: npm install
+
+      - name: Commit package-lock.json
+        run: |
+          if [[ ! -z $(diff package.json.old package.json) ]]; then
+            git add package-lock.json
+            git commit -m "deps: Update package-lock.json"
+          fi
+
+      - name: Check npm package vulnerabilities
+        run: npm audit --production
+
+      - name: Test
+        run: npm test
+
+      - name: Build app for x64
+        run: npm run build:x64
+
+      - name: Build app for arm64
+        run: npm run build:arm64
+
       - name: Push package.json and package-lock.json if needed
         if: ${{ matrix.node-version == '16.x' }}
         run: |
-          if [[ ! -z $(git diff --shortstat package.json package-lock.json) ]]; then \
-            git config --global user.name "github actions"; \
-            git add package.json package-lock.json; \
-            git commit -m "deps: Update dependencies"; \
+          if [[ ! -z $(diff package.json.old package.json) ]]; then
             git push origin ${{ matrix.branch }}
           fi
+
