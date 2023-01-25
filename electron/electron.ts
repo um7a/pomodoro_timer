@@ -150,6 +150,8 @@ const createMainWindow = (): BrowserWindow => {
     frame: false,
     transparent: true,
     titleBarStyle: "customButtonsOnHover",
+    maximizable: false,
+    resizable: false,
     webPreferences: {
       // Not to stall the app when it is in background.
       backgroundThrottling: false,
@@ -174,7 +176,7 @@ const createPreferenceWindow = (): BrowserWindow => {
     transparent: true,
     titleBarStyle: "customButtonsOnHover",
     maximizable: false,
-    //resizable: false,
+    resizable: false,
     webPreferences: {
       // To use ipcRenderer in preload.js.
       nodeIntegration: false,
