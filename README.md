@@ -16,6 +16,8 @@ Pomodoro timer for Mac.
   - [3.2. Download the source code](#32-download-the-source-code)
   - [3.3. Project setup](#33-project-setup)
   - [3.4. Compile app](#34-compile-app)
+    - [3.4.1. Compile app for x64](#341-compile-app-for-x64)
+    - [3.4.2. Compile app for arm64](#342-compile-app-for-arm64)
 - [4. Other commands](#4-other-commands)
   - [4.1. Execute test](#41-execute-test)
   - [4.2. Compiles and start for development](#42-compiles-and-start-for-development)
@@ -61,7 +63,7 @@ $ npm install
 
 ### 3.4. Compile app
 
-- for x64
+#### 3.4.1. Compile app for x64
 
 ```bash
 $ npm run build:x64
@@ -69,7 +71,7 @@ $ npm run build:x64
 
 Compiled app is in `dist/mac/`.
 
-- for arm64
+#### 3.4.2. Compile app for arm64
 
 ```bash
 $ npm run build:arm64
