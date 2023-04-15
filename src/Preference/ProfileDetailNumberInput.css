@@ -1,6 +1,7 @@
 .ProfileNumberInput {
   color: var(--font-color);
   font-size: 12px;
+  -webkit-app-region: no-drag;
 }
 
 .ProfileNumberInput .key {

@@ -37,6 +37,7 @@
   border: 1px solid;
   border-color: var(--line-color);
   border-radius: 3px;
+  -webkit-app-region: no-drag;
 }
 
 /*
@@ -53,4 +54,5 @@
   height: 3px;
   transform: rotate(-45deg);
   width: 8px;
+  -webkit-app-region: no-drag;
 }

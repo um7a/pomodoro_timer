@@ -5,6 +5,7 @@
   text-align: center;
   top: 95px;
   width: 100%;
+  z-index: 20;
   -webkit-app-region: drag; /* To drag the window. */
 }
 

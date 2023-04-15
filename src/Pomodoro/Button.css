@@ -5,7 +5,8 @@
   text-align: center;
   top: 140px;
   width: 100%;
-  -webkit-app-region: drag; /* To drag the window. */
+  z-index: 30;
+  -webkit-app-region: no-drag;
 }
 
 .Button p {

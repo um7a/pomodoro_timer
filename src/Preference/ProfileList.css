@@ -3,6 +3,7 @@
   position: absolute;
   width: 199px;
   border-right: 1px solid var(--line-color);
+  -webkit-app-region: no-drag;
 }
 
 .ProfileList p {
@@ -52,14 +53,17 @@
 .ProfileList .ProfileListHeader .Title {
   display: inline-block;
   width: 70%;
+  -webkit-app-region: no-drag;
 }
 
 .ProfileList .ProfileListHeader .MinusButton {
   display: inline-block;
   width: 10px;
+  -webkit-app-region: no-drag;
 }
 
 .ProfileList .ProfileListHeader .PlusButton {
   display: inline-block;
   width: 10px;
+  -webkit-app-region: no-drag;
 }
