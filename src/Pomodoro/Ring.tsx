@@ -83,7 +83,7 @@ const innerFrontRing = new MultiColorRing({
       z: -0.01,
     },
   },
-  thetaSegments: 500,
+  thetaSegments: 3000,
 });
 innerFrontRing.addToScene(scene);
 
@@ -130,7 +130,7 @@ const outerFrontRing = new MultiColorRing({
       z: -0.01,
     },
   },
-  thetaSegments: 500,
+  thetaSegments: 3000,
 });
 outerFrontRing.addToScene(scene);
 
@@ -173,9 +173,9 @@ type RingProps = {
   configIsReady: boolean;
   ringIsReady: boolean;
   setRingIsReady: React.Dispatch<React.SetStateAction<boolean>>;
-  timeSec: number;
-  currentIntervalSec: number;
-  workIntervalSec: number;
+  timeMSec: number;
+  currentIntervalMSec: number;
+  workIntervalMSec: number;
   isWorking: boolean;
   workCount: number;
   nWorkBeforeLongBreak: number;
@@ -331,30 +331,31 @@ function Ring(props: RingProps) {
 
     // innerDrawRange
     const newInnerDrawRange = Math.ceil(
-      ((props.currentIntervalSec - props.timeSec) / props.currentIntervalSec) *
+      ((props.currentIntervalMSec - props.timeMSec) /
+        props.currentIntervalMSec) *
         innerFrontRing.getThetaSegments()
     );
     innerFrontRing.setDrawRange(newInnerDrawRange);
     innerFrontRing.setColors(props.currentColors);
 
     // outerDrawRange
-    const totalWorkSec = props.nWorkBeforeLongBreak * props.workIntervalSec;
-    let currentElapsedSec: number;
+    const totalWorkMSec = props.nWorkBeforeLongBreak * props.workIntervalMSec;
+    let currentElapsedMSec: number;
     if (props.isWorking) {
-      currentElapsedSec =
-        (props.workCount - 1) * props.workIntervalSec +
-        (props.currentIntervalSec - props.timeSec);
+      currentElapsedMSec =
+        (props.workCount - 1) * props.workIntervalMSec +
+        (props.currentIntervalMSec - props.timeMSec);
     } else {
-      currentElapsedSec = props.workCount * props.workIntervalSec;
+      currentElapsedMSec = props.workCount * props.workIntervalMSec;
     }
     const newOuterDrawRange = Math.ceil(
-      (currentElapsedSec / totalWorkSec) * innerFrontRing.getThetaSegments()
+      (currentElapsedMSec / totalWorkMSec) * innerFrontRing.getThetaSegments()
     );
     outerFrontRing.setDrawRange(newOuterDrawRange);
     outerFrontRing.setColors(props.currentColors);
 
     renderer.render(scene, cameraWrapper.getCamera());
-  }, [props.timeSec, props.currentIntervalSec, props.currentColors]);
+  }, [props.timeMSec, props.currentIntervalMSec, props.currentColors]);
 
   return <div id="Ring"></div>;
 }

@@ -9,7 +9,7 @@ import * as ColorUtils from "../utils/colorUtils";
 
 const { electron } = window;
 
-const useIntervalBy1s = (callback: () => void, deps: any[]) => {
+const useIntervalBy250ms = (callback: () => void, deps: any[]) => {
   const callbackRef = useRef<() => void>(callback);
   useEffect(() => {
     callbackRef.current = callback;
@@ -19,7 +19,7 @@ const useIntervalBy1s = (callback: () => void, deps: any[]) => {
     const tick = () => {
       callbackRef.current();
     };
-    const id = setInterval(tick, 1000);
+    const id = setInterval(tick, 250);
     return () => {
       clearInterval(id);
     };
@@ -32,17 +32,17 @@ function Pomodoro() {
   const [configWasChanged, setConfigWasChanged] = useState(false);
 
   // state for timer's configuration
-  const [workSec, setWorkSec] = useState(0);
-  const [shortBreakSec, setShortBreakSec] = useState(0);
-  const [longBreakSec, setLongBreakSec] = useState(0);
+  const [workMSec, setWorkMSec] = useState(0);
+  const [shortBreakMSec, setShortBreakMSec] = useState(0);
+  const [longBreakMSec, setLongBreakMSec] = useState(0);
   const [nWorkBeforeLongBreak, setNWorkBeforeLongBreak] = useState(0);
 
   // state for timer's condition
-  const [timeSec, setTimeSec] = useState(0);
+  const [timeMSec, setTimeMSec] = useState(0);
   const [workCount, setWorkCount] = useState(0);
   const [isWorking, setIsWorking] = useState(false);
   const [timerIsReady, setTimerIsReady] = useState(false);
-  const [currentIntervalSec, setCurrentIntervalSec] = useState(0);
+  const [currentIntervalMSec, setCurrentIntervalMSec] = useState(0);
   const [lastHeartBeat, setLastHeartBeat] = useState(0);
   const [isPausing, setIsPausing] = useState(false);
   const [goNext, setGoNext] = useState(false);
@@ -79,7 +79,7 @@ function Pomodoro() {
   }, []);
 
   //
-  // (2) Read config file and initialize some state.
+  // (2) Read config file and initialize some states.
   //
   useEffect(() => {
     if (configIsReady && !configWasChanged) {
@@ -98,9 +98,9 @@ function Pomodoro() {
       console.log(profile);
       // Initialize state
       // state for timer's configuration
-      setWorkSec(profile.workIntervalSec);
-      setShortBreakSec(profile.shortBreakIntervalSec);
-      setLongBreakSec(profile.longBreakIntervalSec);
+      setWorkMSec(1000 * profile.workIntervalSec);
+      setShortBreakMSec(1000 * profile.shortBreakIntervalSec);
+      setLongBreakMSec(1000 * profile.longBreakIntervalSec);
       setNWorkBeforeLongBreak(profile.nWorkBeforeLongBreak);
 
       // state for notification's configuration
@@ -108,7 +108,6 @@ function Pomodoro() {
 
       // state for window's configuration
       setBackgroundColor(profile.backgroundColor);
-      console.error(profile.backgroundColor);
 
       // state for ring's configuration
       setTransparent(profile.transparent);
@@ -138,8 +137,8 @@ function Pomodoro() {
     }
     console.log(`Writing the startup message is done. Setup timer.`);
     // Initialize Timer
-    setTimeSec(workSec);
-    setCurrentIntervalSec(workSec);
+    setTimeMSec(workMSec);
+    setCurrentIntervalMSec(workMSec);
     setWorkCount(1);
     setCurrentColors(workColors);
     setIsWorking(true);
@@ -150,13 +149,13 @@ function Pomodoro() {
   //
   // (4) Update states every second
   //
-  useIntervalBy1s(() => {
+  useIntervalBy250ms(() => {
     console.log(`Update states.`);
 
     // Temporary heart beat output for debug.
-    const currentHeartBeat = new Date().getTime() / 1000;
+    const currentHeartBeat = new Date().getTime();
     console.log(
-      `heart beat. timeSec = ${timeSec}. duration = ${
+      `heart beat. timeMSec = ${timeMSec}. duration = ${
         currentHeartBeat - lastHeartBeat
       }`
     );
@@ -173,43 +172,38 @@ function Pomodoro() {
       return;
     }
 
-    if (timeSec > 0) {
-      setTimeSec(timeSec - 1);
+    if (timeMSec > 0) {
+      setTimeMSec(timeMSec - 250);
+      return;
+    }
+
+    setGoNext(true);
+    if (notificationIsEnabled === false) {
       return;
     }
 
     console.log(`Send notification.`);
-    if (notificationIsEnabled) {
-      if (isWorking) {
-        if (workCount === nWorkBeforeLongBreak) {
-          const nextIntervalMinuteStr =
-            longBreakSec > 60
-              ? `${longBreakSec / 60} Minutes`
-              : `${longBreakSec} Seconds`;
-          new Notification("Long Break " + String.fromCodePoint(0x1f943), {
-            body: nextIntervalMinuteStr,
-            silent: true,
-          });
-          const bell = new Audio("notification.mp3");
-          bell.currentTime = 0;
-          bell.play();
-        } else {
-          const nextIntervalMinuteStr =
-            shortBreakSec > 60
-              ? `${shortBreakSec / 60} Minutes`
-              : `${shortBreakSec} Seconds`;
-          new Notification("Short Break " + String.fromCodePoint(0x2615), {
-            body: nextIntervalMinuteStr,
-            silent: true,
-          });
-          const bell = new Audio("notification.mp3");
-          bell.currentTime = 0;
-          bell.play();
-        }
-      } else {
+    if (isWorking) {
+      if (workCount === nWorkBeforeLongBreak) {
+        const longBreakSec = longBreakMSec / 1000;
         const nextIntervalMinuteStr =
-          workSec > 60 ? `${workSec / 60} Minutes` : `${workSec} Seconds`;
-        new Notification("Work" + String.fromCodePoint(0x1f680), {
+          longBreakSec > 60
+            ? `${longBreakSec / 60} Minutes`
+            : `${longBreakSec} Seconds`;
+        new Notification("Long Break " + String.fromCodePoint(0x1f943), {
+          body: nextIntervalMinuteStr,
+          silent: true,
+        });
+        const bell = new Audio("notification.mp3");
+        bell.currentTime = 0;
+        bell.play();
+      } else {
+        const shortBreakSec = shortBreakMSec / 1000;
+        const nextIntervalMinuteStr =
+          shortBreakSec > 60
+            ? `${shortBreakSec / 60} Minutes`
+            : `${shortBreakSec} Seconds`;
+        new Notification("Short Break " + String.fromCodePoint(0x2615), {
           body: nextIntervalMinuteStr,
           silent: true,
         });
@@ -217,9 +211,18 @@ function Pomodoro() {
         bell.currentTime = 0;
         bell.play();
       }
+    } else {
+      const workSec = workMSec / 1000;
+      const nextIntervalMinuteStr =
+        workSec > 60 ? `${workSec / 60} Minutes` : `${workSec} Seconds`;
+      new Notification("Work" + String.fromCodePoint(0x1f680), {
+        body: nextIntervalMinuteStr,
+        silent: true,
+      });
+      const bell = new Audio("notification.mp3");
+      bell.currentTime = 0;
+      bell.play();
     }
-
-    setGoNext(true);
   }, [timerIsReady, ringIsReady, isPausing]);
 
   //
@@ -240,12 +243,12 @@ function Pomodoro() {
     const nextIsBreak = isWorking;
     if (nextIsBreak) {
       if (workCount === nWorkBeforeLongBreak) {
-        setCurrentIntervalSec(longBreakSec);
-        setTimeSec(longBreakSec);
+        setCurrentIntervalMSec(longBreakMSec);
+        setTimeMSec(longBreakMSec);
         setCurrentColors(longBreakColors);
       } else {
-        setCurrentIntervalSec(shortBreakSec);
-        setTimeSec(shortBreakSec);
+        setCurrentIntervalMSec(shortBreakMSec);
+        setTimeMSec(shortBreakMSec);
         setCurrentColors(shortBreakColors);
       }
     } else {
@@ -254,8 +257,8 @@ function Pomodoro() {
       } else {
         setWorkCount(workCount + 1);
       }
-      setCurrentIntervalSec(workSec);
-      setTimeSec(workSec);
+      setCurrentIntervalMSec(workMSec);
+      setTimeMSec(workMSec);
       setCurrentColors(workColors);
     }
     setIsWorking(!isWorking);
@@ -281,32 +284,32 @@ function Pomodoro() {
     }
 
     // Go to previous interval.
-    if (currentIntervalSec - timeSec < 2) {
+    if (currentIntervalMSec - timeMSec < 2000) {
       const prevIsBreak = isWorking;
       if (prevIsBreak) {
         // Current interval is work. The previous interval is break.
         if (workCount === 1) {
           // The previous interval is long break.
-          setTimeSec(longBreakSec);
-          setCurrentIntervalSec(longBreakSec);
+          setTimeMSec(longBreakMSec);
+          setCurrentIntervalMSec(longBreakMSec);
           setCurrentColors(longBreakColors);
           setWorkCount(nWorkBeforeLongBreak);
         } else {
           // The previous interval is short break.
-          setTimeSec(shortBreakSec);
-          setCurrentIntervalSec(shortBreakSec);
+          setTimeMSec(shortBreakMSec);
+          setCurrentIntervalMSec(shortBreakMSec);
           setCurrentColors(shortBreakColors);
           setWorkCount(workCount - 1);
         }
       } else {
         // Current interval is break. The previous interval is work.
-        setTimeSec(workSec);
-        setCurrentIntervalSec(workSec);
+        setTimeMSec(workMSec);
+        setCurrentIntervalMSec(workMSec);
         setCurrentColors(workColors);
       }
       setIsWorking(!isWorking);
     } else {
-      setTimeSec(currentIntervalSec);
+      setTimeMSec(currentIntervalMSec);
     }
 
     if (!currentIsPausing) {
@@ -335,16 +338,19 @@ function Pomodoro() {
       ) : undefined}
 
       {timerIsReady ? (
-        <Timer timeSec={timeSec} labelColor={ringLabelColor} />
+        <Timer
+          timeSec={Math.floor(timeMSec / 1000)}
+          labelColor={ringLabelColor}
+        />
       ) : undefined}
 
       <Ring
         configIsReady={configIsReady}
         ringIsReady={ringIsReady}
         setRingIsReady={setRingIsReady}
-        timeSec={timeSec}
-        currentIntervalSec={currentIntervalSec}
-        workIntervalSec={workSec}
+        timeMSec={timeMSec}
+        currentIntervalMSec={currentIntervalMSec}
+        workIntervalMSec={workMSec}
         isWorking={isWorking}
         workCount={workCount}
         nWorkBeforeLongBreak={nWorkBeforeLongBreak}
