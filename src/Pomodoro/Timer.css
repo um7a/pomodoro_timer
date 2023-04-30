@@ -2,22 +2,44 @@
   animation-name: fade-in;
   animation-duration: 1s;
   cursor: default;
-  height: 100%;
   position: absolute;
-  text-align: center;
-  top: 100px;
+  top: 75px;
   width: 100%;
   z-index: 20;
   -webkit-app-region: drag; /* To drag the window. */
 }
 
-.Timer p {
+.Timer .TimerLabel {
   color: var(--color);
-  font-size: 15px;
+  display: flex;
+  justify-content: center;
 }
 
-.Timer p::selection {
+.Timer .TimerLabel ::selection {
   background-color: transparent;
+}
+
+.Timer .TimerLabel .Minute {
+  font-size: 30px;
+  font-weight: 500;
+  text-align: right;
+  width: 50px;
+}
+
+.Timer .TimerLabel .Second {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 18px;
+  text-align: left;
+  width: 23px;
+}
+
+.Timer .TimerLabel .Colon {
+  font-size: 10px;
+  font-weight: 500;
+  margin-top: 20px;
+  text-align: center;
+  width: 10px;
 }
 
 @keyframes fade-in {

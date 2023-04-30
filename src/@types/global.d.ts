@@ -9,6 +9,8 @@ export interface IElectron {
   getCurrentProfileName: () => Promise<string>;
   setCurrentProfileName: (profileName: string) => Promise<void>;
   onProfileChanged: (callback) => Promise<void>;
+  onComputerSuspended: (callback) => Promise<void>;
+  onComputerResumed: (callback) => Promise<void>;
   renameCurrentProfile: (profileName: string) => Promise<void>;
   set: (
     profileKey: string,

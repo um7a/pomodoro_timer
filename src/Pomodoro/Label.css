@@ -5,7 +5,7 @@
   height: 100%;
   position: absolute;
   text-align: center;
-  top: 90px;
+  top: 102px;
   width: 100%;
   z-index: 20;
   -webkit-app-region: drag; /* To drag the window. */
@@ -13,7 +13,9 @@
 
 .Label p {
   color: var(--color);
-  font-size: 12px;
+  font-size: 9px;
+  font-weight: 200;
+  letter-spacing: 1px;
 }
 
 .Label p::selection {

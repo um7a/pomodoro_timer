@@ -4,7 +4,7 @@ import "./Label.css";
 type LabelProps = {
   isWorking: boolean;
   isLongBreak: boolean;
-  labelColor: number;
+  fontColor: number;
 };
 
 const LABEL = {
@@ -20,7 +20,7 @@ function Label(props: LabelProps) {
         className="Label"
         style={
           {
-            "--color": ColorUtils.ntos(props.labelColor),
+            "--color": ColorUtils.ntos(props.fontColor),
           } as React.CSSProperties
         }
       >
@@ -33,7 +33,7 @@ function Label(props: LabelProps) {
         className="Label"
         style={
           {
-            "--color": ColorUtils.ntos(props.labelColor),
+            "--color": ColorUtils.ntos(props.fontColor),
           } as React.CSSProperties
         }
       >
@@ -46,7 +46,7 @@ function Label(props: LabelProps) {
         className="Label"
         style={
           {
-            "--color": ColorUtils.ntos(props.labelColor),
+            "--color": ColorUtils.ntos(props.fontColor),
           } as React.CSSProperties
         }
       >

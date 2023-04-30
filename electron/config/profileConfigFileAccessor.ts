@@ -15,6 +15,11 @@ type VALUE_ATTRIBUTE = {
 };
 
 const VALUE_ATTRIBUTES: VALUE_ATTRIBUTE[] = [
+  {
+    key: "profileConfigFormat",
+    default: 1.0,
+    type: "number",
+  },
   // Pomodoro
   {
     key: "workIntervalSec",
@@ -45,7 +50,7 @@ const VALUE_ATTRIBUTES: VALUE_ATTRIBUTE[] = [
   // Color
   {
     key: "transparent",
-    default: 0.7,
+    default: 0.8,
     type: "number",
   },
   {
@@ -65,32 +70,37 @@ const VALUE_ATTRIBUTES: VALUE_ATTRIBUTE[] = [
   },
   {
     key: "backgroundColor",
-    default: 0x000000,
+    default: 0x171717,
     type: "color",
   },
   {
-    key: "ringBaseColor",
-    default: 0x1a1a1a,
+    key: "workBaseColor",
+    default: 0x2a1a1a,
     type: "color",
   },
   {
-    key: "ringLabelColor",
+    key: "shortBreakBaseColor",
+    default: 0x1a2a1a,
+    type: "color",
+  },
+  {
+    key: "longBreakBaseColor",
+    default: 0x1a1a2f,
+    type: "color",
+  },
+  {
+    key: "fontColor",
     default: 0xffffff,
     type: "color",
   },
   {
-    key: "scaleColor",
-    default: 0x1a1a1a,
-    type: "color",
-  },
-  {
     key: "preferenceTransparent",
-    default: 1,
+    default: 0.9,
     type: "number",
   },
   {
     key: "preferenceBackgroundColor",
-    default: 0x0e0e0e,
+    default: 0x171717,
     type: "color",
   },
   {
@@ -162,16 +172,22 @@ export class ProfileConfigFileAccessor {
   }
 
   isProfileConfigFormat() {
+    console.log(`Check profile config format.`);
     const jsonObject = this.getProfile();
     if (typeof jsonObject !== "object") {
       console.warn(`invalid profile format: profile is not object.`);
       return false;
     }
+
     for (let i = 0; i < VALUE_ATTRIBUTES.length; i++) {
       const attr = VALUE_ATTRIBUTES[i];
       const key = attr.key;
       const type = attr.type;
       const actualValue = jsonObject[key];
+      console.log(
+        `Check ${key}, its type is ${type}. actualValue is ${actualValue}.`
+      );
+
       if (type === "color") {
         if (!ColorUtils.isColorNumber(actualValue)) {
           console.log(`value of ${key} is not color: ${actualValue}`);
@@ -261,6 +277,13 @@ export class ProfileConfigFileAccessor {
 
   static GetProfileNames() {
     const profileNames: string[] = [];
+    if (fs.existsSync(PROFILE_CONFIG_DIR_PATH) === false) {
+      console.warn(
+        `The directory ${PROFILE_CONFIG_DIR_PATH} does not exist. Create new directory.`
+      );
+      fs.mkdirSync(PROFILE_CONFIG_DIR_PATH);
+    }
+
     const profileFileNames = fs.readdirSync(PROFILE_CONFIG_DIR_PATH);
     profileFileNames.forEach((profileFileName) => {
       // If file name does not end with ".json", skip
@@ -352,5 +375,15 @@ export class ProfileConfigFileAccessor {
   copyProfileConfigFile() {
     this.jsonFileAccessor.copy();
     return filePathToName(this.jsonFileAccessor.getFilePath());
+  }
+
+  profileConfigFileExists() {
+    return this.jsonFileAccessor.jsonFileExists();
+  }
+
+  save() {
+    console.log(`Save current profile config to file.`);
+    const currentProfile = this.getProfile();
+    this.jsonFileAccessor.saveRaw(currentProfile);
   }
 }

@@ -2,7 +2,7 @@
   cursor: default;
   position: absolute;
   text-align: center;
-  top: 140px;
+  top: 122px;
   width: 100%;
   z-index: 30;
   -webkit-app-region: no-drag;
@@ -11,7 +11,7 @@
 .Button p {
   color: var(--color);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 10px;
   margin: 0;
   padding: 0;
   visibility: hidden;
@@ -22,10 +22,9 @@
 }
 
 .Button p span {
-  margin: 0px 5px;
+  margin: 0px 3px;
 }
 
 .Button p span::selection {
-  margin: 0px 5px;
   background-color: transparent;
 }

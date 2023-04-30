@@ -11,6 +11,12 @@ contextBridge.exposeInMainWorld("electron", {
   onProfileChanged: (callback: () => void) => {
     return ipcRenderer.on("onProfileChanged", callback);
   },
+  onComputerSuspended: (callback: () => void) => {
+    return ipcRenderer.on("onComputerSuspended", callback);
+  },
+  onComputerResumed: (callback: () => void) => {
+    return ipcRenderer.on("onComputerResumed", callback);
+  },
   renameCurrentProfile: (profileName: string) => {
     ipcRenderer.invoke("renameCurrentProfile", profileName);
   },
