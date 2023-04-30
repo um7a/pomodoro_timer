@@ -3,32 +3,7 @@
   position: absolute;
   width: 199px;
   border-right: 1px solid var(--line-color);
-}
-
-.ProfileList p {
-  color: var(--font-color);
-  cursor: pointer;
-  font-size: 12px;
-  margin: 0;
-  padding-bottom: 5px;
-  padding-left: 10px;
-  padding-top: 5px;
-}
-
-.ProfileList input.selected {
-  background-color: var(--label-bg-color);
-  border: none;
-  color: var(--font-color);
-  font-size: 12px;
-  outline: none;
-  padding-bottom: 5px;
-  padding-left: 10px;
-  padding-top: 5px;
-  width: calc(100% - 11px);
-}
-
-.ProfileList p::selection {
-  background-color: transparent;
+  -webkit-app-region: no-drag;
 }
 
 .ProfileList .ProfileListHeader {
@@ -49,17 +24,53 @@
   background-color: transparent;
 }
 
-.ProfileList .ProfileListHeader .Title {
+.ProfileList .ProfileListHeader p.Title {
   display: inline-block;
   width: 70%;
+  -webkit-app-region: drag;
 }
 
-.ProfileList .ProfileListHeader .MinusButton {
+.ProfileList .ProfileListHeader p.MinusButton {
   display: inline-block;
   width: 10px;
 }
 
-.ProfileList .ProfileListHeader .PlusButton {
+.ProfileList .ProfileListHeader p.PlusButton {
   display: inline-block;
   width: 10px;
+}
+
+.ProfileList label {
+  font-size: 10px;
+  margin-left: 3px;
+}
+
+.ProfileList label::selection {
+  background-color: transparent;
+}
+
+.ProfileList input.selected {
+  background-color: #00000000; /* Make transparent */
+  border: none;
+  color: var(--font-color);
+  font-size: 12px;
+  outline: none;
+  padding-bottom: 5px;
+  padding-left: 3px;
+  padding-top: 5px;
+  width: calc(90% - 11px);
+}
+
+.ProfileList p {
+  color: var(--font-color);
+  cursor: pointer;
+  font-size: 12px;
+  margin: 0;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.ProfileList p::selection {
+  background-color: transparent;
 }

@@ -18,4 +18,5 @@
   margin: 0 5px;
   outline: none;
   width: 40px;
+  -webkit-app-region: no-drag;
 }

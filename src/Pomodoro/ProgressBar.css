@@ -1,0 +1,7 @@
+#ProgressBar {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 20;
+  -webkit-app-region: drag; /* To drag the window. */
+}

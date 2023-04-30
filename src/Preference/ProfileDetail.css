@@ -3,7 +3,7 @@
   left: 200px;
   position: absolute;
   width: calc(100% - 200px);
-  -webkit-app-region: drag; /* To drag the window. */
+  -webkit-app-region: no-drag;
 }
 
 .ProfileDetailColumn {
@@ -17,6 +17,7 @@
   background-color: var(--label-bg-color);
   padding-bottom: 5px;
   padding-top: 5px;
+  -webkit-app-region: drag;
 }
 
 .ProfileDetailHeader p {

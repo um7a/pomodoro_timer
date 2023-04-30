@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, powerMonitor } from "electron";
 import path from "path";
 import { MainConfigFileAccessor } from "./config/mainConfigFileAccessor";
 import { ProfileConfigFileAccessor } from "./config/profileConfigFileAccessor";
@@ -29,21 +29,27 @@ profileList.forEach((profileName) => {
   profileConfigFileAccessor = new ProfileConfigFileAccessor(profileName);
   if (!profileConfigFileAccessor.isProfileConfigFormat()) {
     console.warn(
-      `Profile config file ${profileName} is invalid format. Delete and create new one.`
+      `Profile config file ${profileName} is invalid format. Delete.`
     );
     profileConfigFileAccessor.deleteProfileConfigFile();
 
     // If current profile is invalid, create new.
     if (profileName === currentProfileName) {
+      console.warn(
+        `Current profile config file ${profileName} is deleted. Create new one.`
+      );
       profileConfigFileAccessor.createNewProfileConfigFile();
     }
   }
 });
 
-console.log(`Load profile config files.`);
+console.log(`Load current profile config file.`);
 const currentProfileConfigFileAccessor = new ProfileConfigFileAccessor(
   currentProfileName
 );
+if (currentProfileConfigFileAccessor.profileConfigFileExists() === false) {
+  currentProfileConfigFileAccessor.save();
+}
 
 console.log(`Setup ipcMain.`);
 ipcMain.handle("getProfile", () => {
@@ -124,13 +130,15 @@ ipcMain.handle("copyProfile", () => {
 });
 
 ipcMain.handle("deleteProfile", (_, nextProfileName: string) => {
-  console.error(`deleteProfile: next profile is "${nextProfileName}"`);
+  console.log(`Delete profile. The next profile is "${nextProfileName}"`);
   currentProfileConfigFileAccessor.deleteProfileConfigFile();
+  currentProfileConfigFileAccessor.changeProfile(nextProfileName);
   mainConfigFileAccessor.setCurrentProfileName(nextProfileName);
   // Reload profile on main window.
   if (typeof mainWindow === "undefined") {
     console.warn(`Main window does not exist. Skip sending profile change.`);
   } else {
+    console.log(`Send profile change to main window.`);
     mainWindow.webContents.send("onProfileChanged");
   }
   // Reload profile on preference window.
@@ -139,14 +147,38 @@ ipcMain.handle("deleteProfile", (_, nextProfileName: string) => {
       `Preference window does not exist. Skip sending profile change.`
     );
   } else {
+    console.log(`Send profile change to preference window.`);
     preferenceWindow.webContents.send("onProfileChanged");
+  }
+});
+
+//
+// Handle suspending / resuming a computer.
+//
+powerMonitor.on("suspend", () => {
+  console.log(`Computer was suspended.`);
+  if (typeof mainWindow === "undefined") {
+    console.warn(`Main window does not exist. Skip sending ComputerSuspended.`);
+  } else {
+    console.log(`Send ComputerSuspended event to main window.`);
+    mainWindow.webContents.send("onComputerSuspended");
+  }
+});
+
+powerMonitor.on("resume", () => {
+  console.log(`Computer was resumed.`);
+  if (typeof mainWindow === "undefined") {
+    console.warn(`Main window does not exist. Skip sending ComputerResumed.`);
+  } else {
+    console.log(`Send ComputerResumed event to main window.`);
+    mainWindow.webContents.send("onComputerResumed");
   }
 });
 
 const createMainWindow = (): BrowserWindow => {
   const mainWindow = new BrowserWindow({
-    width: 230,
-    height: 240,
+    width: 190,
+    height: 190,
     frame: false,
     transparent: true,
     titleBarStyle: "customButtonsOnHover",

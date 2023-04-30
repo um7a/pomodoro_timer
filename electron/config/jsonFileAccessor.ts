@@ -56,6 +56,18 @@ export class JsonFileAccessor {
     );
   }
 
+  saveRaw(raw: any): void {
+    const dirPath = dirname(this.filePath);
+    if (!existsSync(dirPath)) {
+      console.warn(
+        `The directory ${dirPath} does not exist. Create new directory.`
+      );
+      mkdirSync(dirPath);
+    }
+
+    writeFileSync(this.filePath, JSON.stringify(raw, undefined, 2));
+  }
+
   getJsonObject(): any {
     try {
       const jsonStr = readFileSync(this.filePath, "utf8");

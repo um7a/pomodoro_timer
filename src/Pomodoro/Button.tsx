@@ -7,7 +7,7 @@ type ButtonProps = {
   setIsPausing: React.Dispatch<React.SetStateAction<boolean>>;
   setGoNext: React.Dispatch<React.SetStateAction<boolean>>;
   setGoPrevious: React.Dispatch<React.SetStateAction<boolean>>;
-  labelColor: number;
+  fontColor: number;
 };
 
 function Button(props: ButtonProps) {
@@ -16,7 +16,7 @@ function Button(props: ButtonProps) {
       <p
         style={
           {
-            "--color": ColorUtils.ntos(props.labelColor),
+            "--color": ColorUtils.ntos(props.fontColor),
           } as React.CSSProperties
         }
       >

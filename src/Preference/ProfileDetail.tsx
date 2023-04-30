@@ -18,7 +18,7 @@ function isPositiveInteger(value: number): boolean {
   return true;
 }
 
-function isBetween01(value: number): boolean {
+function isBetween0And1(value: number): boolean {
   const max = 1;
   const min = 0;
   if (Number.isNaN(value) || value > max || value < min) {
@@ -41,13 +41,14 @@ function ProfileDetail(props: ProfileDetailProps) {
   const [backgroundColor, setBackgroundColor] = useState(0x000000);
   const [transparent, setTransparent] = useState("1.0");
 
-  // state for ring's configuration
+  // state for progress bar's configuration
   const [workColors, setWorkColors] = useState([0x000000]);
   const [shortBreakColors, setShortBreakColors] = useState([0x000000]);
   const [longBreakColors, setLongBreakColors] = useState([0x000000]);
-  const [backRingColor, setBackRingColor] = useState(0x000000);
-  const [ringLabelColor, setRingLabelColor] = useState(0x000000);
-  const [scaleColor, setScaleColor] = useState(0x000000);
+  const [workBaseColor, setWorkBaseColor] = useState(0x000000);
+  const [shortBreakBaseColor, setShortBreakBaseColor] = useState(0x000000);
+  const [longBreakBaseColor, setLongBreakBaseColor] = useState(0x000000);
+  const [fontColor, setFontColor] = useState(0x000000);
 
   // state for preference's configuration
   const [prefTransparent, setPrefTransparent] = useState("1.0");
@@ -85,15 +86,16 @@ function ProfileDetail(props: ProfileDetailProps) {
     // about notification configuration
     setNotificationIsEnabled(props.currentProfile.notificationIsEnabled);
 
-    // about pomodoro ring's configuration
+    // about pomodoro progress bar's configuration
     setTransparent(props.currentProfile.transparent);
     setWorkColors(props.currentProfile.workColors);
     setShortBreakColors(props.currentProfile.shortBreakColors);
     setLongBreakColors(props.currentProfile.longBreakColors);
     setBackgroundColor(props.currentProfile.backgroundColor);
-    setBackRingColor(props.currentProfile.ringBaseColor);
-    setRingLabelColor(props.currentProfile.ringLabelColor);
-    setScaleColor(props.currentProfile.scaleColor);
+    setWorkBaseColor(props.currentProfile.workBaseColor);
+    setShortBreakBaseColor(props.currentProfile.shortBreakBaseColor);
+    setLongBreakBaseColor(props.currentProfile.longBreakBaseColor);
+    setFontColor(props.currentProfile.fontColor);
 
     // about preference's configuration
     setPrefTransparent(props.currentProfile.preferenceTransparent);
@@ -124,7 +126,7 @@ function ProfileDetail(props: ProfileDetailProps) {
           profileKey={"workIntervalSec"}
           value={workMinuteStr}
           description={"Work Interval"}
-          unit={"Minute"}
+          unit={"Minutes"}
           convertFunc={(value: number) => Math.floor(value * 60)}
           validateFunc={isPositiveInteger}
           bgColor={prefBgColor}
@@ -136,7 +138,7 @@ function ProfileDetail(props: ProfileDetailProps) {
           profileKey={"shortBreakIntervalSec"}
           value={shortBreakMinuteStr}
           description={"Short Break Interval"}
-          unit={"Minute"}
+          unit={"Minutes"}
           convertFunc={(value: number) => Math.floor(value * 60)}
           validateFunc={isPositiveInteger}
           bgColor={prefBgColor}
@@ -148,7 +150,7 @@ function ProfileDetail(props: ProfileDetailProps) {
           profileKey={"longBreakIntervalSec"}
           value={longBreakMinuteStr}
           description={"Long Break Interval"}
-          unit={"Minute"}
+          unit={"Minutes"}
           convertFunc={(value: number) => Math.floor(value * 60)}
           validateFunc={isPositiveInteger}
           bgColor={prefBgColor}
@@ -174,7 +176,7 @@ function ProfileDetail(props: ProfileDetailProps) {
           description={"Transparent"}
           unit={""}
           convertFunc={(value: number) => value}
-          validateFunc={isBetween01}
+          validateFunc={isBetween0And1}
           bgColor={prefBgColor}
           fontColor={prefFontColor}
           fontInvalidColor={prefFontInvalidColor}
@@ -205,21 +207,28 @@ function ProfileDetail(props: ProfileDetailProps) {
           fontColor={prefFontColor}
         />
         <ProfileDetailColorInput
-          profileKey={"ringBaseColor"}
-          value={backRingColor}
-          description={"Ring Base Color"}
+          profileKey={"workBaseColor"}
+          value={workBaseColor}
+          description={"Work Base Color"}
           fontColor={prefFontColor}
         />
         <ProfileDetailColorInput
-          profileKey={"ringLabelColor"}
-          value={ringLabelColor}
+          profileKey={"shortBreakBaseColor"}
+          value={shortBreakBaseColor}
+          description={"Short Break Base Color"}
+          fontColor={prefFontColor}
+        />
+        <ProfileDetailColorInput
+          profileKey={"longBreakBaseColor"}
+          value={longBreakBaseColor}
+          description={"Long Break Base Color"}
+          fontColor={prefFontColor}
+        />
+
+        <ProfileDetailColorInput
+          profileKey={"fontColor"}
+          value={fontColor}
           description={"Font Color"}
-          fontColor={prefFontColor}
-        />
-        <ProfileDetailColorInput
-          profileKey={"scaleColor"}
-          value={scaleColor}
-          description={"Scale Color"}
           fontColor={prefFontColor}
         />
 
@@ -263,7 +272,7 @@ function ProfileDetail(props: ProfileDetailProps) {
           description={"Transparent"}
           unit={""}
           convertFunc={(value: number) => value}
-          validateFunc={isBetween01}
+          validateFunc={isBetween0And1}
           bgColor={prefBgColor}
           fontColor={prefFontColor}
           fontInvalidColor={prefFontInvalidColor}

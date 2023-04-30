@@ -28,6 +28,9 @@ function ProfileList(props: ProfileListProps) {
       return;
     }
     console.log(`Load profile.`);
+    console.log(
+      `Current profile: ${JSON.stringify(props.currentProfile, undefined, 2)}`
+    );
     setFontColor(props.currentProfile.preferenceFontColor);
     setLabelBgColor(props.currentProfile.preferenceLabelBackgroundColor);
     setLabelFontColor(props.currentProfile.preferenceLabelFontColor);
@@ -44,30 +47,41 @@ function ProfileList(props: ProfileListProps) {
   const profileList = profileNames.map((profileName) => {
     if (profileName === currentProfileName) {
       return (
-        <input
-          className="selected"
-          style={
-            {
-              "--font-color": ColorUtils.ntos(fontColor),
-              "--label-bg-color": ColorUtils.ntos(labelBgColor),
-            } as React.CSSProperties
-          }
-          type="text"
-          value={editedCurrentProfileName}
-          onChange={(event) => {
-            setEditedCurrentProfileNameCopy(event.target.value);
-          }}
-          onBlur={() => {
-            electron.renameCurrentProfile(editedCurrentProfileName);
-          }}
-        />
+        <div>
+          <label
+            htmlFor="selectedProfile"
+            style={{ color: ColorUtils.ntos(fontColor) }}
+          >
+            ●
+          </label>
+          <input
+            name="selectedProfile"
+            className="selected"
+            style={
+              {
+                "--font-color": ColorUtils.ntos(fontColor),
+              } as React.CSSProperties
+            }
+            type="text"
+            value={editedCurrentProfileName}
+            onChange={(event) => {
+              setEditedCurrentProfileNameCopy(event.target.value);
+            }}
+            onBlur={() => {
+              console.log(
+                `Profile name is changed to ${editedCurrentProfileName}`
+              );
+              electron.renameCurrentProfile(editedCurrentProfileName);
+            }}
+          />
+        </div>
       );
     }
     return (
       <p
         onClick={async () => {
           await electron.setCurrentProfileName(profileName);
-          console.log(`Current profile name is changed to ${profileName}`);
+          console.log(`Current profile is changed to ${profileName}`);
         }}
         style={
           {

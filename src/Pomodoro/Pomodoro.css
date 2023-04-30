@@ -10,8 +10,8 @@
     var(--background-color-blue),
     var(--background-transparent)
   );
-  height: 240px;
+  height: 190px;
   position: relative;
-  width: 230px;
+  width: 190px;
   -webkit-app-region: drag; /* To drag the window. */
 }
