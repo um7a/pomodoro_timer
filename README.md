@@ -6,7 +6,7 @@ Pomodoro timer for Mac.
 ![daily_build](https://github.com/um7a/pomodoro_timer/actions/workflows/daily_build.yml/badge.svg?branch=main)
 
 <div align="center">
-  <img src="https://github.com/um7a/pomodoro_timer/raw/main/docs/pomodoro_timer_on_desktop.png" width="500px">
+  <img src="https://github.com/um7a/pomodoro_timer/raw/v0.5.0/docs/pomodoro_timer_on_desktop.png" width="500px">
 </div>
 
 - [1. Install](#1-install)
