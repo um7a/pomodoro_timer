@@ -17,8 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        # We should execute 16.x first. Because only 16.x job updates package.json if necessary.
-        node-version: [16.x, 14.x]
+        # We should execute 20.x first. Because only 20.x job updates package.json if necessary.
+        node-version: [20.x, 18.x]
         branch: [main]
     steps:
       - name: Checkout to ${{ matrix.branch }}
@@ -36,7 +36,7 @@ jobs:
         run: git config --global user.name "github actions"
 
       - name: Update npm packages
-        if: ${{ matrix.node-version == '16.x' }}
+        if: ${{ matrix.node-version == '20.x' }}
         run: |
           cp package.json package.json.old
           npm install -g npm-package-updater
@@ -65,7 +65,7 @@ jobs:
         run: npm run build:arm64
 
       - name: Push package.json and package-lock.json if needed
-        if: ${{ matrix.node-version == '16.x' }}
+        if: ${{ matrix.node-version == '20.x' }}
         run: |
           if [[ ! -z $(diff package.json.old package.json) ]]; then
             git push origin ${{ matrix.branch }}

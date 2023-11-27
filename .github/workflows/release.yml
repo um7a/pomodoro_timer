@@ -15,7 +15,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 20.x
 
       - name: check tag name
         run: test `echo ${{ github.ref }} | cut -d / -f 3 | cut -d v -f 2`  = `node -e "console.log(require('./package.json').version)"`
@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        node-version: [16.x]
+        node-version: [20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
