@@ -21,8 +21,7 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "three": "^0.158.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.4",
@@ -32,17 +31,22 @@
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
-    "@types/three": "^0.158.3",
     "electron": "^27.1.2",
     "electron-builder": "^24.9.1",
     "react-scripts": "^5.0.1",
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "start": "tsc -p electron && electron .",
-    "build:x64": "tsc -p electron && electron-builder --mac --x64 --publish never",
-    "build:arm64": "tsc -p electron && electron-builder --mac --arm64 --publish never",
-    "test": "react-scripts test --watchAll=false"
+    "start": "npm run frontend:build && npm run electron:start",
+    "test": "npm run frontend:test",
+    "build:x64": "npm run frontend:build && npm run electron:build:x64",
+    "build:arm64": "npm run frontend:build && npm run electron:build:arm64",
+    "electron:start": "tsc -p electron && electron .",
+    "electron:build:x64": "tsc -p electron && electron-builder --mac --x64 --publish never",
+    "electron:build:arm64": "tsc -p electron && electron-builder --mac --arm64 --publish never",
+    "frontend:build": "CI=false && react-scripts build",
+    "frontend:test": "react-scripts test --watchAll=false",
+    "frontend:eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

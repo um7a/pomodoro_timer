@@ -49,7 +49,7 @@ function Pomodoro() {
   const [isSuspended, setIsSuspended] = useState(false);
   const [goNext, setGoNext] = useState(false);
   const [goPrevious, setGoPrevious] = useState(false);
-  const updateTimerIntervalId = useRef<NodeJS.Timer | undefined>(undefined);
+  const updateTimerIntervalId = useRef<NodeJS.Timeout | undefined>(undefined);
   const resumed = useRef(true);
 
   // state for progressBar's condition
@@ -71,10 +71,10 @@ function Pomodoro() {
     allIntervalProgressIsOnAnimation,
     setAllIntervalProgressIsOnAnimation,
   ] = useState(false);
-  const oneIntervalProgressIntervalId = useRef<NodeJS.Timer | undefined>(
+  const oneIntervalProgressIntervalId = useRef<NodeJS.Timeout | undefined>(
     undefined
   );
-  const allIntervalProgressIntervalId = useRef<NodeJS.Timer | undefined>(
+  const allIntervalProgressIntervalId = useRef<NodeJS.Timeout | undefined>(
     undefined
   );
   const delta = useRef<number>(0);
@@ -84,7 +84,7 @@ function Pomodoro() {
     currentPercentage: number,
     setProgress: React.Dispatch<React.SetStateAction<number>>,
     setProgressIsOnAnimation: React.Dispatch<React.SetStateAction<boolean>>
-  ): NodeJS.Timer | undefined {
+  ): NodeJS.Timeout | undefined {
     if (currentPercentage === requestedPercentage) {
       logger.log(`No need to move progress bar. Do nothing.`);
       return;
