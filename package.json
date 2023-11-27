@@ -34,7 +34,7 @@
     "@types/react-dom": "^18.2.17",
     "@types/three": "^0.158.3",
     "electron": "^27.1.2",
-    "electron-builder": "^23.3.3",
+    "electron-builder": "^24.9.1",
     "react-scripts": "^5.0.1",
     "typescript": "^4.8.4"
   },
