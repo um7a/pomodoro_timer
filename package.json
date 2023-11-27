@@ -1,6 +1,6 @@
 {
   "name": "pomodoro_timer",
-  "version": "0.5.1",
+  "version": "0.5.0",
   "private": true,
   "main": "build/electron/electron.js",
   "homepage": "./",
@@ -39,10 +39,10 @@
     "typescript": "^4.9.5"
   },
   "scripts": {
-    "test": "npm run frontend:test",
     "start": "tsc -p electron && electron .",
     "build:x64": "tsc -p electron && electron-builder --mac --x64 --publish never",
-    "build:arm64": "tsc -p electron && electron-builder --mac --arm64 --publish never"
+    "build:arm64": "tsc -p electron && electron-builder --mac --arm64 --publish never",
+    "test": "react-scripts test --watchAll=false"
   },
   "eslintConfig": {
     "extends": [
