@@ -18,22 +18,23 @@ jobs:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
         # We should execute 20.x first. Because only 20.x job updates package.json if necessary.
-        node-version: [20.x, 18.x]
+        node-version: [20.x]
         branch: [main]
     steps:
       - name: Checkout to ${{ matrix.branch }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
 
       - name: Configure git
-        run: git config --global user.name "github actions"
+        run: |
+          git config --global user.name "github actions"
+          git config --global user.email "um7a@users.noreply.github.com"
 
       - name: Update npm packages
         if: ${{ matrix.node-version == '20.x' }}
